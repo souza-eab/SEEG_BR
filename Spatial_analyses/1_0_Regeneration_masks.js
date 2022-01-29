@@ -14,6 +14,8 @@
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.
+
+// set directory for the output file
 var dir_output = 'projects/mapbiomas-workspace/SEEG/2021/Col9/';
 
 // Set assets

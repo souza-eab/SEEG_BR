@@ -11,3 +11,8 @@ This scripts paper Zimbres et al 2022
 4. [Install R base](https://cran.r-project.org/bin/) version 4.x and [Install R Studio Desktop.](https://www.rstudio.com/products/rstudio/download/)
 
 5. Download or clone this repository to your local workspace.
+
+
+## Contact
+For clarification or issue/bug report, please write to <felipe.lenti@ipam.org.br>, <edriano.souza@ipam.org.br> and/or <barbara.zimbres@ipam.org.br>
+

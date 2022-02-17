@@ -14,5 +14,5 @@ This scripts paper Zimbres et al 2022
 
 
 ## Contact
-For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br> and/or <felipe.lenti@ipam.org.br> 
+For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <edriano.souza@ipam.org.br> and/or <felipe.lenti@ipam.org.br> 
 

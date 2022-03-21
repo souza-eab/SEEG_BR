@@ -31,7 +31,7 @@ var col6floresta85 = colecao6.select('classification_1985').remap(
                   [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49],
                   [1,1,1,0, 1, 1, 1, 0, 0, 0, 9, 0, 0, 9, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 1]);
 
-// Changing names of bands 
+// Selection names of bands 
 col6floresta85 = col6floresta85.select([0],['regen1985']).int8();
 
 // List years
@@ -48,7 +48,7 @@ for (var i_ano=0;i_ano<anos.length; i_ano++){
   col6floresta85 = col6floresta85.addBands(col6flor.select([0],['regen'+ano])).int8();
 }
 
-//Gera a função que aplica a regra geral do filtro temporal (3 anos antes e 2 depois da transição)
+// Generate the function that applies the general rule of time filter (3 years before and 2 years after the transition)
 var geraMask3_3 = function(ano){
   var mask =  col6floresta85.select('regen'+(ano - 3)).eq(0)
               .and(col6floresta85.select('regen'+(ano - 2)).eq(0))
@@ -60,7 +60,7 @@ var geraMask3_3 = function(ano){
   return mask;
 };
 
-//Aplica as exceções das regras nos dois primeiros (1986 e 1987) e dois últimos anos (2019 e 2020) da série temporal
+// Applies the rule exceptions in the first two (1986 and 1987) and last two years (2019 and 2020) of the time series
 var imageZero = ee.Image(0);
   var mask86 =  col6floresta85.select('regen'+(1986 - 1)).eq(0)
               .and(col6floresta85.select('regen'+(1986    )).eq(1))
@@ -121,19 +121,19 @@ var imageZero = ee.Image(0);
   mask20 = mask20.updateMask(mask20.neq(0));
   mask20 = mask20.select([0], ['regen2020']);
 
-//Soma as bandas dos dois primeiros anos
+//Sum the bands of the first two years
 var regen = mask86.addBands(mask87);
 
-//Cria uma banda do primeiro ano da regra geral
+// Create a first-year rule band
 var regen88 = geraMask3_3(1988);
 regen88 = regen88.unmask(imageZero);  
 regen88 = regen88.updateMask(regen88.neq(0));
 regen88 = regen88.select(['regen1985'],['regen1988']);
 
-//Soma as bandas 
+//Sum the bands
 regen = regen.addBands(regen88);
 
-//Gera as bandas aplicando o filtro para todos os demais anos da regra geral (no caso, até 2016)
+// Generate the bands by applying the filter for all other years of the general rule (in this case, until 2019)
 for (var i = 1989; i < 2019; i++) {
    var regen_geral = geraMask3_3(i);
       regen_geral = regen_geral.unmask(imageZero);
@@ -141,11 +141,13 @@ for (var i = 1989; i < 2019; i++) {
   regen = regen.addBands(regen_geral.select([0],['regen'+ i]));
 }
 
-//Adiciona os dois últimos anos
+// Add the last two years
 regen = regen.addBands(mask19).addBands(mask20);
 print(regen);
 
-Map.addLayer(regen.select('regen2019'), {'min': 0,'max': 1, 'palette': 'blue'},'Regen_2019');
+
+// Visualization eg. year 2012 e 2020
+Map.addLayer(regen.select('regen2012'), {'min': 0,'max': 1, 'palette': 'blue'},'Regen_2012');
 Map.addLayer(regen.select('regen2020'), {'min': 0,'max': 1, 'palette': 'blue'},'Regen_2020');
 
 Export.image.toAsset({

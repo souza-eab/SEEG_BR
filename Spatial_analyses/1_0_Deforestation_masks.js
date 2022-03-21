@@ -146,7 +146,7 @@ regen = regen.addBands(mask19).addBands(mask20);
 print(regen);
 
 
-// Visualization eg. year 2012 e 2020
+// View Regeneration eg. year 2012 e 2020
 Map.addLayer(regen.select('regen2012'), {'min': 0,'max': 1, 'palette': 'blue'},'Regen_2012');
 Map.addLayer(regen.select('regen2020'), {'min': 0,'max': 1, 'palette': 'blue'},'Regen_2020');
 

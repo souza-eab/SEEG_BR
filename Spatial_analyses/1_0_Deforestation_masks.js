@@ -6,10 +6,10 @@
 /////////  Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// @. UPDATE HISTORIC //
+// @. UPDATE HISTORIC STEPS//
 // 1: SCRIPT TO GENERATE REGENERATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
 // 1.0 Set your directory 
-// 1.1: Acess Asset MapBiomas Col6, Biomes_BR
+// 1.1: Acess Asset MapBiomas Col6 and Biomes_BR
 // 1.2: Remap layer for Native Vegetation or Non Native Vegetation 
 // 1.3: 
 // @. ~~~~~~~~~~~~~~ // 

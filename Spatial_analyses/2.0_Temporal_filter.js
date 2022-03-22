@@ -111,27 +111,27 @@ var years = ['1990','1991','1992','1993','1994','1995','1996','1997','1998','199
 var eeYears = ee.List(years);
 
 ///// Input the Asset 'REGENERATION' mask asset exported from step 1.0
-var inputImage_regen = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1.0_Regeneration_masks'); // change to the asset you saved in the previous script
+var inputImage_regeneration = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Regeneration_masks'); // change to the asset you saved in the previous script
 
 // Apply functions
-var result_regen = eeYears.map(function(year){
+var result_regeneration = eeYears.map(function(year){
   filterParams;
   PostClassification;
-    var image = inputImage_regen.select(ee.String('regen').cat(ee.String(year)));
+    var image = inputImage_regeneration.select(ee.String('regeneration').cat(ee.String(year)));
     var pc = new PostClassification(image);
     var filtered2 = pc.spatialFilter(filterParams); 
     return(filtered2.int8());
 });
 
 // Save the result as a multi-band (ImageCollection)
-result_regen = collection2multiband(ee.ImageCollection.fromImages(result_regen));
-print(result_regen);
+result_regeneration = collection2multiband(ee.ImageCollection.fromImages(result_regeneration));
+print(result_regeneration);
 
 // Export 
 Export.image.toAsset({
-    "image": result_regen.uint8(),
-    "description": '2.0_Temporal_filter_regeneration',
-    "assetId": dir_output + '2.0_Temporal_filter_regeneration', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
+    "image": result_regeneration.uint8(),
+    "description": '2_0_Temporal_filter_regeneration',
+    "assetId": dir_output + '2_0_Temporal_filter_regeneration', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'
@@ -141,27 +141,27 @@ Export.image.toAsset({
 });
 
 ///// Input the Asset 'DESFORESTATION' mask asset exported from step 1.0  
-var inputImage_desm = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1.0_Deforestation_masks'); // change to the asset saved by you in the previous script
+var inputImage_deforestation = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Deforestation_masks'); // change to the asset saved by you in the previous script
 
 // Apply function 
-var result_desm = eeYears.map(function(year){
+var result_deforestation = eeYears.map(function(year){
   filterParams;
   PostClassification;
-    var image = inputImage_desm.select(ee.String('desm').cat(ee.String(year)));
+    var image = inputImage_deforestation.select(ee.String('deforestation').cat(ee.String(year)));
     var pc = new PostClassification(image);
     var filtered2 = pc.spatialFilter(filterParams); 
     return(filtered2.int8());
 });
 
 // Save the result as a multi-band (ImageCollection)
-result_desm = collection2multiband(ee.ImageCollection.fromImages(result_desm));
-print(result_desm);
+result_deforestation = collection2multiband(ee.ImageCollection.fromImages(result_deforestation));
+print(result_deforestation);
 
 // Export
 Export.image.toAsset({
-    "image": result_desm.uint8(),
-    "description": 'desmSEEGc6_filter_certo',
-    "assetId": dir_output + '2.0_Temporal_filter_deforestation', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
+    "image": result_deforestation.uint8(),
+    "description": '2_0_Temporal_filter_deforestation',
+    "assetId": dir_output + '2_0_Temporal_filter_deforestation', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

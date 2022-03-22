@@ -12,7 +12,9 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 
 
 
-## Understand steps and folders
+## Workflow
+
+Understand steps and folders
 
 
 
@@ -31,5 +33,5 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 5. Download or clone this repository to your local workspace.
 
 
-#### Contact
+#### Reporting Issues
 For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <felipe.lenti@ipam.org.br> and/or <edriano.souza@ipam.org.br>.

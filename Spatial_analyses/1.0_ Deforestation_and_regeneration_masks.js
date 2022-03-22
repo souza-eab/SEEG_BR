@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: RECLASSIFICATION TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0) //////////////
+/////////// GOALS: RECLASSIFICATION TO GENERATE DESFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0) //////////////
 //////////  Coordination: Barbara Zimbres, Julia Shimbo, and Ane Alencar /////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
 ////////// Citing: Zimbres et al.,2022.  ///////////////////////////////////////////////////////////////////////////////////
@@ -155,12 +155,13 @@ var vis = {
 Map.addLayer(desm.select('desm2013'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2013");
 Map.addLayer(desm.select('desm2020'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2020");
 Map.addLayer(MapBiomas_col6.select('classification_2020'), vis,"Mapbiomas_2020");
- 
+Map.addLayer(MapBiomas_col6.select('classification_2013'), vis,"Mapbiomas_2013"); 
+
 // Exporting data
 Export.image.toAsset({
     "image": desm.unmask(0).uint8(),
-    "description": 'Reclass_desforestation_SEEG',
-    "assetId":dir_output + 'Reclass_desforestation_SEEG', // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
+    "description": '1.0_Deforestation_masks,
+    "assetId":dir_output + '1.0_Deforestation_masks', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

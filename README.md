@@ -19,7 +19,7 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 
 2. [General rule_map classification](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map)
 
-3. [Wetlands classification](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/3-wetlands)
+3. [Zonal classification](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/3-wetlands)
 
 4. [Integration of maps](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 

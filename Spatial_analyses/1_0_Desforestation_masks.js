@@ -142,7 +142,7 @@ desm = desm.addBands(mask19).addBands(mask20);
 print(desm);
 
 // View eg. 
-Map.addLayer(desm.select('desm2019'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2019");
+Map.addLayer(desm.select('desm2013'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2013");
 Map.addLayer(desm.select('desm2020'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2020");
 
 // Exporting data

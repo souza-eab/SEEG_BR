@@ -15,16 +15,15 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 ## Workflow
    Understand steps and folders
 
-    [1.0 Deforestation_and_regeneration_masks.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
+ 1. [Deforestation_and_regeneration_masks.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
 
-    [2.0 Temporal_filter.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
+ 2. [Temporal_filter.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
     
-    [2.0 Temporal_filter.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
-
+    2.1 [Transitions.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
 
 3. [Zonal classification.py](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/3-wetlands)
 
-4. [Estimates](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+4. [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
 
 ### How to use

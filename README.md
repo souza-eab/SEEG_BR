@@ -1,5 +1,5 @@
 <div>
-    <img src='./files/aux/ipam_logo.jpg' height='auto' width='160' align='right'>
+    <img src='./aux2/ipam_logo.jpg' height='auto' width='160' align='right'>
     <h1>Cerrado biome</h1>
 </div>
 

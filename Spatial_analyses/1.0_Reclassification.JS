@@ -13,7 +13,7 @@
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 // Set Asset
 // Asset Biomes brazilian
@@ -159,8 +159,8 @@ Map.addLayer(MapBiomas_col6.select('classification_2020'), vis,"Mapbiomas_2020")
 // Exporting data
 Export.image.toAsset({
     "image": desm.unmask(0).uint8(),
-    "description": 'Reclass_desflorestations_SEEG',
-    "assetId":dir_output + 'Reclass_desflorestations_SEEG', // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
+    "description": 'Reclass_desforestation_SEEG',
+    "assetId":dir_output + 'Reclass_desforestation_SEEG', // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

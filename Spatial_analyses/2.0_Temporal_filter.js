@@ -137,11 +137,11 @@ Export.image.toAsset({
         '.default': 'mode'
     },
     "maxPixels": 1e13,
-    "region": Bioma.geometry().convexHull() // If desired, change here to the name of the desired region in Brazil
+    "region": Biomes.geometry().convexHull() // If desired, change here to the name of the desired region in Brazil
 });
 
 ///// Input the Asset 'DESFORESTATION' mask asset exported from step 1.0  
-var inputImage_deforestation = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Deforestation_masks'); // change to the asset saved by you in the previous script
+var inputImage_deforestation = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1.0_Deforestation_masks'); // change to the asset saved by you in the previous script
 
 // Apply function 
 var result_deforestation = eeYears.map(function(year){
@@ -167,5 +167,5 @@ Export.image.toAsset({
         '.default': 'mode'
     },
     "maxPixels": 1e13,
-    "region": Bioma.geometry().convexHull() //If desired, change here to the name of the desired region in Brazil
+    "region": Biomes.geometry().convexHull() //If desired, change here to the name of the desired region in Brazil
 });

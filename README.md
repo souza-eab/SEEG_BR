@@ -6,7 +6,7 @@
 Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.org.br/)<br>
 
 
-# SEEG_BRA_LULUCF (Zimbres et al., 2022).
+# SEEG_BR 
 
   We present a method to spatially allocate all of the emissions and removals due to land conversion in Brazil at high spatial and temporal scales. The method presented here is based on the framework of the National Communications, considering the processes quantified, the equations, emission factors, carbon stocks, and annual increments, but improves on the spatial information over which all calculations are applied. 
 
@@ -15,13 +15,14 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 ## Workflow
    Understand steps and folders
 
-1. [Reclassification NV and NNV](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
+1. [1.0 Deforestation_and_regeneration_masks.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
 
-2. [General rule_map classification](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map)
+2. [2.0 Temporal_filter.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
+2.1 
 
-3. [Zonal classification](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/3-wetlands)
+3. [Zonal classification.py](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/3-wetlands)
 
-4. [Integration of maps](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+4. [Estimates](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
 
 ### How to use
@@ -38,3 +39,6 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 
 #### Reporting Issues
 For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <felipe.lenti@ipam.org.br> and/or <edriano.souza@ipam.org.br>.
+
+
+## Citing

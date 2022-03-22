@@ -1,6 +1,6 @@
 <div>
     <img src='./aux2/ipam_logo.jpg' height='auto' width='160' align='right'>
-  <h1>Cerrado biome</h1>
+  <h1>Three decades of greenhouse gas emissions and removals associated with land use change in Brazil </h1>
 </div>
 
 Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.org.br/)<br>
@@ -12,7 +12,7 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 </div>
 
 </div>
-## Understand steps and folders
+# Understand steps and folders
 
 
 
@@ -22,7 +22,7 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 </div>
 
 </div>
-### How to use
+# How to use
 1. [Create an account](https://signup.earthengine.google.com/) in Google Earth Engine plataform.
 
 2. [Install Python](https://www.python.org/downloads/) version 3.x.
@@ -36,6 +36,6 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 </div>
 
 </div>
-#### Contact
+# Contact
 For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <felipe.lenti@ipam.org.br> and/or <edriano.souza@ipam.org.br> 
 </div>

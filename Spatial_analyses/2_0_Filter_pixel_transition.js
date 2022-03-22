@@ -99,7 +99,7 @@ var Bioma = ee.FeatureCollection("users/SEEGMapBiomas/bioma_1milhao_uf2015_250mi
 
 // Specify spatial filter parameters
 var filterParams = [
-   {classValue: 1, maxSize: 5}, // o tamanho maximo que o mapbiomas está usando é 5, valor definido em reunião (kernel de 5 pixels)
+   {classValue: 1, maxSize: 5}, // the maximum size (pixel kernel) that mapbiomas is using is 5. therefore  value is default set (5 pixel kernel)
    {classValue: 0, maxSize: 5}
 ];
 
@@ -111,7 +111,7 @@ var anos = ['1990','1991','1992','1993','1994','1995','1996','1997','1998','1999
 var eeAnos = ee.List(anos);
 
 ///// Input the Asset 'REGENERATION' mask asset exported from step 1.0
-var inputImage_regen = ee.Image('projects/mapbiomas-workspace/SEEG/2021/Col9/regenSEEGc6'); // alterar para o asset salvo por vocês no script anterior
+var inputImage_regen = ee.Image('projects/mapbiomas-workspace/SEEG/2021/Col9/regenSEEGc6'); // change to the asset you saved in the previous script
 
 // Apply functions
 var result_regen = eeAnos.map(function(ano){

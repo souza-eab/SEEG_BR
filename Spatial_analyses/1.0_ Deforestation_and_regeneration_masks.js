@@ -160,7 +160,7 @@ Map.addLayer(MapBiomas_col6.select('classification_2013'), vis,"Mapbiomas_2013")
 // Exporting data
 Export.image.toAsset({
     "image": desm.unmask(0).uint8(),
-    "description": '1.0_Deforestation_masks,
+    "description": '1.0_Deforestation_masks',
     "assetId":dir_output + '1.0_Deforestation_masks', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {

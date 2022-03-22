@@ -155,5 +155,5 @@ Export.image.toAsset({
         '.default': 'mode'
     },
     "maxPixels": 1e13,
-    "region": Bioma.geometry().bounds() // If desired, change here to the name of the desired region
+    "region": Bioma.geometry().bounds() // If desired, change here to the name of the desired region in Brazil
 });

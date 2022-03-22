@@ -15,7 +15,7 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 ## Workflow
    Understand steps and folders
 
-1. [Classification NV and NNV](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
+1. [Reclassification NV and NNV] (https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
 
 2. [General rule_map classification](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map)
 

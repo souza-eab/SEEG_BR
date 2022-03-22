@@ -1,9 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-## SCRIPT TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0) 
-## For any issue/bug, please write to <edriano.souza@ipam.org.br>; <dhemerson.costa@ipam.org.br>; <barbara.zimbres@ipam.org.br> 
-## Developed by: IPAM, SEEG and OC
-## Citing: SEEG/Observatório do Clima and IPAM
 
 
 ## Set assets
@@ -21,6 +16,8 @@
 ### cd "NOME DA PASTA ONDE ESSE SCRIPT ESTA ARMAZENADO"
 ### python "NOME COM QUE ESSE SCRIPT ESTA SALVO".py
 
+
+
 import ee
 import os
 from pprint import pprint
@@ -32,12 +29,11 @@ def start(years):
 
     print(years)
 
-    #Aqui voce precisa chamar as regioes de interesse, em raster. Tem que estar como Asset no GEE tambem.
-    #O valor do raster eh o geocodigo do bioma segundo o IBGE.
+    # Set your region of interest in raster, or all Biomes_BR (IBGE, 2020) 
     biomas = ee.Image(
         'projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster')
 
-    #O valor do raster eh o geocodigo dos municipios segundo o IBGE.
+    # Set Cities_BR
     municipios = ee.Image(
         'projects/mapbiomas-workspace/AUXILIAR/municipios-2019-raster')
 
@@ -45,18 +41,18 @@ def start(years):
     #estados = ee.Image(
     #    'projects/mapbiomas-workspace/AUXILIAR/estados-2016-raster')
 
-    # Aqui eh o raster multi-banda das transicoes
+    # Set your Asset ImagemCollection SEEG_Transicoes_2021_c6_stacked
     transitions = ee.Image(
         'projects/mapbiomas-workspace/SEEG/2021/Col9/SEEG_Transicoes_2021_c6_stacked')
     
-    # Aqui eh o raster multi-banda de areas protegidas, em que cada banda e o cumulativo das AP em cada ano
+    # Here is the multi-band raster of protected areas (PA), where each band is the cumulative of PA areas and units in each year
     apMask = ee.Image(
         'projects/mapbiomas-workspace/AUXILIAR/areas-protegidas-por-ano-2019/ap' + years[0]).unmask()
 
     biomasMunicip = biomas.multiply(10000000).add(municipios)
 
     geometry = biomas.geometry().bounds()
-    # a geometria aqui eh uma bounding box do Brasil. Criem uma bounding box do RS e insiram as coordenadas aqui.
+    # Create a bounding box do Brasil
     geometry = ee.Geometry.Polygon(
         [[[-74.34040691705002, 5.9630086351511690],
                 [-74.34040691705002, -34.09134700746099],
@@ -65,7 +61,7 @@ def start(years):
 
     pixelArea = ee.Image.pixelArea().divide(1000000)
 
-    #Essa funcao faz a soma das areas por regiao (zonal)
+    # Region Calculation: This function sums the areas per region
     def getPropertiesAp0(item):
 
         item = ee.Dictionary(item)
@@ -185,7 +181,7 @@ def start(years):
     task = ee.batch.Export.table.toDrive(
         collection=areas,
         description=name,
-        folder='SEEG_2021_GEE_v1', #Pasta no Google Drive para exportar a tabela
+        folder='SEEG_2021_GEE_v1', #Export to your Google Drive or other's path 
         fileNamePrefix=name,
         fileFormat="GeoJSON")           
 

@@ -15,7 +15,7 @@
 /* @. Set user parameters */// eg.
 
 // set directory for the output file
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2021/Col9/';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ var PostClassification = function(image) {
 
 
 // Feature of the region of interest, in this case, all biomes in Brazil
-var Bioma = ee.FeatureCollection("users/SEEGMapBiomas/bioma_1milhao_uf2015_250mil_IBGE_geo_v4_revisao_pampa_lagoas");
+var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 // Specify spatial filter parameters
 var filterParams = [
@@ -105,19 +105,19 @@ var filterParams = [
 
 
 // From here on, we work from 1990, which is the initial period of official data presented by the National Inventory (QCN,2020) 
-var anos = ['1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
+var years = ['1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
 
 // Creat list years
-var eeAnos = ee.List(anos);
+var eeYears = ee.List(years);
 
 ///// Input the Asset 'REGENERATION' mask asset exported from step 1.0
-var inputImage_regen = ee.Image('projects/mapbiomas-workspace/SEEG/2021/Col9/regenSEEGc6'); // change to the asset you saved in the previous script
+var inputImage_regen = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1.0_Regeneration_masks'); // change to the asset you saved in the previous script
 
 // Apply functions
-var result_regen = eeAnos.map(function(ano){
+var result_regen = eeYears.map(function(year){
   filterParams;
   PostClassification;
-    var image = inputImage_regen.select(ee.String('regen').cat(ee.String(ano)));
+    var image = inputImage_regen.select(ee.String('regen').cat(ee.String(year)));
     var pc = new PostClassification(image);
     var filtered2 = pc.spatialFilter(filterParams); 
     return(filtered2.int8());
@@ -130,8 +130,8 @@ print(result_regen);
 // Export 
 Export.image.toAsset({
     "image": result_regen.uint8(),
-    "description": 'regenSEEGc6_filter_certo',
-    "assetId": 'projects/mapbiomas-workspace/SEEG/2021/Col9/regen_SEEGc6_filter', // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
+    "description": '2.0_Temporal_filter_regeneration',
+    "assetId": dir_output + '2.0_Temporal_filter_regeneration', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'
@@ -141,13 +141,13 @@ Export.image.toAsset({
 });
 
 ///// Input the Asset 'DESFORESTATION' mask asset exported from step 1.0  
-var inputImage_desm = ee.Image('projects/mapbiomas-workspace/SEEG/2021/Col9/desmSEEGc6'); // change to the asset saved by you in the previous script
+var inputImage_desm = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1.0_Deforestation_masks'); // change to the asset saved by you in the previous script
 
 // Apply function 
-var result_desm = eeAnos.map(function(ano){
+var result_desm = eeYears.map(function(year){
   filterParams;
   PostClassification;
-    var image = inputImage_desm.select(ee.String('desm').cat(ee.String(ano)));
+    var image = inputImage_desm.select(ee.String('desm').cat(ee.String(year)));
     var pc = new PostClassification(image);
     var filtered2 = pc.spatialFilter(filterParams); 
     return(filtered2.int8());
@@ -161,7 +161,7 @@ print(result_desm);
 Export.image.toAsset({
     "image": result_desm.uint8(),
     "description": 'desmSEEGc6_filter_certo',
-    "assetId": 'projects/mapbiomas-workspace/SEEG/2021/Col9/desmSEEGc6_filter', // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
+    "assetId": dir_output + '2.0_Temporal_filter_deforestation', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

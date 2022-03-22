@@ -1,6 +1,6 @@
 <div>
     <img src='./aux2/ipam_logo.jpg' height='auto' width='160' align='right'>
-  <h1>  Three decades of greenhouse gas emissions and removals associated with land use change in Brazil </h1>
+  <h1>  *Three decades of greenhouse gas emissions and removals associated with land use change in Brazil* </h1>
 </div>
 
 Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.org.br/)<br>

@@ -325,8 +325,8 @@ Map.addLayer(regen.select('regen2020'), {'min': 0,'max': 1, 'palette': 'blue'},'
 
 Export.image.toAsset({
     "image": regen.unmask(0).uint8(),
-    "description": '1.0_Deforestation_masks',
-    "assetId": dir_output + '1.0_Deforestation_masks', // Enter the address and name eg. ' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
+    "description": '1.0_Regeneration_masks',
+    "assetId": dir_output + '1.0_Regeneration_masks', // Enter the address and name eg. ' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

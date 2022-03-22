@@ -5,24 +5,21 @@
 
 Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.org.br/)<br>
 
-</div>
+
 # SEEG_BRA_LULUCF (Zimbres et al., 2022).
 
   We present a method to spatially allocate all of the emissions and removals due to land conversion in Brazil at high spatial and temporal scales. The method presented here is based on the framework of the National Communications, considering the processes quantified, the equations, emission factors, carbon stocks, and annual increments, but improves on the spatial information over which all calculations are applied. 
-</div>
-
-</div>
-# Understand steps and folders
 
 
+
+## Understand steps and folders
 
 
 
 
-</div>
 
-</div>
-# How to use
+
+### How to use
 1. [Create an account](https://signup.earthengine.google.com/) in Google Earth Engine plataform.
 
 2. [Install Python](https://www.python.org/downloads/) version 3.x.
@@ -33,9 +30,6 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 
 5. Download or clone this repository to your local workspace.
 
-</div>
 
-</div>
-# Contact
-For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <felipe.lenti@ipam.org.br> and/or <edriano.souza@ipam.org.br> 
-</div>
+#### Contact
+For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <felipe.lenti@ipam.org.br> and/or <edriano.souza@ipam.org.br>.

@@ -15,12 +15,12 @@
 /* @. Set user parameters */// eg.
 
 // set directory for the output file
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2021/Col9/';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Feature of the region of interest, in this case, all biomes in Brazil
-var assetRegions = "projects/mapbiomas-workspace/AUXILIAR/biomas-2019";
+var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
 //List years

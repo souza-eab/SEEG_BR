@@ -157,7 +157,7 @@ var  baseMap = ee.Image(0).clip(regions)
   var mapBiomas89UsoMask = mapbiomas.select("classification_1989").remap([9, 15, 20, 23, 24, 25, 30, 31,  39, 40, 41, 46, 47, 48], 
                                                                          [1,  1,  1,  1,  1,  1,  1,  1,   1,  1,  1,  1,  1,  1], 0);
 // 
-// Joint                                                    
+// Merge                                                    
   var mapBiomas89Mask = mapBiomas89vegMask.where(mapBiomas89vegMask.eq(0), mapBiomas89UsoMask);
 
 // Fills in the unstable areas with the use masks and native vegetation in 1989

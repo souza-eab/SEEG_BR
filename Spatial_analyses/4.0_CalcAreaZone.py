@@ -1,6 +1,4 @@
 
-
-
 ## Set assets
 
 ## SCRIPT TO GENERATE SUM AND EXPORT IN AREAS OF TRANSITION ANNUAL TO ACCORDING OF INTERESS REGION
@@ -66,11 +64,11 @@ def start(years):
 
         item = ee.Dictionary(item)
 
-        year = ee.Dictionary(ee.List(item.get('groups')).get(0)).get('ANO')
+        year = ee.Dictionary(ee.List(item.get('groups')).get(0)).get('YEAR')
 
         feature = ee.Feature(None) \
             .set("featureid", ee.String(item.get('featureid'))) \
-            .set("ANO", year) \
+            .set("YEAR", year) \
             .set("AP", 0) \
             .set("data", [])
 
@@ -80,12 +78,12 @@ def start(years):
         def temp(obj, feature):
             obj = ee.Dictionary(obj)
 
-            classe = ee.String(ee.Number(obj.get('CLASSE')).toUint32())
+            class = ee.String(ee.Number(obj.get('TYPE')).toUint32())
 
             area = obj.get('sum')
 
             datalist = ee.List(ee.Feature(feature).get(
-                'data')).add([classe, area])
+                'data')).add([class, area])
 
             return ee.Feature(feature).set('data', datalist)
 
@@ -99,11 +97,11 @@ def start(years):
 
         item = ee.Dictionary(item)
 
-        year = ee.Dictionary(ee.List(item.get('groups')).get(0)).get('ANO')
+        year = ee.Dictionary(ee.List(item.get('groups')).get(0)).get('YEAR')
 
         feature = ee.Feature(None) \
             .set("featureid", ee.String(item.get('featureid'))) \
-            .set("ANO", year) \
+            .set("YEAR", year) \
             .set("AP", 1) \
             .set("data", [])
 
@@ -113,12 +111,12 @@ def start(years):
         def temp(obj, feature):
             obj = ee.Dictionary(obj)
 
-            classe = ee.String(ee.Number(obj.get('CLASSE')).toUint32())
+            class = ee.String(ee.Number(obj.get('TYPE')).toUint32())
 
             area = obj.get('sum')
 
             datalist = ee.List(ee.Feature(feature).get(
-                'data')).add([classe, area])
+                'data')).add([class, area])
 
             return ee.Feature(feature).set('data', datalist)
 
@@ -130,7 +128,7 @@ def start(years):
 
     def calculateArea(image, regions, feature, ap, year1, year2, apClass):
 
-        reducer = ee.Reducer.sum().group(1, 'CLASSE').group(1, 'ANO').group(1, 'featureid')
+        reducer = ee.Reducer.sum().group(1, 'TYPE').group(1, 'YEAR').group(1, 'featureid')
 
         areas = pixelArea.addBands(regions).addBands(ee.Image((year1 * 10000) + year2)).addBands(image) \
             .mask(ap.eq(apClass))\
@@ -168,15 +166,6 @@ def start(years):
     areasAp1 = ee.FeatureCollection(areasAp1).flatten()
 
     areas = areasAp0.merge(areasAp1)
-
-    #Export
-    name = "seeg-collection-6-transicao-biomas-municipios-" + \
-        years[0] + '-' + years[1]
-
-    #completeName = os.path.join('SEEG', file_name)
-    #file = open(completeName +'.GeoJSON', 'w')
-    #file.write(str(areas))
-    #file.close()
 
     task = ee.batch.Export.table.toDrive(
         collection=areas,
@@ -217,7 +206,7 @@ periods = [
     ["2016", "2017"],
     ["2017","2018"],
     ["2018","2019"],
-    ["2019","2020","2021"]
+    ["2019","2020"]
 ]
 
 for period in periods:

@@ -130,8 +130,8 @@ print(result_regeneration);
 // Export 
 Export.image.toAsset({
     "image": result_regeneration.uint8(),
-    "description": '2_0_Temporal_filter_regeneration',
-    "assetId": dir_output + '2_0_Temporal_filter_regeneration', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
+    "description": '1_1_Temporal_filter_regeneration',
+    "assetId": dir_output + '1_1_Temporal_filter_regeneration', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'
@@ -160,8 +160,8 @@ print(result_deforestation);
 // Export
 Export.image.toAsset({
     "image": result_deforestation.uint8(),
-    "description": '2_0_Temporal_filter_deforestation',
-    "assetId": dir_output + '2_0_Temporal_filter_deforestation', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
+    "description": '1_1_Temporal_filter_deforestation',
+    "assetId": dir_output + '1_1_Temporal_filter_deforestation', // Enter the address and name eg.' projects/ee-seeg-brazil/assets/collection_9/v1/' of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

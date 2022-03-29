@@ -403,8 +403,8 @@ var SEEGmap1_1 = ee.Image(mapsSEEG1_1.get(31));
 print('SEEGmap1_1 Maps_pos_desmate*regen', SEEGmap1_1 );
 
 ///////////////////////////////////
-//Exportar os mapas de cobertura estabilizados como uma Image Collection
-//(é necessário criar uma Image Collection vazia no Asset para armazenar cada imagem que for iterativamente sendo exportada)
+//Export the stabilized coverage maps as an Image Collection
+//(you need to create an empty Image Collection in the Asset to store each image that is iteratively 
 
 for (var i = 0; i < 32; i++){ //MAIS UM ANO
   var bandName = SEEGmap1_1.bandNames().get(i);

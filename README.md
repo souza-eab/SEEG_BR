@@ -17,13 +17,13 @@ We present a method to spatially allocate all of the emissions and removals due 
    
    Folders 📂 are organized by key-steps  ✨ and contains a set of codes {} following the SEEG_BR_Munipality classification schema;
 
-1. ✨ Spatial_analyses [GEE.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
+1. ✨ Spatial_analyses [GEE.js](https://github.com/souza-eab/SEEG_BR/tree/main/1._Spatial_analyses)
 
-2. ✨ Estimates.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+2. ✨ Estimates.R [Estimates.R](https://github.com/souza-eab/SEEG_BR/tree/main/2._Estimates)
 
-3. 📂📊 Plots.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+3. 📂📊 Plots.R [Estimates.R](https://github.com/souza-eab/SEEG_BR/tree/main/3._Data_analyses)
 
-   📂 Aux_ [Folder auxiliaries](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+   📂 Aux_ [Folder auxiliaries](https://github.com/souza-eab/SEEG_BR/tree/main/aux)
 
 ### How to use
 1. [Create an account](https://signup.earthengine.google.com/) in Google Earth Engine plataform.

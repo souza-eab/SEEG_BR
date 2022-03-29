@@ -37,12 +37,24 @@ Generating and stabilize annual coverage basemaps from a MapBiomas collection (e
 
 
 ```javascript
-var Def_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Deforestation_masks');
-Map.addLayer(Def_filter.select('deforestation2020').selfMask(), {'min': 0,'max': 1, 'palette': '#FFFFFF,#FF0000'},"Deforestation_2020");
+// Acessing Asset
+var Mask_stable = ee.ImageCollection('projects/ee-seeg-brazil/assets/collection_9/v1/2_1_Mask_stable')
+  .toBands()
+  .aside(print);
+  
+// Palettes
+var palettes = require('users/mapbiomas/modules:Palettes.js');
+var vis = {
+    'min': 0,
+    'max': 49,
+    'palette': palettes.get('classification6')
+    };
 
-var Reg_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Regeneration_masks');
-Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 1, 'palette': '#FFFFFF,#00FF00'},"Regeneration_2020") 
+//Map Add Layer   
+Map.addLayer(Mask_stable.select(['SEEG_c9_v1_2020_classification_2020']).clip(roi), vis, '2_1_Mask_stable_ROI');
+Map.addLayer(Mask_stable.select(['SEEG_c9_v1_2020_classification_2020']).clip(BiomesBR), vis, '2_1_Mask_stable_Biomes_BR',false);
+  
 ```
-[Link to script](https://code.earthengine.google.com/2168f9616bebe4834b4dd9fe7f328c43)
+[Link to script](https://code.earthengine.google.com/d08ff95922dfe6689e1bc221b0c7f0c5)
 
 

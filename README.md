@@ -15,7 +15,7 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 ## Workflow
    
-   Understand steps ✨ and folders
+   Understand steps ✨ and folders 📂
 
  ✨ Spatial_analyses [GEE.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
 

@@ -15,8 +15,8 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 ## Workflow
    
-   Understanding: Folders 📂 are organized by key-steps  ✨ and contains a set of codes following the SEEG_BR_Munipality classification schema;
-steps and
+   Folders 📂 are organized by key-steps  ✨ and contains a set of codes {} following the SEEG_BR_Munipality classification schema;
+
 1. ✨ Spatial_analyses [GEE.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
 
 2. ✨ Estimates.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
@@ -38,7 +38,7 @@ steps and
 
 
 #### Reporting Issues
-For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <felipe.lenti@ipam.org.br> and/or <edriano.souza@ipam.org.br>.
+For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <edriano.souza@ipam.org.br> and/or <felipe.lenti@ipam.org.br> 
 
 
 ## Citing

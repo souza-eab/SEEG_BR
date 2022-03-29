@@ -33,8 +33,7 @@ Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 
 
 # 2.0 Masks_stable.js
 
-Generating and stabilize annual coverage basemaps from a MapBiomas collection (eg. col 6.0)
-
+Masks stable annual coverage basemaps from a MapBiomas collection (eg. col 6.0)
 
 ```javascript
 // Acessing Asset

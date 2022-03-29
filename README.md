@@ -17,21 +17,13 @@ We present a method to spatially allocate all of the emissions and removals due 
    
    Understand steps and folders
 
- 1. [Deforestation_and_regeneration_masks.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
+ Spatial_analyses [GEE.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
 
-    1.1 [Temporal_filter.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
-    
-2. [Masks Stable.js]
+ Estimates.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
-3. [Transitions.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
- 
-    3.1 [Temporal_filter.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
+ Plots.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
-
-3. [Zonal classification.py](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/3-wetlands)
-
-4. [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
-
+ Aux_ [Folder input](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
 ### How to use
 1. [Create an account](https://signup.earthengine.google.com/) in Google Earth Engine plataform.

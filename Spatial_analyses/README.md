@@ -23,7 +23,7 @@ The second step is the application of a temporal filter in every pixel, of at le
 
 <div>
     <img src='aux/Zimbres_et_al_2022_SEEG_BR_Figures.jpg' height='auto' width='160' align='center'>
-  <h1> Temporal rules for the generation of the deforestation mask (natural vegetation loss) and the regeneration mask (natural vegetation gain) for each year of the MapBiomas time series. </h1>
+  <h1>  </h1>
 </div>
 
 

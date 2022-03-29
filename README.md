@@ -23,7 +23,7 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 3. 📂📊 Plots.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
-   📂 Aux_ [Folder input](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+   📂 Aux_ [Folder auxiliaries](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
 ### How to use
 1. [Create an account](https://signup.earthengine.google.com/) in Google Earth Engine plataform.

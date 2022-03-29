@@ -21,7 +21,11 @@ We present a method to spatially allocate all of the emissions and removals due 
 
     1.1 [Temporal_filter.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
     
-2. [Transitions.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
+2. [Masks Stable.js]
+
+3. [Transitions.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
+ 
+    3.1 [Temporal_filter.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/2-general-map);
 
 
 3. [Zonal classification.py](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/3-wetlands)

@@ -22,7 +22,7 @@ For the calculations of SEEG Land Use Change Sector is to classify yearly transi
 The second step is the application of a temporal filter in every pixel, of at least six years (three years before the transition, the year of transition, and two years after the transition). This filtering identifies pixels with a classification over time consistent with the expected transition. For instance, a pixel is identified as deforestation only when the transition from natural vegetation to anthropic land use is preceded by three years of classification as stable natural vegetation, followed by three years (including the transition year) as anthropic land use. To minimize the uncertainty associated with the years at the beginning and the end of the time series, the filtering rules consider more years before or after the given year, depending on the availability of maps in the time series. By making these criteria more flexible at both ends of the time series, this approach allows us to generate estimates for the period of 1986 to 2019. 
 
 <div align = 'center'>
-<img src='aux/Zimbres_et_al_2022_SEEG_BR_Figures.jpg' height='auto' width='160'/>
+<img src='https://github.com/souza-eab/SEEG_BR/blob/0a5d6297fd921315be95dc781be77c4e9848cc09/aux/Zimbres_et_al_2022_SEEG_BR_Figures.jpg' height='auto' width='160'/>
 </div>
 
 

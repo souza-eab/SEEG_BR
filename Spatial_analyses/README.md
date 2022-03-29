@@ -22,12 +22,12 @@ For the calculations of SEEG Land Use Change Sector is to classify yearly transi
 
 
 ```javascript
-var Def_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_deforestation');
+var Def_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Deforestation_masks');
 Map.addLayer(Def_filter.select('deforestation2020').selfMask(), {'min': 0,'max': 1, 'palette': '#FFFFFF,#FF0000'},"Deforestation_2020");
 
-var Reg_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_regeneration');
+var Reg_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Regeneration_masks');
 Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 1, 'palette': '#FFFFFF,#00FF00'},"Regeneration_2020") 
 ```
-[Link to script](https://code.earthengine.google.com/9d7c0ec79fbde03ab4f9b69563882708)
+[Link to script](https://code.earthengine.google.com/2168f9616bebe4834b4dd9fe7f328c43)
 
 

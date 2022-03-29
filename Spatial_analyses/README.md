@@ -1,6 +1,6 @@
 # 1. Deforestation_and_Regeneretaion.js
 
-The first step for the calculations of SEEG Land Use Change Sector is to classify yearly transitions as ‘deforestation’ or ‘regeneration’ of the natural vegetation. Building these masks involves, first, the reclassification of all land cover classes from the MapBiomas time series into two classes: natural vegetation and anthropic land use. Based on the MapBiomas collection 6.0 [legend] (https://mapbiomas-br-site.s3.amazonaws.com/downloads/Colecction%206/Cod_Class_legenda_Col6_MapBiomas_BR.pdf), these two classes include:
+The first step for the calculations of SEEG Land Use Change Sector is to classify yearly transitions as ‘deforestation’ or ‘regeneration’ of the natural vegetation. Building these masks involves, first, the reclassification of all land cover classes from the MapBiomas time series into two classes: natural vegetation and anthropic land use. Based on the MapBiomas collection 6.0 [legend](https://mapbiomas-br-site.s3.amazonaws.com/downloads/Colecction%206/Cod_Class_legenda_Col6_MapBiomas_BR.pdf), these two classes include:
 
 **Natural Vegetation:** Forest Formation (3), Savanna Formation (4), Mangrove (5), Wetland (11), Grassland Formation (12), Other non Forest Formation (13), and Wooded Restinga (49).
 

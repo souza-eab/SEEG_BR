@@ -1,5 +1,5 @@
 <div>
-    <img src='./aux2/ipam_logo.jpg' height='auto' width='160' align='right'>
+    <img src='./aux/ipam_logo.jpg' height='auto' width='160' align='right'>
   <h1>  Three decades of GHG emissions and removals associated with land use change in Brazil </h1>
 </div>
 

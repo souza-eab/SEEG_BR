@@ -64,3 +64,41 @@ Map.addLayer(Mask_stable.select(['SEEG_c9_v1_2020_classification_2020']).clip(Bi
 [Link to script](https://code.earthengine.google.com/d08ff95922dfe6689e1bc221b0c7f0c5)
 
 
+# 3.0 Transitions_maps.js.js
+
+Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0)
+
+```javascript
+
+// Add Asset  3.0 Transitions_maps
+var listImages = ee.data.listAssets('projects/ee-seeg-brazil/assets/collection_9/v1/3_0_Transitions_maps').assets;
+
+var image = ee.Image().select();
+
+listImages.forEach(function(obj){
+  image = image.addBands(obj.id);
+});
+
+print(image)
+
+var palettes = require('users/mapbiomas/modules:Palettes.js');
+var vis = {
+    'min': 0,
+    'max': 49,
+    'palette': palettes.get('classification6'),
+    bands:['transicao_2019_2020']
+    };
+
+
+Map.addLayer(image,vis,'original',false);
+
+var image_2 = image.divide(10000).int();
+var image_3 = image.divide(100).int().mod(100);
+var image_4 = image.mod(100);
+
+Map.addLayer(image_2.clip(roi),vis,'img-2 .divide(10000).int()-ROI2',false);
+Map.addLayer(image_3.clip(BiomesBR),vis,'img-3 .divide(100).int().mod(100)-ROI3',false);
+Map.addLayer(image_4.clip(roi),vis,'img-4 .mod(100)-Roi4',false);
+```
+[Link to script](https://code.earthengine.google.com/a49a06b9bcc0723a198d536970fbc64b)
+

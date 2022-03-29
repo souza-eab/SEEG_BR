@@ -7,7 +7,7 @@ Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.
 
 
 
-## SEEG_BR 
+## About SEEG_BR 
 
 We present a method to spatially allocate all of the emissions and removals due to land conversion in Brazil at high spatial and temporal scales. The method presented here is based on the framework of the National Communications, considering the processes quantified, the equations, emission factors, carbon stocks, and annual increments, but improves on the spatial information over which all calculations are applied. 
 
@@ -15,15 +15,15 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 ## Workflow
    
-   Understand steps ✨ and folders 📂
+   Understanding: Folders 📂 are organized by key-steps  ✨ and contains a set of codes following the SEEG_BR_Munipality classification schema;
+steps and
+1. ✨ Spatial_analyses [GEE.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
 
- ✨ Spatial_analyses [GEE.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
+2. ✨ Estimates.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
- ✨ Estimates.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+3. 📂📊 Plots.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
- 📂📊 Plots.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
-
- 📂 Aux_ [Folder input](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+4. 📂 Aux_ [Folder input](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
 ### How to use
 1. [Create an account](https://signup.earthengine.google.com/) in Google Earth Engine plataform.

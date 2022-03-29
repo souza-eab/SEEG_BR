@@ -28,6 +28,6 @@ Map.addLayer(Def_filter.select('deforestation2020').selfMask(), {'min': 0,'max':
 var Reg_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_regeneration');
 Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 1, 'palette': '#FFFFFF,#00FF00'},"Regeneration_2020") 
 ```
-[Link to script](https://code.earthengine.google.com/4051918e07c956ad8524957dff747d83)
+[Link to script](https://code.earthengine.google.com/9d7c0ec79fbde03ab4f9b69563882708)
 
 

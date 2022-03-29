@@ -1,4 +1,4 @@
-#1. Deforestation and Regenereration
+# 01_Deforestation_and_Regeneretaion.js
 
 The first step for the calculations of SEEG Land Use Change Sector is to classify yearly transitions as ‘deforestation’ or ‘regeneration’ of the natural vegetation. Building these masks involves, first, the reclassification of all land cover classes from the MapBiomas time series into two classes: natural vegetation and anthropic land use. Based on the MapBiomas collection 6.0 legend <>, these two classes include:
 
@@ -6,8 +6,6 @@ The first step for the calculations of SEEG Land Use Change Sector is to classif
 
 **Anthropic Land Use:** Forest Plantation (9), Pasture (15), Sugar Cane (20), Mosaic of Agriculture and Pasture (21), Urban Infrastructure (24), Other non Vegetated Areas (25), Mining (30), Aquaculture (31), Perennial Crop (36), Soybean (39), and Other Temporary Crops (41). Pixel = (1).
 
-## 01_Deforestation_and_Regeneretaion.js
-Compute an area of interest (AOI) based on height to the nearest drainage (HAND).
 ```javascript
 var Def = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Deforestation_masks');
 Map.addLayer(Def.select('deforestation2020').selfMask().clip(BiomesBR), {'min': 0,'max': 1, 'palette': '#FFFFFF,#FF0000'},"Deforestation_2020");

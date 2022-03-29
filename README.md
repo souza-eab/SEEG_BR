@@ -15,15 +15,15 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 ## Workflow
    
-   Understand steps and folders
+   Understand steps ✨ and folders
 
- Spatial_analyses [GEE.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
+ ✨ Spatial_analyses [GEE.js](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/1-feature-space)
 
- Estimates.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+ ✨ Estimates.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
- Plots.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+ 📂📊 Plots.R [Estimates.R](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
- Aux_ [Folder input](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
+ 📂 Aux_ [Folder input](https://github.com/musx/mapbiomas-cerrado-col6/tree/main/4-integrate-map)
 
 ### How to use
 1. [Create an account](https://signup.earthengine.google.com/) in Google Earth Engine plataform.

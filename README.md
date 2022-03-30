@@ -21,7 +21,7 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 2. ✨ Estimates.R [Estimates.R](https://github.com/souza-eab/SEEG_BR/tree/main/2._Estimates)
 
-3. 📂📊 Plots.R [Estimates.R](https://github.com/souza-eab/SEEG_BR/tree/main/3._Data_analyses)
+3. 📂📊:earth_americas::world_map: Plots.R [Data_analyses.R](https://github.com/souza-eab/SEEG_BR/tree/main/3._Data_analyses)
 
    📂 Aux_ [Folder auxiliaries](https://github.com/souza-eab/SEEG_BR/tree/main/aux)
 

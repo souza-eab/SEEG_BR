@@ -17,7 +17,7 @@ Map.addLayer(Reg.select('regeneration2020').selfMask(), {'min': 0,'max': 1, 'pal
 
 For the calculations of SEEG Land Use Change Sector is to classify yearly transitions as ‘deforestation’ or ‘regeneration’ of the natural vegetation. With the generation of these spatial masks, spurious transitions, resulting from errors of classification, are removed. 
 
-# 1.1 [Temporal_filter.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/1.1_Temporal_filter.js)
+# 1.1 [Temporal filter.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/1.1_Temporal_filter.js)
 
 The second step is the application of a temporal filter in every pixel, of at least six years (three years before the transition, the year of transition, and two years after the transition). This filtering identifies pixels with a classification over time consistent with the expected transition. For instance, a pixel is identified as deforestation only when the transition from natural vegetation to anthropic land use is preceded by three years of classification as stable natural vegetation, followed by three years (including the transition year) as anthropic land use. To minimize the uncertainty associated with the years at the beginning and the end of the time series, the filtering rules consider more years before or after the given year, depending on the availability of maps in the time series. By making these criteria more flexible at both ends of the time series, this approach allows us to generate estimates for the period of 1986 to 2019. 
 
@@ -38,7 +38,7 @@ Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 
 [Link to script](https://code.earthengine.google.com/2168f9616bebe4834b4dd9fe7f328c43)
 
 
-# 2.0 [Masks_stable.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Masks_stable.js)
+# 2.0 [Masks stable.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Masks_stable.js)
 
 Masks stable annual coverage basemaps from a MapBiomas collection (eg. col 6.0)
 The next step for the generation of consistent transition maps was the stabilizing of land use changes observed throughout the analyzed period within the deforestation and regeneration masks. This stabilizing analysis, applied to all years of the time series, is shown in Figure 3 and includes the following steps <>:

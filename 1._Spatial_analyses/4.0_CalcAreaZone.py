@@ -1,4 +1,3 @@
-
 ## Set assets
 
 ## SCRIPT TO GENERATE SUM AND EXPORT IN AREAS OF TRANSITION ANNUAL TO ACCORDING OF INTERESS REGION
@@ -29,11 +28,11 @@ def start(years):
 
     # Set your region of interest in raster, or all Biomes_BR (IBGE, 2020) 
     biomas = ee.Image(
-        'projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster')
+        'projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR_tif')
 
     # Set Cities_BR
     municipios = ee.Image(
-        'projects/mapbiomas-workspace/AUXILIAR/municipios-2019-raster')
+        'projects/ee-seeg-brazil/assets/collection_9/v1/mun_BR')
 
     #O valor do raster eh o geocodigo dos estados segundo o IBGE.
     #estados = ee.Image(
@@ -41,7 +40,7 @@ def start(years):
 
     # Set your Asset ImagemCollection SEEG_Transicoes_2021_c6_stacked
     transitions = ee.Image(
-        'projects/mapbiomas-workspace/SEEG/2021/Col9/SEEG_Transicoes_2021_c6_stacked')
+        'projects/ee-seeg-brazil/assets/collection_9/v1/3_1_SEEG_Transitions_stacked')
     
     # Here is the multi-band raster of protected areas (PA), where each band is the cumulative of PA areas and units in each year
     apMask = ee.Image(
@@ -64,11 +63,11 @@ def start(years):
 
         item = ee.Dictionary(item)
 
-        year = ee.Dictionary(ee.List(item.get('groups')).get(0)).get('YEAR')
+        year = ee.Dictionary(ee.List(item.get('groups')).get(0)).get('ANO')
 
         feature = ee.Feature(None) \
             .set("featureid", ee.String(item.get('featureid'))) \
-            .set("YEAR", year) \
+            .set("ANO", year) \
             .set("AP", 0) \
             .set("data", [])
 
@@ -78,12 +77,12 @@ def start(years):
         def temp(obj, feature):
             obj = ee.Dictionary(obj)
 
-            class = ee.String(ee.Number(obj.get('TYPE')).toUint32())
+            classe = ee.String(ee.Number(obj.get('CLASSE')).toUint32())
 
             area = obj.get('sum')
 
             datalist = ee.List(ee.Feature(feature).get(
-                'data')).add([class, area])
+                'data')).add([classe, area])
 
             return ee.Feature(feature).set('data', datalist)
 
@@ -97,11 +96,11 @@ def start(years):
 
         item = ee.Dictionary(item)
 
-        year = ee.Dictionary(ee.List(item.get('groups')).get(0)).get('YEAR')
+        year = ee.Dictionary(ee.List(item.get('groups')).get(0)).get('ANO')
 
         feature = ee.Feature(None) \
             .set("featureid", ee.String(item.get('featureid'))) \
-            .set("YEAR", year) \
+            .set("ANO", year) \
             .set("AP", 1) \
             .set("data", [])
 
@@ -111,12 +110,12 @@ def start(years):
         def temp(obj, feature):
             obj = ee.Dictionary(obj)
 
-            class = ee.String(ee.Number(obj.get('TYPE')).toUint32())
+            classe = ee.String(ee.Number(obj.get('CLASSE')).toUint32())
 
             area = obj.get('sum')
 
             datalist = ee.List(ee.Feature(feature).get(
-                'data')).add([class, area])
+                'data')).add([classe, area])
 
             return ee.Feature(feature).set('data', datalist)
 
@@ -128,7 +127,7 @@ def start(years):
 
     def calculateArea(image, regions, feature, ap, year1, year2, apClass):
 
-        reducer = ee.Reducer.sum().group(1, 'TYPE').group(1, 'YEAR').group(1, 'featureid')
+        reducer = ee.Reducer.sum().group(1, 'CLASSE').group(1, 'ANO').group(1, 'featureid')
 
         areas = pixelArea.addBands(regions).addBands(ee.Image((year1 * 10000) + year2)).addBands(image) \
             .mask(ap.eq(apClass))\
@@ -167,10 +166,13 @@ def start(years):
 
     areas = areasAp0.merge(areasAp1)
 
+    name = "SEEG_BR_c9_v1_"+ \
+        years[0]+'-'+ years [1]
+
     task = ee.batch.Export.table.toDrive(
         collection=areas,
         description=name,
-        folder='SEEG_2021_GEE_v1', #Export to your Google Drive or other's path 
+        folder='SEEG_c9_v1', #Export to your Google Drive or other's path 
         fileNamePrefix=name,
         fileFormat="GeoJSON")           
 

@@ -28,7 +28,7 @@ The second step is the application of a temporal filter in every pixel, of at le
 </div>
 
 ```javascript
-Temporal rules for the generation of the deforestation mask (natural vegetation loss) and the regeneration mask (natural vegetation gain) for each year of the MapBiomas time series. 
+// Temporal rules for the generation of the deforestation mask (natural vegetation loss) and the regeneration mask (natural vegetation gain) for each year of the MapBiomas time series. 
 ```
 ```javascript
 var Def_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Deforestation_masks');

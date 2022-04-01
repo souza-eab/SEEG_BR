@@ -4,11 +4,9 @@
 
 </div>    
 # About SEEG_BR 
-
-</div>
 We present a method to spatially allocate all of the emissions and removals due to land conversion in Brazil at high spatial and temporal scales. The method presented here is based on the framework of the National Communications, considering the processes quantified, the equations, emission factors, carbon stocks, and annual increments, but improves on the spatial information over which all calculations are applied. 
-
 </div>
+
 ## Workflow
    
    Folders 📂 are organized by key-steps  ✨ and contain a set of codes {} following the SEEG_BR_Munipality classification scheme:
@@ -21,7 +19,6 @@ We present a method to spatially allocate all of the emissions and removals due 
 
    📂 Aux_ [Folder auxiliaries](https://github.com/souza-eab/SEEG_BR/tree/main/aux)
 
-</div>
 ### How to use
 1. [Create an account](https://signup.earthengine.google.com/) in the Google Earth Engine plataform.
 
@@ -33,11 +30,10 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 5. Download or clone this repository to your local workspace.
 
-</div>
 #### Reporting Issues
 For clarification or an issue/bug report, please write to <barbara.zimbres@ipam.org.br> and/or <edriano.souza@ipam.org.br> 
 
-</div>
+
 ## Citing
 
 ## Develope by 

@@ -29,8 +29,7 @@ The second step is the application of a temporal filter in every pixel, of at le
 
 ```javascript
 // Temporal rules for the generation of the deforestation mask (natural vegetation loss) and the regeneration mask (natural vegetation gain) for each year of the MapBiomas time series. 
-```
-```javascript
+
 var Def_filter = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Deforestation_masks');
 Map.addLayer(Def_filter.select('deforestation2020').selfMask(), {'min': 0,'max': 1, 'palette': '#FFFFFF,#FF0000'},"Deforestation_filter_2020");
 
@@ -40,10 +39,16 @@ Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 
 [Link to script](https://code.earthengine.google.com/2168f9616bebe4834b4dd9fe7f328c43)
 
 
-# 2.0 [Masks stable.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Masks_stable.js)
+# 2.0 [Stabilized cover.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Masks_stable.js)
 
-Masks stable annual coverage basemaps from a MapBiomas collection (currently, col 6.0)
-The next step for the generation of consistent transition maps was the stabilizing of land use changes observed throughout the analyzed period within the deforestation and regeneration masks. This stabilizing analysis, applied to all years of the time series, is shown in Figure 3 and includes the following steps <>:
+This script stabilizes the base maps from a MapBiomas collection (currently, col 6.0), for the generation of consistent transitions of land use and cover observed throughout the analyzed period within the deforestation and regeneration masks. This stabilizing analysis, applied to all years of the time seriesincludes the following steps <>:
+(1) At the pixel level, frequency maps are generated, which count the number of years in which each pixel is classified as each given class;
+(2) A stable natural vegetation layer is created, where only the pixels that were classified as natural vegetation (or waterbodies) for over 95% of the time series are kept, and the most frequent class is allocated to the whole time series; 
+(3) An anthropic land use layer is created, where only the pixels that were classified as anthropic land use during 100% of the time series are kept, and the most frequent class is allocated to the whole time series; 
+(4) Outside of these stabilized land cover layers, the areas where transition is possible have their original MapBiomas classes returned, but only within the deforestation and regeneration masks; 
+(5) In these areas where transition within the masks is possible, the more frequent classes before and after the transition are allocated; 
+(6) In the areas within the regeneration mask, natural class codes are multiplied by 100, in order to indicate secondary vegetation from primary vegetation; 
+(7) Empty (unallocated) pixels after the previous step are indicative of an inconsistent and highly uncertain trajectory, and are left out of the final stabilized land cover maps.
 
 
 ```javascript

@@ -37,8 +37,9 @@ For clarification or an issue/bug report, please write to <barbara.zimbres@ipam.
 
 ## Citing
 
-## <div>
+## Develope by 
+<div>
     <img src='./aux/ipam_logo.jpg' height='auto' width='160' align='right'>
   <h1> </h1>
 </div>
-Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.org.br/)<br>
+[Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.org.br/)<br>

@@ -15,7 +15,7 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 ## Workflow
    
-   Folders 📂 are organized by key-steps  ✨ and contains a set of codes {} following the SEEG_BR_Munipality classification schema;
+   Folders 📂 are organized by key-steps  ✨ and contain a set of codes {} following the SEEG_BR_Munipality classification scheme:
 
 1. ✨ Spatial_analyses [GEE.js](https://github.com/souza-eab/SEEG_BR/tree/main/1._Spatial_analyses)
 
@@ -26,7 +26,7 @@ We present a method to spatially allocate all of the emissions and removals due 
    📂 Aux_ [Folder auxiliaries](https://github.com/souza-eab/SEEG_BR/tree/main/aux)
 
 ### How to use
-1. [Create an account](https://signup.earthengine.google.com/) in Google Earth Engine plataform.
+1. [Create an account](https://signup.earthengine.google.com/) in the Google Earth Engine plataform.
 
 2. [Install Python](https://www.python.org/downloads/) version 3.x.
 
@@ -38,7 +38,7 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 
 #### Reporting Issues
-For clarification or issue/bug report, please write to <barbara.zimbres@ipam.org.br>, <edriano.souza@ipam.org.br> and/or <felipe.lenti@ipam.org.br> 
+For clarification or an issue/bug report, please write to <barbara.zimbres@ipam.org.br> and/or <edriano.souza@ipam.org.br> 
 
 
 ## Citing

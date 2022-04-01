@@ -1,5 +1,5 @@
 <div>
-    <img src='.https://github.com/souza-eab/SEEG_BR/blob/8db3a2988496556f3b15e4aa26a0d9ddde082d4a/aux/seegbrasilhome__2_.png' height='auto' width='160' align='right'>
+    <img src='./aux/seegbrasilhome__2_.png' height='auto' width='160' align='right'>
   <h1>  Three decades of GHG emissions and removals associated with land use change in Brazil </h1>
 </div>
 

@@ -1,6 +1,6 @@
 # About
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+The generation of annual transitions, upon which equations and emission factors are applied, are the basis of the SEEG Land Use Change Sector. From SEEG collection 8 onwards, the methodology for the quantification of these transitions became spatially explicit, taking advantage of the land use and land cover time series available from the MapBiomas Project. In the current approach, the annual land cover maps are stabilized and filtered to consolidate the main transitions taking place in each year, and then the calculations based on stocks and increments presented in the Fourth National Communication are applied (MCTI, 2020). In SEEG 9, launched in 2021, maps from the MapBiomas collection 6 were used, covering the period from 1985 to 2020, which resulted in a period of 1990-2020 for the SEEG results, to match the beginning of the time series covered by the Fourth National Communication.
 
 # 1.0 [Deforestation and Regeneration masks.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/1.0_Deforestation_and_regeneration_masks.js)
 

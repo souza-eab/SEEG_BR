@@ -1,6 +1,6 @@
 ![Github](https://img.shields.io/badge/Github-0.0.1-green.svg)
 <div>
-    <img src='./aux/seegbrasilhome__2_.png' height='auto' width='160' align='right'>
+    <img src='./aux/seegbrasilhome__2_.png' height='auto' width='auto' align='center'>
   <h1>  Three decades of GHG emissions and removals associated with land use change in Brazil </h1>
 <div>
     

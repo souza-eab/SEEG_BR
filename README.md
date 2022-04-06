@@ -36,7 +36,11 @@ For clarification or an issue/bug report, please write to <barbara.zimbres@ipam.
 ## Citing
 
 ## Developed by 
+ <div>
     <img src='./aux/ipam_logo.jpg' height='auto' width='160' align='right'>
-  <h1> Instituto de Pesquisa Ambiental da Amazônia </h1>
-</
-[IPAM](https://ipam.org.br/)<br>
+  <h1>  Three decades of GHG emissions and removals associated with land use change in Brazil </h1>
+</div>
+
+Developed by [Instituto de Pesquisa Ambiental da Amazônia - IPAM](https://ipam.org.br/)<br>
+
+

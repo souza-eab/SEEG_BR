@@ -15,7 +15,7 @@
 /* @. Set user parameters */// eg.
 
 // set directory for the output file
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2021/Col9/';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////

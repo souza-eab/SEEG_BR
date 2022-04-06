@@ -34,7 +34,7 @@ For clarification or an issue/bug report, please write to <barbara.zimbres@ipam.
 
 
 ## Citing
-Zimbres, et al., Three decades of GHG emissions and removals associated with land use change in Brazil. 
+    Zimbres, et al., Three decades of GHG emissions and removals associated with land use change in Brazil. 
 
  <div>
     <img src='./aux/ipam_logo.jpg' height='auto' width='160' align='right'>

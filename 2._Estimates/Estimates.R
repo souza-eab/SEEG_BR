@@ -1,22 +1,61 @@
-## SCRIPT FOR THE CALCULATIONS OF EMISSIONS AND REMOVALS, BY APPLYING STOCKS AND INCREMENT VALUES
-## TO THE TRANSITION AREAS OBTAINED IN THE PREVIOUS STEPS OF THE LAND USE SECTOR METHOD
+---
+Title: 'SCRIPT FOR THE CALCULATIONS OF EMISSIONS AND REMOVALS, BY APPLYING STOCKS AND INCREMENT VALUES
+TO THE TRANSITION AREAS OBTAINED IN THE PREVIOUS STEPS OF THE LAND USE SECTOR METHOD'
+Created by: 'Felipe Lenti, Barbara Zimbres (barbara.zimbres@ipam.org.br), Joao Siqueira e Edriano Souza'
+Key activities:
+              'Required Packages
+               Setting your GIT and/or Google Drive'
 
-## Created by: Felipe Lenti, Barbara Zimbres (barbara.zimbres@ipam.org.br), Joao Siqueira e Edriano Souza
+---
+  
 
-#####REQUIRED PACKAGES#####
-library(geojsonR)
-library(jsonlite)
-library(tidyverse)
-library(googledrive)
-library(openxlsx)
-library(dplyr)
-############################
+## REQUIRED PACKAGES##
+#eg. 
+## install.packages("pacman") // or 
+## install.packages("usethis")
+library(pacman)
+pacman::p_load(usethis, geojsonR,jsonlite, googledrive, openxlsx, ggplot2, tidyverse, tidyr, dplyr)
+
+
+## Setting your GIT and/or Google Drive
+#eg.
+
+usethis::use_git_config(# Seu nome
+  user.name = "souza-eab",
+  # Seu email
+  user.email = "edriano759@gmail.com")
+
+usethis::edit_r_environ()
+usethis::create_github_token()
+
+
+usethis::create_from_github("https://github.com/souza-eab/SEEG_BR/tree/main/aux/Seeg_c9_v1",
+                            destdir = "C:/Users/HD_ED/Documentos",
+                            fork = TRUE)
+
+
+drive_download(name= "SEEG_BR_c9_v1", type = "geojson")
+
+
+
+
+
+
+
+## Define your Path Downloaded Google
+data <- read.csv('../table/qcn_pixel_count.csv')
+
+
+
+
+
+
 
 
 ###Reading the GeoJSON files
 
 #Base file with codes for biome (bioma) and states (estado) 
-biomasestados <- read.csv("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cálculo/biomas_estados.csv") #!!!
+biomasestados <- read.csv("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cï¿½lculo/biomas_estados.csv") #!!!
 
 #Folder containing the GeoJSON files
 folder <- "C:/Users/barbara.zimbres/Dropbox/Work/SEEG/SEEG 9/SEEG_2021_GEE_v1_" #!!!
@@ -384,21 +423,21 @@ colnames(tran_mun)<-c('codigo','codigobiomasestados', 'bioma','estado','ap','de'
 tran_mun<-tran_mun%>%
   group_by(codigo,
            codigobiomasestados, bioma,estado,ap,de,para) %>% summarise(X1989.a.1990 = sum(X1989.a.1990),X1990.a.1991 = sum(X1990.a.1991),
-                                                                              X1991.a.1992 = sum(X1991.a.1992),X1992.a.1993 = sum(X1992.a.1993),
-                                                                              X1993.a.1994 = sum(X1993.a.1994),X1994.a.1995 = sum(X1994.a.1995),
-                                                                              X1995.a.1996 = sum(X1995.a.1996),X1996.a.1997 = sum(X1996.a.1997),
-                                                                              X1997.a.1998 = sum(X1997.a.1998),X1998.a.1999 = sum(X1998.a.1999),
-                                                                              X1999.a.2000 = sum(X1999.a.2000),X2000.a.2001 = sum(X2000.a.2001),
-                                                                              X2001.a.2002 = sum(X2001.a.2002),X2002.a.2003 = sum(X2002.a.2003),
-                                                                              X2003.a.2004 = sum(X2003.a.2004),X2004.a.2005 = sum(X2004.a.2005),
-                                                                              X2005.a.2006 = sum(X2005.a.2006),X2006.a.2007 = sum(X2006.a.2007),
-                                                                              X2007.a.2008 = sum(X2007.a.2008),X2008.a.2009 = sum(X2008.a.2009),
-                                                                              X2009.a.2010 = sum(X2009.a.2010),X2010.a.2011 = sum(X2010.a.2011),
-                                                                              X2011.a.2012 = sum(X2011.a.2012),X2012.a.2013 = sum(X2012.a.2013),
-                                                                              X2013.a.2014 = sum(X2013.a.2014),X2014.a.2015 = sum(X2014.a.2015),
-                                                                              X2015.a.2016 = sum(X2015.a.2016),X2016.a.2017 = sum(X2016.a.2017),
-                                                                              X2017.a.2018 = sum(X2017.a.2018),X2018.a.2019 = sum(X2018.a.2019),
-                                                                              X2019.a.2020 = sum(X2019.a.2020))%>%ungroup()
+                                                                       X1991.a.1992 = sum(X1991.a.1992),X1992.a.1993 = sum(X1992.a.1993),
+                                                                       X1993.a.1994 = sum(X1993.a.1994),X1994.a.1995 = sum(X1994.a.1995),
+                                                                       X1995.a.1996 = sum(X1995.a.1996),X1996.a.1997 = sum(X1996.a.1997),
+                                                                       X1997.a.1998 = sum(X1997.a.1998),X1998.a.1999 = sum(X1998.a.1999),
+                                                                       X1999.a.2000 = sum(X1999.a.2000),X2000.a.2001 = sum(X2000.a.2001),
+                                                                       X2001.a.2002 = sum(X2001.a.2002),X2002.a.2003 = sum(X2002.a.2003),
+                                                                       X2003.a.2004 = sum(X2003.a.2004),X2004.a.2005 = sum(X2004.a.2005),
+                                                                       X2005.a.2006 = sum(X2005.a.2006),X2006.a.2007 = sum(X2006.a.2007),
+                                                                       X2007.a.2008 = sum(X2007.a.2008),X2008.a.2009 = sum(X2008.a.2009),
+                                                                       X2009.a.2010 = sum(X2009.a.2010),X2010.a.2011 = sum(X2010.a.2011),
+                                                                       X2011.a.2012 = sum(X2011.a.2012),X2012.a.2013 = sum(X2012.a.2013),
+                                                                       X2013.a.2014 = sum(X2013.a.2014),X2014.a.2015 = sum(X2014.a.2015),
+                                                                       X2015.a.2016 = sum(X2015.a.2016),X2016.a.2017 = sum(X2016.a.2017),
+                                                                       X2017.a.2018 = sum(X2017.a.2018),X2018.a.2019 = sum(X2018.a.2019),
+                                                                       X2019.a.2020 = sum(X2019.a.2020))%>%ungroup()
 
 tran_mun<-data.frame(tran_mun)
 
@@ -471,7 +510,7 @@ tran_mun <- tran_mun[!!rowSums(abs(tran_mun[(names (tran_mun) %in% c("X1989.a.19
 
 #Importing auxiliary data
 #Stock and increment tables
-setwd('C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cálculo') #!!!
+setwd('C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cï¿½lculo') #!!!
 stk <- read.csv(file = 'estoques_biomas_QCN.csv' , header = TRUE, sep = ";")
 cer_uf <- read.table(file = "estoques-floresta-cer-uf_QCN.txt", header =T)
 incr <- read.csv(file = "incremento_QCN.csv", header = TRUE, sep = ";")
@@ -529,7 +568,7 @@ seeg <- function(t1, t2, bi, uf, ap){
       newAP <- ap
       notes <- "2.3.1.3 FSec-FSec"
       proc <- "Removal by secondary vegetation"
-
+      
     } else if (t1 %in% FNM & t2 %in% FM & ap == 1) { 
       
       equacao <- paste("A*(-",
@@ -540,7 +579,7 @@ seeg <- function(t1, t2, bi, uf, ap){
       newAP <- ap
       notes <- "2.3.1.7 FNM-FM"
       proc <- "Removal in protected areas"
- 
+      
     } else if (t1 %in% Ref & t2 %in% FSec) {
       
       equacao <- paste("A*(",estq[estq$Bioma == as.character(bi) & estq$classe == paste("X", as.character(t1), sep =""), 3],
@@ -1201,7 +1240,7 @@ seeg <- function(t1, t2, bi, uf, ap){
       newAP <- ap
       notes <- "2.3.4.10 O-Ap"
       proc <- "Removal by land use change"
-     
+      
     } else if (t1 %in% FNM & t2 %in% Ac & ap == 0) {
       
       equacao <- paste("A*(",estq[estq$Bioma == as.character(bi) & estq$classe == paste("X", as.character(t1),
@@ -1436,7 +1475,7 @@ seeg <- function(t1, t2, bi, uf, ap){
       newAP <- ap
       notes <- "2.3.12.10 Ac-O"
       proc <- "Land use change"
- 
+      
     } else { 
       equacao <- NA
       newAP <- NA
@@ -1626,7 +1665,7 @@ for (i in 1:nrow(emiss_mun)){
   if (length(eq) == 0 || length(processo) == 0){
     emiss_mun[i, "eq_inv"] <- "not inventoried transition"
     emiss_mun[i, "processo"] <- "not inventoried transition"
-      } else {
+  } else {
     emiss_mun[i, "eq_inv"] <- note
     emiss_mun[i, "processo"] <- processo
     eq <- sub( "A\\*", "", eq)#[2])
@@ -1688,7 +1727,7 @@ emiss_mun_filt [grep("Removal", emiss_mun_filt$processo), "tipo"] <- "Removal"
 emiss_mun_filt [-grep("Removal", emiss_mun_filt$processo), "tipo"] <- "Emission"
 
 #Associating transitions considered in the National Inventory
-setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cálculo") #!!!
+setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cï¿½lculo") #!!!
 simp <- read.csv(file = "class_inv_simpl_eng.csv", header = TRUE, sep = ";")
 emiss_mun_filt$transic <- emiss_mun_filt$eq_inv
 emiss_mun_filt$transic <- gsub('[[:digit:]]', "", emiss_mun_filt$transic)
@@ -1733,21 +1772,21 @@ emiss_aggr<-emiss_mun_filt%>%
            atividade,
            de,
            para) %>% summarise(X1989.a.1990 = sum(X1989.a.1990),X1990.a.1991 = sum(X1990.a.1991),
-                                                                       X1991.a.1992 = sum(X1991.a.1992),X1992.a.1993 = sum(X1992.a.1993),
-                                                                       X1993.a.1994 = sum(X1993.a.1994),X1994.a.1995 = sum(X1994.a.1995),
-                                                                       X1995.a.1996 = sum(X1995.a.1996),X1996.a.1997 = sum(X1996.a.1997),
-                                                                       X1997.a.1998 = sum(X1997.a.1998),X1998.a.1999 = sum(X1998.a.1999),
-                                                                       X1999.a.2000 = sum(X1999.a.2000),X2000.a.2001 = sum(X2000.a.2001),
-                                                                       X2001.a.2002 = sum(X2001.a.2002),X2002.a.2003 = sum(X2002.a.2003),
-                                                                       X2003.a.2004 = sum(X2003.a.2004),X2004.a.2005 = sum(X2004.a.2005),
-                                                                       X2005.a.2006 = sum(X2005.a.2006),X2006.a.2007 = sum(X2006.a.2007),
-                                                                       X2007.a.2008 = sum(X2007.a.2008),X2008.a.2009 = sum(X2008.a.2009),
-                                                                       X2009.a.2010 = sum(X2009.a.2010),X2010.a.2011 = sum(X2010.a.2011),
-                                                                       X2011.a.2012 = sum(X2011.a.2012),X2012.a.2013 = sum(X2012.a.2013),
-                                                                       X2013.a.2014 = sum(X2013.a.2014),X2014.a.2015 = sum(X2014.a.2015),
-                                                                       X2015.a.2016 = sum(X2015.a.2016),X2016.a.2017 = sum(X2016.a.2017),
-                                                                       X2017.a.2018 = sum(X2017.a.2018),X2018.a.2019 = sum(X2018.a.2019),
-                                                                       X2019.a.2020 = sum(X2019.a.2020))
+                               X1991.a.1992 = sum(X1991.a.1992),X1992.a.1993 = sum(X1992.a.1993),
+                               X1993.a.1994 = sum(X1993.a.1994),X1994.a.1995 = sum(X1994.a.1995),
+                               X1995.a.1996 = sum(X1995.a.1996),X1996.a.1997 = sum(X1996.a.1997),
+                               X1997.a.1998 = sum(X1997.a.1998),X1998.a.1999 = sum(X1998.a.1999),
+                               X1999.a.2000 = sum(X1999.a.2000),X2000.a.2001 = sum(X2000.a.2001),
+                               X2001.a.2002 = sum(X2001.a.2002),X2002.a.2003 = sum(X2002.a.2003),
+                               X2003.a.2004 = sum(X2003.a.2004),X2004.a.2005 = sum(X2004.a.2005),
+                               X2005.a.2006 = sum(X2005.a.2006),X2006.a.2007 = sum(X2006.a.2007),
+                               X2007.a.2008 = sum(X2007.a.2008),X2008.a.2009 = sum(X2008.a.2009),
+                               X2009.a.2010 = sum(X2009.a.2010),X2010.a.2011 = sum(X2010.a.2011),
+                               X2011.a.2012 = sum(X2011.a.2012),X2012.a.2013 = sum(X2012.a.2013),
+                               X2013.a.2014 = sum(X2013.a.2014),X2014.a.2015 = sum(X2014.a.2015),
+                               X2015.a.2016 = sum(X2015.a.2016),X2016.a.2017 = sum(X2016.a.2017),
+                               X2017.a.2018 = sum(X2017.a.2018),X2018.a.2019 = sum(X2018.a.2019),
+                               X2019.a.2020 = sum(X2019.a.2020))
 
 
 #Building the final matrix in the format of SEEG
@@ -1780,7 +1819,7 @@ newNames <- c("LEVEL_2",
               "LEVEL_4",
               "LEVEL_6",
               "TYPE",
-             # "CODIBGE",
+              # "CODIBGE",
               "CODBIOMASESTADOS",
               "STATE",
               "ECONOMIC_ACTIVITY",
@@ -1889,7 +1928,7 @@ deforestation<-c("Primary forest -- Non vegetated area",
                  "Secondary non forest vegetation -- Pasture/Agriculture")
 
 desm <- tabelao_full_mun[(tabelao_full_mun$LEVEL_6 %in% deforestation)
-  & tabelao_full_mun$TYPE == "Emission",]
+                         & tabelao_full_mun$TYPE == "Emission",]
 
 desm$LEVEL_4[desm$LEVEL_4 == 1 ] <- 0 #does not matter whether it is within or without protected areas
 
@@ -1934,7 +1973,7 @@ desmBiomassa<-desmC
 desmBiomassa[2:32]<-desmBiomassa[2:32]/0.47 #final unit: tonnes
 
 #Discount from the dry biomass the amount of logs and firewood removed from the areas (data obtained per state from IBGE and saved as an auxiliary table)
-setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cálculo") #!!!
+setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cï¿½lculo") #!!!
 ltve<-read.csv("LenhaTora_UF.csv",sep=";")
 
 #Stereo volume into dry biomass (factors from the Fourth National Inventory)
@@ -1947,7 +1986,7 @@ for(i in 2:ncol(biomassaQueimada)){
     biomassaQueimada[j,i]<-biomassaQueimada[j,i]-ltb[j,i]
   }
 }
-  
+
 #Emissions by the burning of biomass residuals (where combustion factors depend on vegetation type and biome)
 #Vegetation differentiated between Forest and Grassland (Floresta e Campo)
 veg<-data.frame(c("floresta","floresta","floresta","floresta","floresta","floresta","floresta","floresta",
@@ -2192,11 +2231,11 @@ tabelao_full_mun2<-tabelao_full_mun%>%
   group_by(SECTOR,LEVEL_2,LEVEL_3,LEVEL_4,LEVEL_5,LEVEL_6,TYPE,GAS,CODIBGE,CODBIOMASESTADOS,STATE,ECONOMIC_ACTIVITY,PRODUCT) %>% 
   summarise(`1970`=sum(`1970`),`1971`=sum(`1971`),`1972`=sum(`1972`),`1973`=sum(`1973`),`1974`=sum(`1974`),`1975`=sum(`1975`),`1976`=sum(`1976`),
             `1977`=sum(`1977`),`1978`=sum(`1978`),`1979`=sum(`1979`),`1980`=sum(`1980`),`1981`=sum(`1981`),
-  `1982`=sum(`1982`),`1983`=sum(`1983`),`1984`=sum(`1984`),`1985`=sum(`1985`),`1986`=sum(`1986`),`1987`=sum(`1987`),`1988`=sum(`1988`),`1989`=sum(`1989`),
-  `1990`=sum(`1990`),`1991`=sum(`1991`),`1992`=sum(`1992`),`1993`=sum(`1993`),`1994`=sum(`1994`),`1995`=sum(`1995`),`1996`=sum(`1996`),`1997`=sum(`1997`),
-  `1998`=sum(`1998`),`1999`=sum(`1999`),`2000`=sum(`2000`),`2001`=sum(`2001`),`2002`=sum(`2002`),`2003`=sum(`2003`),`2004`=sum(`2004`),`2005`=sum(`2005`),
-  `2006`=sum(`2006`),`2007`=sum(`2007`),`2008`=sum(`2008`),`2009`=sum(`2009`),`2010`=sum(`2010`),`2011`=sum(`2011`),`2012`=sum(`2012`),`2013`=sum(`2013`),
-  `2014`=sum(`2014`),`2015`=sum(`2015`),`2016`=sum(`2016`),`2017`=sum(`2017`),`2018`=sum(`2018`),`2019`=sum(`2019`),`2020`=sum(`2020`))
+            `1982`=sum(`1982`),`1983`=sum(`1983`),`1984`=sum(`1984`),`1985`=sum(`1985`),`1986`=sum(`1986`),`1987`=sum(`1987`),`1988`=sum(`1988`),`1989`=sum(`1989`),
+            `1990`=sum(`1990`),`1991`=sum(`1991`),`1992`=sum(`1992`),`1993`=sum(`1993`),`1994`=sum(`1994`),`1995`=sum(`1995`),`1996`=sum(`1996`),`1997`=sum(`1997`),
+            `1998`=sum(`1998`),`1999`=sum(`1999`),`2000`=sum(`2000`),`2001`=sum(`2001`),`2002`=sum(`2002`),`2003`=sum(`2003`),`2004`=sum(`2004`),`2005`=sum(`2005`),
+            `2006`=sum(`2006`),`2007`=sum(`2007`),`2008`=sum(`2008`),`2009`=sum(`2009`),`2010`=sum(`2010`),`2011`=sum(`2011`),`2012`=sum(`2012`),`2013`=sum(`2013`),
+            `2014`=sum(`2014`),`2015`=sum(`2015`),`2016`=sum(`2016`),`2017`=sum(`2017`),`2018`=sum(`2018`),`2019`=sum(`2019`),`2020`=sum(`2020`))
 
 emiss_aggrCO2 <-  tabelao_full_mun2
 emiss_aggrTAR2 <- tabelao_full_mun2
@@ -2328,8 +2367,8 @@ tabelao_full_final_estados<-tabelao_full_final_estados%>%
 
 #####Correction of the last year of the series based on the deforestation rates provided by official sources (PRODES Amazonia and PRODES Cerrado)
 #Rates are input as auxiliary tables
-setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cálculo") #!!!
-  
+setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cï¿½lculo") #!!!
+
 #PRODES rates at the level of biome
 prodesam_bi<-read.csv("prodesam_bi.csv",head=T,sep=";")
 prodesce_bi<-read.csv("prodesce_bi.csv",head=T,sep=";")
@@ -2376,69 +2415,69 @@ ce2020<-57540000+5271*prodesce_bi$PRODES[20]
 
 gases<-unique(tabelao_full_final_estados$GAS)
 for(i in gases){
-tabelao_full_final_estados[tabelao_full_final_estados$GAS==i&(tabelao_full_final_estados$LEVEL_3=="Amazônia"&
-  ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-    tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-    tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
-  tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Amazônia"&
-                                    ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                        tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                       tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]/
-     sum(tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Amazônia"&
-                                   ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                       tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                      tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63])*am2020
-tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Cerrado"&
-                             ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                 tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+  tabelao_full_final_estados[tabelao_full_final_estados$GAS==i&(tabelao_full_final_estados$LEVEL_3=="Amazï¿½nia"&
+                                                                  ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                      tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                     tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+    tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Amazï¿½nia"&
+                                                                    ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                        tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                       tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]/
+    sum(tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Amazï¿½nia"&
+                                                                        ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                            tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                           tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63])*am2020
   tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Cerrado"&
-                               ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                   tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                  tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]/
-  sum(tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Cerrado"&
-                                   ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                       tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                      tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63])*ce2020
+                                                                  ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                      tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                     tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+    tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Cerrado"&
+                                                                    ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                        tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                       tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]/
+    sum(tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Cerrado"&
+                                                                        ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                            tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                           tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63])*ce2020
 }
 
 #For the other biomes, emissions in 2020 (related to deforestation and the burning of vegetation residuals onlye) are assumed to be the same as in 2019
 for(i in gases){
-tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Caatinga"&
-                             ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                 tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
   tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Caatinga"&
-                               ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                   tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                  tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),62]
-
-tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Mata Atlântica"&
-                             ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                 tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
-  tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Mata Atlântica"&
-                               ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                   tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                  tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),62]
-
-tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Pampa"&
-                             ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                 tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+                                                                  ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                      tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                     tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+    tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Caatinga"&
+                                                                    ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                        tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                       tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),62]
+  
+  tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Mata Atlï¿½ntica"&
+                                                                  ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                      tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                     tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+    tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Mata Atlï¿½ntica"&
+                                                                    ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                        tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                       tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),62]
+  
   tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Pampa"&
-                               ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                   tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                  tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),62]
-
-tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Pantanal"&
-                             ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                 tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+                                                                  ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                      tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                     tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+    tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Pampa"&
+                                                                    ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                        tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                       tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),62]
+  
   tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Pantanal"&
-                               ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
-                                   tabelao_full_final_estados$LEVEL_5=="Deforestation")|
-                                  tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),62]
+                                                                  ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                      tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                     tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),63]<-
+    tabelao_full_final_estados[tabelao_full_final_estados$Gas==i&(tabelao_full_final_estados$LEVEL_3=="Pantanal"&
+                                                                    ((tabelao_full_final_estados$LEVEL_2=="Land use change"&
+                                                                        tabelao_full_final_estados$LEVEL_5=="Deforestation")|
+                                                                       tabelao_full_final_estados$LEVEL_2=="Vegetation residuals")),62]
 }
 
 
@@ -2458,28 +2497,28 @@ tabelao_full_final_estados$STATE<-as.character(tabelao_full_final_estados$STATE)
 tabelao_full_final_estados$LEVEL_3<-as.character(tabelao_full_final_estados$LEVEL_3)
 
 estados<-unique(tabelao_full_final_estados$STATE)
-biomascorr<-c("Amazônia","Cerrado")
+biomascorr<-c("Amazï¿½nia","Cerrado")
 
 for(i in gases){
   for(k in estados){
     tab<-tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$STATE==k&((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                                                                                                           tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                                                                                                          tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),]
+                                                                                                                  tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                                                                 tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),]
     biomas<-as.character(unique(tab$LEVEL_3))
     biomas<-biomas[biomas %in% biomascorr]
     for(j in biomas){
-    tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$LEVEL_3==j&(tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$STATE==k&((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                     tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                    tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals"))),66]<-
-    ((tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$LEVEL_3==j&(tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$STATE==k&((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                       tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                      tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals"))),64]/
-    sum(tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$LEVEL_3==j&(tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$STATE==k&((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                           tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                          tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals"))),64])))*
       tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$LEVEL_3==j&(tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$STATE==k&((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                                                                                                        tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                                                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals"))),65]  
+                                                                                                                                                       tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                                                                                                      tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals"))),66]<-
+        ((tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$LEVEL_3==j&(tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$STATE==k&((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
+                                                                                                                                                           tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                                                                                                          tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals"))),64]/
+            sum(tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$LEVEL_3==j&(tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$STATE==k&((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
+                                                                                                                                                                 tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                                                                                                                tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals"))),64])))*
+        tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$LEVEL_3==j&(tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$STATE==k&((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
+                                                                                                                                                         tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                                                                                                        tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals"))),65]  
     }}}
 
 tabelao_full_final_mun_corr<-tabelao_full_final_mun_corr[,-c(64,65)]
@@ -2487,40 +2526,40 @@ tabelao_full_final_mun_corr<-tabelao_full_final_mun_corr[,-c(64,65)]
 #Repetition of 2019 for the other biomes
 for(i in gases){
   tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Caatinga"&
-                                                                  ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                      tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                     tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),64]<-
+                                                                    ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
+                                                                        tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),64]<-
     tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Caatinga"&
-                                                                    ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                        tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),63]
+                                                                      ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
+                                                                          tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                         tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),63]
   
-  tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Mata Atlântica"&
-                                                                  ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                      tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                     tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),64]<-
-    tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Mata Atlântica"&
+  tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Mata Atlï¿½ntica"&
                                                                     ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
                                                                         tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),63]
+                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),64]<-
+    tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Mata Atlï¿½ntica"&
+                                                                      ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
+                                                                          tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                         tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),63]
   
   tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Pampa"&
-                                                                  ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                      tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                     tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),64]<-
-    tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Pampa"&
                                                                     ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
                                                                         tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),63]
+                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),64]<-
+    tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Pampa"&
+                                                                      ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
+                                                                          tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                         tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),63]
   
   tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Pantanal"&
-                                                                  ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
-                                                                      tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                     tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),64]<-
-    tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Pantanal"&
                                                                     ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
                                                                         tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
-                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),63]
+                                                                       tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),64]<-
+    tabelao_full_final_mun_corr[tabelao_full_final_mun_corr$GAS==i&(tabelao_full_final_mun_corr$LEVEL_3=="Pantanal"&
+                                                                      ((tabelao_full_final_mun_corr$LEVEL_2=="Land use change"&
+                                                                          tabelao_full_final_mun_corr$LEVEL_5=="Deforestation")|
+                                                                         tabelao_full_final_mun_corr$LEVEL_2=="Vegetation residuals")),63]
 }
 
 #Final exporting of the table at the level of states
@@ -2556,7 +2595,7 @@ write.csv(tabelaoBR, file = "TABELAO_MUT_BR-10-01.csv",row.names=F)
 
 #Final exporting of the table at the level of municipalities
 #Municipality names
-setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cálculo") #!!!
+setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares cï¿½lculo") #!!!
 nomesmun<-read.csv("nomes_mun_IBGE.csv",head=T,sep=";")
 nomesmun<-nomesmun[,1:2]
 

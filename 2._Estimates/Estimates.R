@@ -1,66 +1,39 @@
 ---
-Title: 'SCRIPT FOR THE CALCULATIONS OF EMISSIONS AND REMOVALS, BY APPLYING STOCKS AND INCREMENT VALUES
+  Title: 'SCRIPT FOR THE CALCULATIONS OF EMISSIONS AND REMOVALS, BY APPLYING STOCKS AND INCREMENT VALUES
 TO THE TRANSITION AREAS OBTAINED IN THE PREVIOUS STEPS OF THE LAND USE SECTOR METHOD'
-Created by: 'Felipe Lenti, Barbara Zimbres (barbara.zimbres@ipam.org.br), Joao Siqueira e Edriano Souza'
-Key activities:
+#  Created by: 'Felipe Lenti, Barbara Zimbres (barbara.zimbres@ipam.org.br), Joao Siqueira e Edriano Souza'
+#  Key activities:
               'Required Packages
-               Setting your GIT and/or Google Drive'
-
+               Setting and load your Folders JSON e AUX
+               Function GeoJson x .csv (Time processing 2hrs)
+              '
 ---
-  
 
+  
+gc()
+memory.limit (9999999999)
+
+  
 ## REQUIRED PACKAGES##
 #eg. 
 ## install.packages("pacman") // or 
 ## install.packages("usethis")
 library(pacman)
-pacman::p_load(usethis, geojsonR,jsonlite, googledrive, openxlsx, ggplot2, tidyverse, tidyr, dplyr)
+pacman::p_load(usethis, geojsonR,jsonlite, googledrive, openxlsx, ggplot2, tidyverse, tidyr, dplyr,rlang)
 
 
-## Setting your GIT and/or Google Drive
+## Setting and load your Folders and Reading the GeoJSON files
+
+#Base file with codes for biome (bioma) and states (estado)
 #eg.
-
-usethis::use_git_config(# Seu nome
-  user.name = "souza-eab",
-  # Seu email
-  user.email = "edriano759@gmail.com")
-
-usethis::edit_r_environ()
-usethis::create_github_token()
-
-
-usethis::create_from_github("https://github.com/souza-eab/SEEG_BR/tree/main/aux/Seeg_c9_v1",
-                            destdir = "C:/Users/HD_ED/Documentos",
-                            fork = TRUE)
-
-
-drive_download(name= "SEEG_BR_c9_v1", type = "geojson")
-
-
-
-
-
-
-
-## Define your Path Downloaded Google
-data <- read.csv('../table/qcn_pixel_count.csv')
-
-
-
-
-
-
-
-
-###Reading the GeoJSON files
-
-#Base file with codes for biome (bioma) and states (estado) 
-biomasestados <- read.csv("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares c�lculo/biomas_estados.csv") #!!!
+#biomasestados <- read.csv("../biomas_estados.csv")
+biomasestados <- read.csv("biomas_estados.csv")
 
 #Folder containing the GeoJSON files
-folder <- "C:/Users/barbara.zimbres/Dropbox/Work/SEEG/SEEG 9/SEEG_2021_GEE_v1_" #!!!
+folder <- "C:/Users/edriano.souza/GitHub/Estimates/SEEG_c9_v1/" 
 
 
+### Function GeoJson x .csv
 #Base files of the transitions
 # containing the information: code of the municipality (codigo), code of the biome/state (codigobiomasestados),
 # biome (bioma), state (estado), protected area (ap, 1 or 0), year of the transition (periodo), 
@@ -84,16 +57,16 @@ biomasestado.data <- list.files(folder, full.names = TRUE) %>%
       })
   })%>% 
   left_join(biomasestados, by = c("biomasestados"="id"))%>%
-  select(codigo, codigobiomasestados = biomasestados, bioma = descricaobiomas, estado = descricaoestados, ap=areaprotegida, periodo, de, para, 
+  select(codigo, codigobiomasestados = biomasestados, bioma = descricaobiomas, estado = descricaoestados, areaprotegida, periodo, de, para, 
          area_ha = V2) %>%
   mutate(area_ha = area_ha*100)
 
 #Exporting intermediate file
-setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/SEEG 9/SEEG 9.1") #!!!
+setwd("C:/Users/edriano.souza/GitHub/Estimates/OUTPUT")
 write.csv(biomasestado.data, file = "1_0_Dadosbrutos.csv",row.names=F,fileEncoding = "UTF-8" )
 
 
-#Rearranging the table
+#Rearranging the table 
 tran_mun = biomasestado.data %>%
   arrange(codigo, periodo, de, para) %>% 
   spread(key = periodo, value = area_ha, fill = 0) %>%
@@ -103,98 +76,23 @@ tran_mun = biomasestado.data %>%
 # and remove secondary identification (*100) from anthropic classes
 tran_mun <- tran_mun %>% 
   mutate(de= recode(de,
-                    `0` = "0",
-                    `3` = "3",
-                    `4` = "4",
-                    `5` = "5",
-                    `9` = "9",
-                    `11` = "11",
-                    `12` = "12",
-                    `13` = "13",
-                    `15` = "15",
-                    `20` = "20",
-                    `21` = "21",
-                    `23` = "23",
-                    `24` = "24",
-                    `25` = "25",
-                    `29` = "29",
-                    `30` = "30",
-                    `31` = "31",
-                    `33` = "33",
-                    `39` = "39",
-                    `40` = "39",
-                    `41` = "41",
-                    `46` = "36", 
-                    `47` = "36",
-                    `48` = "36",
-                    `49` = "49",
-                    `300` = "300",
-                    `400` = "400",
-                    `500` = "500",
-                    `900` = "9",
-                    `1100` = "1100",
-                    `1200` = "1200",
-                    `1300` = "1300",
-                    `1500` = "1500",
-                    `2000` = "20",
-                    `2100` = "21",
-                    `2500` = "25",
-                    `2900` = "29",
-                    `3300` = "33",
-                    `3900` = "39",
-                    `4000` = "39",
-                    `4100` = "41",
-                    `4600` = "36",
-                    `4700` = "36",
-                    `4800` = "36",
-                    `4900` = "49"
-  )) %>% 
+                    `0` = "0", `3` = "3", `4` = "4",`5` = "5",`9` = "9",`11` = "11",`12` = "12",`13` = "13",`15` = "15",`20` = "20",
+                    `21` = "21",`23` = "23",`24` = "24",`25` = "25",`29` = "29",`30` = "30",`31` = "31",`33` = "33",`39` = "39",
+                    `40` = "39",`41` = "41",`46` = "36",`47` = "36",`48` = "36",`49` = "49",`300` = "300",`400` = "400",
+                    `500` = "500",`900` = "9",`1100` = "1100",`1200` = "1200",`1300` = "1300",`1500` = "1500",
+                    `2000` = "20",`2100` = "21",`2500` = "25",`2900` = "29",`3300` = "33",`3900` = "39",
+                    `4000` = "39",`4100` = "41",`4600` = "36",`4700` = "36",`4800` = "36",
+                    `4900` = "49")) %>% 
   mutate(para= recode(para,
-                      `0` = "0",
-                      `3` = "3",
-                      `4` = "4",
-                      `5` = "5",
-                      `9` = "9",
-                      `11` = "11",
-                      `12` = "12",
-                      `13` = "13",
-                      `15` = "15",
-                      `20` = "20",
-                      `21` = "21",
-                      `23` = "23",
-                      `24` = "24",
-                      `25` = "25",
-                      `29` = "29",
-                      `30` = "30",
-                      `31` = "31",
-                      `33` = "33",
-                      `39` = "39",
-                      `40` = "39",
-                      `41` = "41",
-                      `46` = "36", 
-                      `47` = "36",
-                      `48` = "36",
-                      `49` = "49",
-                      `300` = "300",
-                      `400` = "400",
-                      `500` = "500",
-                      `900` = "9",
-                      `1100` = "1100",
-                      `1200` = "1200",
-                      `1300` = "1300",
-                      `1500` = "1500",
-                      `2000` = "20",
-                      `2100` = "21",
-                      `2500` = "25",
-                      `2900` = "29",
-                      `3300` = "33",
-                      `3900` = "39",
-                      `4000` = "39",
-                      `4100` = "41",
-                      `4600` = "36",
-                      `4700` = "36",
-                      `4800` = "36",
-                      `4900` = "49"))
+                      `0` = "0",`3` = "3",`4` = "4",`5` = "5",`9` = "9",`11` = "11",`12` = "12",`13` = "13",`15` = "15",`20` = "20",
+                      `21` = "21",`23` = "23",`24` = "24",`25` = "25",`29` = "29",`30` = "30",`31` = "31",`33` = "33",
+                      `39` = "39",`40` = "39",`41` = "41",`46` = "36",`47` = "36",`48` = "36",`49` = "49",
+                      `300` = "300",`400` = "400",`500` = "500",`900` = "9",`1100` = "1100",
+                      `1200` = "1200",`1300` = "1300",`1500` = "1500",`2000` = "20",
+                      `2100` = "21",`2500` = "25",`2900` = "29",`3300` = "33",
+                      `3900` = "39",`4000` = "39",`4100` = "41",
+                      `4600` = "36",`4700` = "36",
+                      `4800` = "36",`4900` = "49"))
 
 
 write.csv(tran_mun, file = "1_0_DadosbrutosRECT.csv",row.names=F,fileEncoding = "UTF-8" ) #!!!
@@ -202,12 +100,7 @@ write.csv(tran_mun, file = "1_0_DadosbrutosRECT.csv",row.names=F,fileEncoding = 
 #List of classes from Mapbiomas (Collection 6) present in each biome
 #Amazonia
 sort(as.numeric(unique(tran_mun$de[tran_mun$bioma=="AMAZONIA"])))
-classesAM<-c(3, 
-             4,
-             5,
-             9,
-             11, 
-             12,
+classesAM<-c(3,4,5,9,11,12,
              15,
              20,
              21, 
@@ -541,6 +434,7 @@ head(inc)
 #Exporting intermediate file
 write.csv(tran_mun,"tran_mun_intermediario.csv",row.names=F,fileEncoding = "UTF-8" )
 
+styler:::set_style_transformers()
 ####Function built to associate the Inventory equations with each transition type
 seeg <- function(t1, t2, bi, uf, ap){
   #######Considering state stocks for forest class in the Cerrado  

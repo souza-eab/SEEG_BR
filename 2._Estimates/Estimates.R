@@ -5,6 +5,7 @@
   areas obtained in the previous steps of the land use 
   sector method'
 #Created by: 'Felipe Lenti, Barbara Zimbres (barbara.zimbres@ipam.org.br), Joao Siqueira e Edriano Souza'
+# For any bug or issues: Barbara Zimbres (barbara.zimbres@ipam.org.br) and/or Edriano Souza (edriano.souza@ipam.org.br)
 #Key activities in sections
 ---
 
@@ -28,7 +29,7 @@ pacman::p_load(usethis, geojsonR, jsonlite, googledrive, openxlsx, ggplot2, tidy
 biomasestados <- read.csv("biomas_estados.csv")
 
 # Folder containing the GeoJSON files
-folder <- "/SEEG_c9_v1/"
+folder <- "data/SEEG_c9_v1"
 
 ## Recode ------------------------------------------------------------------
 # Base files of the transitions
@@ -67,10 +68,10 @@ biomasestado.data <- list.files(folder, full.names = TRUE) %>%
 
 ### 0_Exporting intermediate file ---------------------------------------------
 setwd("C:/Users/edriano.souza/GitHub/Estimates/OUTPUT")
-write.csv(biomasestado.data, file = "1_0_Dadosbrutos.csv", row.names = F, fileEncoding = "UTF-8")
+write.csv(biomasestado.data, file = "1_0_Dadosbrutos.csv", row.names = F,fileEncoding = "UTF-8")
 
 
-# Rearranging the table ---------------------------------------------------
+## Rearranging the table ---------------------------------------------------
 tran_mun <- biomasestado.data %>%
   arrange(codigo, periodo, de, para) %>%
   spread(key = periodo, value = area_ha, fill = 0) %>%
@@ -78,7 +79,7 @@ tran_mun <- biomasestado.data %>%
 
 
 
-# Reclassify --------------------------------------------------------------
+### Class matching ----------------------------------------------------------
 # Reclassify some of the agriculture classes from MapBiomas to group them into less detailed classes (e.g. classes 46-48 into 36)
 # and remove secondary identification (*100) from anthropic classes
 tran_mun <- tran_mun %>%
@@ -103,12 +104,14 @@ tran_mun <- tran_mun %>%
     `4800` = "36", `4900` = "49"
   ))
 
-
+### 1_Exporting intermediate file  ------------------------------------------
 write.csv(tran_mun, file = "1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
 
-# List of classes from Mapbiomas (Collection 6) present in each biome
 
-# Amazonia
+## List of classes Mapbiomas (Collection 6) present in each biome --------
+#List of classes from Mapbiomas (Collection 6) present in each biome 
+
+### Amazon ------------------------------------------------------------
 sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "AMAZONIA"])))
 classesAM <- c(
   3, # Forest Formation
@@ -136,7 +139,7 @@ classesAM <- c(
   1200
 )
 
-# Cerrado
+### Cerrado -----------------------------------------------------------------
 sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "CERRADO"])))
 classesCE <- c(
   3, # Forest Formation
@@ -164,7 +167,7 @@ classesCE <- c(
   1200
 )
 
-# Atlantic Forest
+### Atlantic Forest ---------------------------------------------------------
 sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "MATA ATLANTICA"])))
 classesMA <- c(
   3, # Forest Formation
@@ -197,7 +200,7 @@ classesMA <- c(
   4900
 )
 
-# Caatinga
+### Caatinga ----------------------------------------------------------------
 sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "CAATINGA"])))
 classesCA <- c(
   3,
@@ -226,7 +229,7 @@ classesCA <- c(
   1300
 )
 
-# Pantanal
+### Pantanal ----------------------------------------------------------------
 sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "PANTANAL"])))
 classesPN <- c(
   3,
@@ -249,7 +252,7 @@ classesPN <- c(
   1200
 )
 
-# Pampa
+### Pampa -------------------------------------------------------------------
 sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "PAMPA"])))
 classesPM <- c(
   3,
@@ -272,13 +275,14 @@ classesPM <- c(
   1200
 )
 
-
+#Vetor
 biomas <- c(
   "AMAZONIA", "CAATINGA", "CERRADO", "MATA_ATLANTICA",
   "PAMPA", "PANTANAL"
 )
 
-# Correspondence between Mapbiomas classes and the classes from the Fourth National Inventory
+## Correspondence between Mapbiomas classes and the classes from 4NI -------
+#Correspondence between Mapbiomas classes and the classes from the Fourth National Inventory
 FM <- c(3, 4, 5, 49)
 FNM <- c(3, 4, 5, 49)
 FSec <- c(300, 400, 500, 4900)
@@ -286,6 +290,7 @@ GM <- c(11, 12, 13)
 GNM <- c(11, 12, 13)
 GSec <- c(1100, 1200, 1300)
 Ref <- 9
+
 
 Ac <- c(20, 21, 36, 39, 41)
 Ap <- 15
@@ -295,7 +300,8 @@ classes <- sort(unique(c(FM, FNM, FSec, Ref, GM, GNM, GSec, Ac, Ap, O)))
 uso <- sort(unique(c(Ref, Ac, Ap, O)))
 nat <- c(FM, GM, FSec, GSec)
 
-# Stocks in the Cerrado biome vary according to state
+
+### Stocks in the Cerrado biome vary according to state ---------------------
 estadosCerrado <- c(
   "BA",
   "DF",
@@ -346,6 +352,7 @@ colnames(tran_mun) <- c(
   "X2017.a.2018", "X2018.a.2019", "X2019.a.2020"
 )
 
+## #Aggregate and sum the transition areas according to the zones  ----------
 # Aggregate and sum the transition areas according to the zones (municipalities, states, biomes and protected areas)
 tran_mun <- tran_mun %>%
   group_by(
@@ -381,7 +388,7 @@ tran_mun$de <- as.factor(tran_mun$de)
 tran_mun$para <- as.factor(tran_mun$para)
 levels(tran_mun$bioma) <- c("AMAZONIA", "CAATINGA", "CERRADO", "MATA_ATLANTICA", "PAMPA", "PANTANAL")
 
-# Checking biome area quantified
+### Checking biome area quantified ------------------------------------------
 nrow(tran_mun[tran_mun$de == 3 &
   tran_mun$para == 3 &
   tran_mun$ap == 1 &
@@ -420,6 +427,7 @@ nrow(tran_mun[tran_mun$de == 3 &
 tran_mun <- tran_mun[(tran_mun$para %in% classes), ]
 tran_mun <- tran_mun[(tran_mun$de %in% classes), ]
 
+### Relate transitions involving forest in the Cerrado with each state --------
 # Relate transitions involving forest in the Cerrado with each state (keep UF=others for the other biomes)
 # UF = unit of the federation
 tran_mun$uf <- "OUTROS"
@@ -429,7 +437,8 @@ for (i in 1:length(estadosCerrado)) {
   tran_mun[tran_mun$bioma == "CERRADO" & tran_mun$estado == estados_cer[i] & tran_mun$para == 3, "uf"] <- estadosCerrado[i]
 }
 
-# Remove transitions of very small areas (< 1ha)
+
+### Remove transitions of very small areas (< 1ha) ------------------------
 tran_mun <- tran_mun[!!rowSums(abs(tran_mun[(names(tran_mun) %in% c(
   "X1989.a.1990", "X1990.a.1991", "X1991.a.1992",
   "X1992.a.1993", "X1993.a.1994", "X1994.a.1995",
@@ -443,14 +452,12 @@ tran_mun <- tran_mun[!!rowSums(abs(tran_mun[(names(tran_mun) %in% c(
   "X2016.a.2017", "X2017.a.2018", "X2018.a.2019", "X2019.a.2020"
 ))])) > 1, ]
 
-# Importing auxiliary data
-# Stock and increment tables
-setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares c<U+FFFD>lculo") # !!!
-stk <- read.csv(file = "estoques_biomas_QCN.csv", header = TRUE, sep = ";")
-cer_uf <- read.table(file = "estoques-floresta-cer-uf_QCN.txt", header = T)
-incr <- read.csv(file = "incremento_QCN.csv", header = TRUE, sep = ";")
+## Importing auxiliary data (Stock and increment tables) -------------------
+stk <- read.csv(file = "data/aux_data/estoques_biomas_QCN.csv", header = TRUE, sep = ";")
+cer_uf <- read.table(file = "data/aux_data/estoques-floresta-cer-uf_QCN.txt", header = T)
+incr <- read.csv(file = "data/aux_data/incremento_QCN.csv", header = TRUE, sep = ";")
 
-# Rearranging stock table
+### Rearranging stock table -------------------------------------------------
 bio <- rep(stk$Bioma, each = 12)
 estq <- reshape(stk,
   varying = list(colnames(stk[-1])),
@@ -464,7 +471,7 @@ rownames(estq) <- NULL
 colnames(estq)[3] <- "estoque"
 head(estq, 72)
 
-# Rearranging increment table
+### Rearranging increment table -------------------------------------------------
 inc <- reshape(incr,
   varying = list(colnames(incr[-1])),
   times = names(incr[-1]),
@@ -477,17 +484,19 @@ rownames(inc) <- NULL
 colnames(inc)[3] <- "incremento"
 head(inc)
 
+### 2_Exporting intermediate file ---------------------------------------------
 # Exporting intermediate file
 write.csv(tran_mun, "tran_mun_intermediario.csv", row.names = F, fileEncoding = "UTF-8")
 
 
+## Function built to associate the 4CI equation witch each  ----------------
 #' Title: Function built to associate the Inventory equations with each transition type
 #'
 #' @param t1 class transition_time1
-#' @param t2 class transition_time1
-#' @param bi 
-#' @param uf 
-#' @param ap 
+#' @param t2 class transition_time2
+#' @param bi biomes
+#' @param uf states
+#' @param ap protected áreas 
 #'
 #' @return
 #' @export
@@ -1751,16 +1760,19 @@ for (i in 1:nrow(emiss_mun)) {
   }
 }
 
-# Definition of columns with annual estimates as numeric
+### Definition of columns with annual estimates as numeric ------------------
 emiss_mun[, 8:38] <- as.numeric(unlist(emiss_mun[, 8:38]))
 
-# Exporting intermediate files #!!!
+### 3_Exporting intermediate files --------------------------------------------
 write.csv(emiss_mun, file = "emiss_mun_col6_municipios.csv")
 
-#### Organizing resulting matrix
+
+
+### Organizing resulting matrix ---------------------------------------------
 emiss_mun_filt <- emiss_mun
 emiss_mun_filt <- emiss_mun_filt[-grep("not inventoried transition", emiss_mun_filt$processo), ]
 unique(emiss_mun_filt$processo)
+
 
 # Generation oF the column "Atividade", differentiating the economic activity responsible for the transition (either CONSERVATION or PASTURE/AGRICULTURE
 emiss_mun_filt$atividade <- NA
@@ -1772,7 +1784,8 @@ emiss_mun_filt$tipo <- NA
 emiss_mun_filt[grep("Removal", emiss_mun_filt$processo), "tipo"] <- "Removal"
 emiss_mun_filt[-grep("Removal", emiss_mun_filt$processo), "tipo"] <- "Emission"
 
-# Associating transitions considered in the National Inventory
+
+### Associating transitions considered in the National Inventory ------------
 setwd("C:/Users/barbara.zimbres/Dropbox/Work/SEEG/Auxiliares c<U+FFFD>lculo") # !!!
 simp <- read.csv(file = "class_inv_simpl_eng.csv", header = TRUE, sep = ";")
 emiss_mun_filt$transic <- emiss_mun_filt$eq_inv
@@ -1787,7 +1800,8 @@ for (i in 1:nrow(simp)) {
 
 unique(paste(emiss_mun_filt$transic, emiss_mun_filt$eq_inv))
 
-# Organizing column order
+
+### Organizing column order -------------------------------------------------
 emiss_mun_filt <- emiss_mun_filt[, c(
   "processo", "bioma", "ap", "transic", "tipo", "estado", "atividade", "X1989.a.1990", "X1990.a.1991",
   "X1991.a.1992", "X1992.a.1993",
@@ -1807,7 +1821,7 @@ emiss_mun_filt <- emiss_mun_filt[, c(
   "codigobiomasestados", "de", "para", "uf", "eq_inv"
 )]
 
-# Grouping and summarizing cases
+## Grouping and summarizing cases ------------------------------------------
 emiss_aggr <- emiss_mun_filt %>%
   group_by(
     processo,
@@ -1842,7 +1856,7 @@ emiss_aggr <- emiss_mun_filt %>%
   )
 
 
-# Building the final matrix in the format of SEEG
+### Building the final matrix in the format of SEEG -------------------------
 emiss_aggr$ano1970 <- 0
 emiss_aggr$ano1971 <- 0
 emiss_aggr$ano1972 <- 0
@@ -1957,9 +1971,11 @@ emiss_aggr[i] <- lapply(emiss_aggr[i], as.character)
 
 tabelao_full_mun <- emiss_aggr
 
-# Exporting intermediate file
+
+### 4_ Exporting intermediate file ---------------------------------------------
 write.csv(tabelao_full_mun, file = "tabelao_full_col6.csv") # !!!
 
+#type
 tabelao_full_mun$LEVEL_4 <- as.character(tabelao_full_mun$LEVEL_4)
 tabelao_full_mun$LEVEL_5 <- as.character(tabelao_full_mun$LEVEL_5)
 tabelao_full_mun$PRODUCT <- as.character(tabelao_full_mun$PRODUCT)
@@ -1968,8 +1984,7 @@ tabelao_full_mun$PARA <- as.character(tabelao_full_mun$PARA)
 tabelao_full_mun$CODBIOMASESTADOS <- as.character(tabelao_full_mun$CODBIOMASESTADOS)
 
 
-#### Calculating emissions by the burning of vegetation residuals
-
+## Calculating emissions by the burning of vegetation residuals ------------
 # Classifying transitions that comprise deforestation
 deforestation <- c(
   "Primary forest -- Non vegetated area",
@@ -1991,7 +2006,8 @@ desm <- tabelao_full_mun[(tabelao_full_mun$LEVEL_6 %in% deforestation) &
 
 desm$LEVEL_4[desm$LEVEL_4 == 1] <- 0 # does not matter whether it is within or without protected areas
 
-# Grouping and summarizing emissions due to deforestation
+
+## Grouping and summarizing emissions due to deforestation -----------------
 desm <- desm %>%
   group_by(
     SECTOR, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, TYPE, GAS, CODIBGE,
@@ -2012,6 +2028,8 @@ desm$LEVEL_6 <- "NA"
 names(desm)
 desm <- desm[c(1:5, 66, 6:65)]
 
+
+## Apllying calculations of CH4 and N20 emissions  -------------------------
 # Applying calculations of CH4 and N2O emissions based on the emissions of CO2 caused by deforestation
 
 # Emissions per state
@@ -2056,6 +2074,8 @@ for (i in 2:ncol(biomassaQueimada)) {
   }
 }
 
+
+## Emissions by the burning of biomass residuals ---------------------------
 # Emissions by the burning of biomass residuals (where combustion factors depend on vegetation type and biome)
 # Vegetation differentiated between Forest and Grassland (Floresta e Campo)
 veg <- data.frame(
@@ -2079,7 +2099,7 @@ desmUFVeg <- aggregate(desmVeg[, c(36:66)],
   FUN = "sum"
 )
 
-# Proportion of deforestation in each state/vegetation type
+## Proportion of deforestation in each state/vegetation type ---------------
 desmUFProp <- desmUFVeg %>%
   left_join(x = desmUFVeg, y = desmUF, by = c("Group.1"))
 for (i in 3:33) {
@@ -2111,7 +2131,8 @@ for (i in 3:33) {
 }
 desmQueimadaVegBioma <- desmQueimadaVegBioma[, c(1, 2, 34, 3:33)]
 
-# Applying combustion factors
+
+## Applying combustion factors ---------------------------------------------
 desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x == "floresta" & desmQueimadaVegBioma$Group.2.y == "AMAZONIA", 4:34] <-
   desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x == "floresta" & desmQueimadaVegBioma$Group.2.y == "AMAZONIA", 4:34] * 0.368
 desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x == "campo" & desmQueimadaVegBioma$Group.2.y == "AMAZONIA", 4:34] <-
@@ -2143,6 +2164,8 @@ desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x == "campo" & desmQueimadaVeg
   desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x == "campo" & desmQueimadaVegBioma$Group.2.y == "PANTANAL", 4:34] * mean(c(0.920, 0.840))
 
 
+
+### Aggregate each ------------------------------------------------------------
 # Distributing the burned biomass data per state/vegetation type into the municipal level
 # according to the proportion of deforestation in each municipality
 # Total de emissao por estado/veg/bioma: desmQueimadaVegBioma
@@ -2197,7 +2220,7 @@ n2o[n2o$Group.4 == "campo", 5:35] <- n2o[n2o$Group.4 == "campo", 5:35] * 0.21 / 
 n2o[n2o$Group.4 == "floresta", 5:35] <- n2o[n2o$Group.4 == "floresta", 5:35] * 0.2 / 1000
 
 
-# Organizing the results
+## Organizing the results --------------------------------------------------
 ch4$GAS <- "CH4 (t)"
 n2o$GAS <- "N2O (t)"
 
@@ -2249,6 +2272,8 @@ n2o <- n2o[, c(37:43, 36, 44:48, 5:35)]
 names(ch4)
 names(n2o)
 
+
+## Generation of Co2e emission according to GTP,..,GWP from AR's -----------
 # Generation of CO2 equivalent emissions according to GTP and GWP from AR 2, 4, 5, and 6
 TAR2 <- round((ch4[, 14:44] * 5) + (n2o[, 14:44] * 270))
 WAR2 <- round((ch4[, 14:44] * 21) + (n2o[, 14:44] * 310))
@@ -2307,8 +2332,8 @@ residuos$`1988` <- 0
 residuos$`1989` <- 0
 residuos <- residuos[, c(1:13, 45:64, 14:44)]
 
-# Exclude information "de" and "para" from the main table
 
+### Exclude information "de" and "para" from the main table -----------------
 tabelao_full_mun2 <- tabelao_full_mun %>%
   group_by(SECTOR, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, TYPE, GAS, CODIBGE, CODBIOMASESTADOS, STATE, ECONOMIC_ACTIVITY, PRODUCT) %>%
   summarise(
@@ -2351,11 +2376,16 @@ tabelao_full_final_mun <- rbind(
   emiss_aggrWAR6,
   residuos
 )
-
-# Exporting intermediate file
+### 5_Exporting intermediate file ---------------------------------------------
 write.csv(tabelao_full_final_mun, file = "SEEG_Tabelao_full_mun_col6.csv")
 
-# Further organization
+
+
+
+
+
+
+## Further organization ----------------------------------------------------
 tabelao_full_final_mun$LEVEL_3 <- as.factor(tabelao_full_final_mun$LEVEL_3)
 levels(tabelao_full_final_mun$LEVEL_3) <- c(
   "Amazonia",

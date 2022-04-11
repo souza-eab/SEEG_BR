@@ -25,13 +25,13 @@ var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 // export parameters
 var gfolder = 'TEMP';                // google drive folder 
-var assetId = 'projects/mapbiomas-workspace/SEEG/2021/Col9/'; // asset link
+var assetId = 'projects/mapbiomas-workspace/SEEG/2021/Col9'; // asset link
 
 // define data path
-var dir = 'projects/mapbiomas-workspace/SEEG/2021/Col9/Transicoes';
+var dir = 'projects/ee-seeg-brazil/assets/collection_9/v1/3_0_Transitions_maps';
 
 // define filenames prefix
-var prefix = 'SEEG_Transicoes_2021_c6_';
+var prefix = 'SEEG_Transitions_';
 
 // define years to be processed
 var listYears = ['1989_1990', '1990_1991', '1991_1992', '1992_1993', '1993_1994', '1994_1995', '1995_1996', 
@@ -79,5 +79,4 @@ print(recipe);
     'scale': 30,
     'maxPixels': 1e13
 });
-
 

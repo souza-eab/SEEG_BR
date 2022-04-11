@@ -6,10 +6,13 @@
 /////////  Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// @. UPDATE HISTORIC //
-// 1: 
-// 1.1: 
-// 1.1: 
+// @. UPDATE HISTORIC EXECUTABLE//
+// 1: EXCLUDE ISOLATED PIXELS AND REDUCE NOISE MAPBIOMAS
+// 1.1: Function that transforms an image collection into a single image with multiple bands
+// 1.2: Create Function that applies the Majority Filter (square_Kernel)
+// 1.3: Feature of the region of interest, in this case, all biomes in Brazil
+// 1.4: Specify spatial filter parameters
+// 1.5: Exporting data
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.

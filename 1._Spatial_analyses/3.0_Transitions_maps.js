@@ -6,11 +6,14 @@
 /////////   Processing time <2h> in Google Earth Engine ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// @. UPDATE HISTORIC //
-// 1: SCRIPT TO GENERATE REGENERATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
-// 1.1: Acess Asset MapBiomas and Biomes BRAZIL
-// 1.1: Remap layer col. 6.0 Mapiomas 
-// @. ~~~~~~~~~~~~~~ // 
+// @. UPDATE HISTORIC EXECUTABLE//
+// 1: Generate and Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0)
+// 1.1: Set Asset
+// 1.2: Load the assets from the previouly step 'Mask_stable" in coverage 
+// 1.3:  Loop to do the arithmetic of bands with all pairs of years, multiplying t1 (y1) by 10000     
+// 1.4: Exporting data
+// @. ~~~~~~~~~~~~~~ //
+
 
 /* @. Set user parameters */// eg.
 

@@ -180,7 +180,7 @@ print(recipe);
 [Link to script](https://code.earthengine.google.com/deefc5a08bfdc246263c999ba97b12ab)
 
 
-# 4.0 [4.0_CalcAreaZone.ipynb](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/4.0_CalcAreaZone.ipynb)
+# 4.0 [CalcAreaZone.ipynb](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/4.0_CalcAreaZone.ipynb)
 
 Create and Export the sum in areas of transition annual to according of BoundingBox and/or interess region (eg. Municipalities Brazil)
 

@@ -6,11 +6,16 @@
 /////////   Processing time <2h> in Google Earth Engine ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// @. UPDATE HISTORIC //
-// 1: SCRIPT TO GENERATE REGENERATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
-// 1.1: Acess Asset MapBiomas and Biomes BRAZIL
-// 1.1: Remap layer col. 6.0 Mapiomas 
+// @. UPDATE HISTORIC EXECUTABLE//
+// 1: Script to generate and stabilize annual coverage basemaps from a MapBiomas collection (eg. col 6.0)
+// 1.1: Create your ImageCollection (eg. 2_1_Mask_stable)
+// 1.2: Set Asset
+// 1.3: Define data path
+// 1.4: define filenames prefix     
+// 1.5: Class frequency window between t0 AND t
+// 1.6: Exporting data
 // @. ~~~~~~~~~~~~~~ // 
+
 
 /* @. Set user parameters */// eg.
 

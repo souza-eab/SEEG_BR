@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: Generate and Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0) //
+/////////// GOALS: Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0) //
 //////////  Coordination: Barbara Zimbres, Julia Shimbo, and Ane Alencar /////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
 //////////  Citing: Zimbres et al.,2022.  //////////////////////////////////////////////////////////////////////////////////
@@ -7,13 +7,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: Script to generate and stabilize annual coverage basemaps from a MapBiomas collection (eg. col 6.0)
-// 1.1: Create your ImageCollection (eg. 2_1_Mask_stable)
-// 1.2: Set Asset
-// 1.3: Define data path
-// 1.4: define filenames prefix     
-// 1.5: Class frequency window between t0 AND t
-// 1.6: Exporting data
+// 1: Generate and Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0)
+// 1.1: Set Asset
+// 1.2: Define data path
+// 1.3: Define filenames prefix     
+// 1.4: Exporting data
 // @. ~~~~~~~~~~~~~~ // 
 
 

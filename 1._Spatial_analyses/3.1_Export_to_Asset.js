@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: Generate and Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0)
+// 1: Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0)
 // 1.1: Set Asset
 // 1.2: Define data path
 // 1.3: Define filenames prefix     

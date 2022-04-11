@@ -23,6 +23,7 @@ We present a method to spatially allocate all of the emissions and removals due 
 1. [Create an account](https://signup.earthengine.google.com/) in the Google Earth Engine plataform.
 
 2. [Install Python](https://www.python.org/downloads/) version 3.x.
+    or [Google Collab](https://colab.research.google.com/) 
 
 3. Install Earth Engine [Python API](https://developers.google.com/earth-engine/guides/python_install) and get the credentials. 
 

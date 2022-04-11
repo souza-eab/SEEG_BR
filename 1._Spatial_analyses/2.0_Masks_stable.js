@@ -5,25 +5,31 @@
 ////////// Citing: Zimbres et al.,2022.  ///////////////////////////////////////////////////////////////////////////////////
 /////////  Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//// Processing time 24-48 hs in Google Earth Engine
-// @. UPDATE HISTORIC //
-// 1: 
-// 1.1: 
-// 1.1: 
+//// Processing time 48:72 hours in Google Earth Engine
+
+
+
+// @. UPDATE HISTORIC EXECUTABLE//
+// 1: Script to generate and stabilize annual coverage basemaps from a MapBiomas collection (eg. col 6.0)
+// 1.1: Create your ImageCollection (eg. 2_1_Mask_stable)
+// 1.2: Set Asset
+// 1.3: Calculating frequency (number of years) in which each i_pixel was determined class_n
+// 1.4: Building the stabilized coverage map for year t      
+// 1.5: Class frequency window between t0 AND t
+// 1.6: Exporting data
 // @. ~~~~~~~~~~~~~~ // 
+
 
 /* @. Set user parameters */// eg.
 
 // set directory for the output file
 var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/2_1_Mask_stable/';
 
-// Feature of the region of interest, in this case, all biomes in Brazil
 // Set Asset collection  6.0 MapBiomas 
 var mapbioDir = 'projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1';
 var mapbiomas = ee.Image(mapbioDir)
 
 // Feature of the region of interest, in this case, all biomes in Brazil
-
 var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 

@@ -6,10 +6,13 @@
 /////////   Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// @. UPDATE HISTORIC //
+// @. UPDATE HISTORIC EXECUTABLE//
 // 1: SCRIPT TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
 // 1.1: Acess Asset MapBiomas and Biomes BRAZIL
-// 1.1: Remap layer col. 6.0 Mapiomas 
+// 1.2: Remap layer col. 6.0 Mapiomas 
+// 1.3: Filter Temporal
+// 1.4: Applies the rule exceptions in the first two and last two years of the time series
+// 1.5: Exporting data
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.
@@ -182,10 +185,13 @@ Export.image.toAsset({
 /////////  Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// @. UPDATE HISTORIC //
-// 1: SCRIPT TO GENERATE REGENERATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
+// @. UPDATE HISTORIC EXECUTABLE//
+// 1: SCRIPT TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
 // 1.1: Acess Asset MapBiomas and Biomes BRAZIL
-// 1.1: Remap layer col. 6.0 Mapiomas 
+// 1.2: Remap layer col. 6.0 Mapiomas 
+// 1.3: Filter Temporal
+// 1.4: Applies the rule exceptions in the first two and last two years of the time series
+// 1.5: Exporting data
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.

@@ -187,3 +187,7 @@ Create and Export the sum in areas of transition annual to according of Bounding
 
 [Link to script_in_Google_Collab](https://colab.research.google.com/drive/17HOAjssZNNneiIms1rDRRl2wypeOMqQd?usp=sharing)
 [Link to script_in_Python (Local)](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/4.1_CalcAreaZone.py)
+
+# Schema
+<img src='/aux/SEEG_v1_0.0.1.png' height='auto' width='auto' align='right'>
+

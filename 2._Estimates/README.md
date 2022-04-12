@@ -1127,3 +1127,121 @@ desmUFBioma<-aggregate(desm[, c(36:66)], by = list(
 zeros<-which(desmUFBioma==0,arr.ind = T)
 desmUFBioma[zeros]<-1
 ```
+### Emissions (CO2) into dry biomass (Kg) -----------------------------------
+```javascript
+#Emissions (CO2) into dry biomass (Kg), where: CO2/44/12 -> C/0.47 -> Biomass
+desmC<-desmUF
+desmC[2:32]<-desmC[2:32]/(44/12)
+desmBiomassa<-desmC
+desmBiomassa[2:32]<-desmBiomassa[2:32]/0.47 #final unit: tonnes
+```
+## Discount from the dry biomass the amount
+```javascript
+#Discount from the dry biomass the amount of logs and firewood removed from the areas (data obtained per state from IBGE and saved as an auxiliary table)
+ltve<-read.csv("data/aux_data/LenhaTora_UF.csv",sep=";")
+```
+### Stereo volume into dry biomass 
+```javascript
+#Stereo volume into dry biomass (factors from the Fourth National Inventory)
+ltb<-ltve
+ltb[2:32]<-ltb[2:32]*0.6141*0.631 #final unit: tonnes
+
+biomassaQueimada<-desmUF
+for(i in 2:ncol(biomassaQueimada)){
+  for(j in 1:nrow(biomassaQueimada)){
+    biomassaQueimada[j,i]<-biomassaQueimada[j,i]-ltb[j,i]
+  }
+}
+
+```
+
+### Emissions by the burning of biomass residuals -
+```javascript
+#Emissions by the burning of biomass residuals (where combustion factors depend on vegetation type and biome)
+#Vegetation differentiated between Forest and Grassland (Floresta e Campo)
+
+veg<-data.frame(c("floresta","floresta","floresta","floresta","floresta","floresta","floresta","floresta",
+                  "campo","campo","campo","campo","campo","campo"),
+                c(3, 4, 5, 49,300, 400, 500,4900,11,12,13,1100, 1200, 1300))
+colnames(veg)<-c("tipo","cod")
+veg$cod<-as.character(veg$cod)
+
+desmVeg<-desm%>%
+  left_join(x=desm,y= veg, by=c("DE"="cod"))
+
+desmUFVeg<-aggregate(desmVeg[, c(36:66)], by = list(
+  desmVeg$STATE,
+  desmVeg$tipo),
+  FUN = "sum")
+ ```
+#### Proportion of deforestation in each state/vegetation type
+ ```javascript
+#Proportion of deforestation in each state/vegetation type
+desmUFProp<-desmUFVeg%>%
+  left_join(x=desmUFVeg,y= desmUF, by=c("Group.1"))
+for(i in 3:33){
+  desmUFProp[,i+62]<-desmUFProp[,i]/desmUFProp[,i+31]
+}
+desmUFProp<-desmUFProp[,-c(3:64)]
+
+desmQueimadaProp<-desmUFProp%>%
+  left_join(x=desmUFProp,y= biomassaQueimada, by=c("Group.1"))
+for(i in 3:33){
+  desmQueimadaProp[,i+31]<-desmQueimadaProp[,i]*desmQueimadaProp[,i+31]
+}
+desmQueimadaVeg<-desmQueimadaProp[,-c(3:33)]
+```
+#### Joining biome information and distributes deforestation amount
+```
+#Joining biome information and distributes deforestation amount according to the proportions calculated 
+desmUFBiomaProp<-desmUFBioma%>%
+  left_join(x=desmUFBioma,y=desmUF,by="Group.1")
+
+for(i in 3:33){
+  desmUFBiomaProp[,i]<-desmUFBiomaProp[,i]/desmUFBiomaProp[,i+31]
+}
+desmUFBiomaProp<-desmUFBiomaProp[,-c(34:64)]
+
+desmQueimadaVegBioma<-desmQueimadaVeg%>%
+  left_join(x=desmQueimadaVeg,y=desmUFBiomaProp,by="Group.1")
+
+for(i in 3:33){
+  desmQueimadaVegBioma[,i]<-desmQueimadaVegBioma[,i]*desmQueimadaVegBioma[,i+32]
+}
+desmQueimadaVegBioma<-desmQueimadaVegBioma[,c(1,2,34,3:33)]
+```
+
+#### Applying combustion factors 
+```javascript
+#### Applying combustion factors
+
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="AMAZONIA",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="AMAZONIA",4:34]*0.368
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="AMAZONIA",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="AMAZONIA",4:34]*mean(c(0.771,0.539))
+
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="CERRADO",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="CERRADO",4:34]*0.379
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="CERRADO",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="CERRADO",4:34]*mean(c(0.920,0.840))
+
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="CAATINGA",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="CAATINGA",4:34]*0.383
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="CAATINGA",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="CAATINGA",4:34]*mean(c(0.840,0.840))
+
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="MATA_ATLANTICA",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="MATA_ATLANTICA",4:34]*0.368
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="MATA_ATLANTICA",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="MATA_ATLANTICA",4:34]*mean(c(0.920,0.539))
+
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="PAMPA",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="PAMPA",4:34]*0.368
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="PAMPA",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="PAMPA",4:34]*mean(c(0.944,0.539))
+
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="PANTANAL",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="PANTANAL",4:34]*0.379
+desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="PANTANAL",4:34]<-
+  desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="PANTANAL",4:34]*mean(c(0.920,0.840))
+```javascript

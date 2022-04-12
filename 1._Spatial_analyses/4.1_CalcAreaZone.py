@@ -16,7 +16,7 @@ Original file is located at
 #**Three decades of GHG emissions and removals associated with land use change in Brazil**
 
 ```
-# GOAL: Create and Export the sum in areas of transition annual to according of BoundingBox and/or interess region (eg. Municipalities Brazil)
+# GOAL: Create and export the areas of annual transitions according to a BoundingBox and/or a region of interest (eg. municipalities of Brazil)
 ```
 
 # **Description and assumption:**
@@ -39,10 +39,9 @@ ee.Initialize()
 
 """# **STEP 3**
 ## **3.0 Function** 
-  ## **3.1 Set assets previously performed** // or Set your workspace directory
-  ## **3.2 Aplly functions to sum in areas of transition annual** 
-  ## **3.3 Set your drive Google Drive** 
-
+  ## **3.1 Load assets previously created // or Set your workspace directory
+  ## **3.2 Apply functions to generate areas of annual transitions** 
+  ## **3.3 Set your drive Google Drive folder** 
 
 """
 
@@ -51,27 +50,27 @@ def start(years):
 
     print(years)
 
-## 3.1 Set Assets 
-    # Set your region of interest in raster, or all Biomes_BR (IBGE, 2020) 
+## 3.1 Load Assets 
+    # Load your region of interest as a raster, or all biomes in Brazil (IBGE, 2020)  
     biomas = ee.Image(
         'projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR_tif')
 
-    # Set Municipalities_BR
+    # Load Brazilian municipalities
     municipios = ee.Image(
         'projects/ee-seeg-brazil/assets/collection_9/v1/mun_BR')
 
-    # Set your Asset ImagemCollection step_4.1 previously performed : eg. path 'projects/ee-seeg-brazil/assets/collection_9/v1/4_1_SEEG_Transitions_stacked'
+    # Load your ImageCollection from step_4.1: eg. path 'projects/ee-seeg-brazil/assets/collection_9/v1/3_1_SEEG_Transitions_stacked'
     transitions = ee.Image(
         'projects/ee-seeg-brazil/assets/collection_9/v1/4_1_SEEG_Transitions_stacked')
     
-    # Here is the multi-band raster of protected areas (PA), where each band is the cumulative of PA areas and units in each year
+    # Here is the multi-band raster of protected areas (PA), where each band is the cumulative raster of protected areas in each year
     apMask = ee.Image(
         'projects/mapbiomas-workspace/AUXILIAR/areas-protegidas-por-ano-2019/ap' + years[0]).unmask()
 
     biomasMunicip = biomas.multiply(10000000).add(municipios)
 
     geometry = biomas.geometry().bounds()
-    # Create a bounding box BRAZIL 
+    # Create a bounding box of Brazil 
     geometry = ee.Geometry.Polygon(
         [[[-74.34040691705002, 5.9630086351511690],
                 [-74.34040691705002, -34.09134700746099],
@@ -80,9 +79,9 @@ def start(years):
 
     pixelArea = ee.Image.pixelArea().divide(1000000)
 
-## 3.2 Aplly functions to sum in areas of transition annual 
+## 3.2 Apply function to calculate the areas of annual transitions 
 
-    # Region Calculation: This function sums the areas per region
+    # Calculation: This function sums the areas per region of interest
     def getPropertiesAp0(item):
 
         item = ee.Dictionary(item)
@@ -190,7 +189,7 @@ def start(years):
 
     areas = areasAp0.merge(areasAp1)
 
-## 3.3 Set your drive Google Drive  
+## 3.3 Set your Google Drive folder
 
     name = "SEEG_BR_c9_v1_"+ \
         years[0]+'-'+ years [1]
@@ -198,7 +197,7 @@ def start(years):
     task = ee.batch.Export.table.toDrive(
         collection=areas,
         description=name,
-        folder='SEEG_c9_v1', #Export to your Google Drive or other's path 
+        folder='SEEG_c9_v1', #Export to your Google Drive or other path 
         fileNamePrefix=name,
         fileFormat="GeoJSON")           
 
@@ -259,8 +258,5 @@ For any issue/bug, please write to <barbara.zimbres@ipam.org.br> and/or <edriano
 
 Developed by: Instituto de Pesquisas Ambientais da Amazônia  
 
-```
-```
-Citing: 
 ```
 """

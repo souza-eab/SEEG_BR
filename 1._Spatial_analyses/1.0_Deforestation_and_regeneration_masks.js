@@ -7,11 +7,11 @@
 
 // @. UPDATE HISTORIC EXECUTABLE//
 // 1: SCRIPT TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
-// 1.1: Accessing the assets from the MapBiomas collection and Biomes of Brazil
-// 1.2: Reclassifying layers from Mapbiomas 
+// 1.1: Access the assets from the MapBiomas collection and Biomes of Brazil
+// 1.2: Reclassify layers from Mapbiomas 
 // 1.3: Temporal filter
-// 1.4: Applying the temporal rules adapted to the first two and last two years of the time series
-// 1.5: Exporting the data
+// 1.4: Apply the temporal rules adapted to the first two and last two years of the time series
+// 1.5: Export the data
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.

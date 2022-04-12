@@ -21,11 +21,12 @@ library(pacman)
 pacman::p_load(usethis, geojsonR, jsonlite, googledrive, openxlsx, ggplot2, tidyverse, tidyr, dplyr, rlang)
 ``` 
 ## Recode GeoJson && .csv // <Processing 2H> //
-### Base files of the transitions
-### containing the information: code of the municipality (codigo), code of the biome/state (codigobiomasestados),
-### biome (bioma), state (estado), protected area (ap, 1 or 0), year of the transition (periodo),
-### class transitioned from (de) and to (para), and area of the transition (area_ha, in hectares)
 ```javascript
+# Base files of the transitions
+# containing the information: code of the municipality (codigo), code of the biome/state (codigobiomasestados),
+# biome (bioma), state (estado), protected area (ap, 1 or 0), year of the transition (periodo),
+# class transitioned from (de) and to (para), and area of the transition (area_ha, in hectares)
+
 biomasestado.data <- list.files(folder, full.names = TRUE) %>%
   map_df(function (file) {
     dt = fromJSON(file,flatten = TRUE, simplifyDataFrame = TRUE)$features

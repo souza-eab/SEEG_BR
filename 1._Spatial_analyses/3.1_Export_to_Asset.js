@@ -8,7 +8,7 @@
 
 // @. UPDATE HISTORIC EXECUTABLE//
 // 1: Export pairwise transition maps from a MapBiomas collection (eg. col 6.0)
-// 1.1: Set Asset
+// 1.1: Load asset
 // 1.2: Define the data path
 // 1.3: Define filename prefix     
 // 1.4: Export the pairwise data

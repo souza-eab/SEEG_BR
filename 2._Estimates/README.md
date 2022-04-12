@@ -1030,6 +1030,8 @@ prodesce_uf<-read.csv("data/aux_data/ prodesce_uf.csv",head=T,sep=";")
 ### Linear regression between PRODES rates and the emissions by SEEG --------
 desm<-tabelao_full_mun[tabelao_full_mun$LEVEL_5=="Deforestation"& tabelao_full_mun$TYPE == "Emission",]
 
+``````javascript
+
 biomas_AUS<-desm%>%
   group_by(LEVEL_3) %>% 
   summarise(`X1970`=sum(`X1970`),`X1971`=sum(`X1971`),`X1972`=sum(`X1972`),`X1973`=sum(`X1973`),`X1974`=sum(`X1974`),`X1975`=sum(`X1975`),`X1976`=sum(`X1976`),
@@ -1040,4 +1042,4 @@ biomas_AUS<-desm%>%
             `X2006`=sum(`X2006`),`X2007`=sum(`X2007`),`X2008`=sum(`X2008`),`X2009`=sum(`X2009`),`X2010`=sum(`X2010`),`X2011`=sum(`X2011`),`X2012`=sum(`X2012`),`X2013`=sum(`X2013`),
             `X2014`=sum(`X2014`),`X2015`=sum(`X2015`),`X2016`=sum(`X2016`),`X2017`=sum(`X2017`),`X2018`=sum(`X2018`),`X2019`=sum(`X2019`),`X2020`=sum(`X2020`))
 
-
+``````

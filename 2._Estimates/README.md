@@ -1244,4 +1244,317 @@ desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegB
   desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="floresta"&desmQueimadaVegBioma$Group.2.y=="PANTANAL",4:34]*0.379
 desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="PANTANAL",4:34]<-
   desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBioma$Group.2.y=="PANTANAL",4:34]*mean(c(0.920,0.840))
+```
+
+#### Distributing the burned biomass data per state/vegetation type i 
+```javascript
+# Distributing the burned biomass data per state/vegetation type into the municipal level
+# According to the proportion of deforestation in each municipality
+# Total de emissao por estado/veg/bioma: desmQueimadaVegBioma
+
+#Emission caused by deforestation in each municipality/vegetation type/biome case
+desmMunVegBioma<-aggregate(desmVeg[, c(36:66)], by = list(
+  desmVeg$LEVEL_3,
+  desmVeg$CODIBGE,
+  desmVeg$STATE,
+  desmVeg$tipo),
+  FUN = "sum")
+
+#Proportion of emission caused by deforestation in each municipality/vegetation type/biome case in the total deforestation amount in each state/veg/biome
+desmUFVegBioma<-aggregate(desmVeg[, c(36:66)], by = list(
+  desmVeg$LEVEL_3,
+  desmVeg$STATE,
+  desmVeg$tipo),
+  FUN = "sum")
+
+#PS: CASES WHERE DEFORESTATION AREA EQUALS ZERO PREVENTS THE CALCULATIONS. ADDING 1 SOLVES THE PROBLEM
+zeros<-which(desmUFVegBioma==0,arr.ind = T)
+desmUFVegBioma[zeros]<-1
+
+desmMunVegBiomaProp<-desmMunVegBioma%>%
+  left_join(x=desmMunVegBioma,y= desmUFVegBioma, by=c("Group.1"="Group.1","Group.3"="Group.2","Group.4"="Group.3"))
+for(i in 5:35){
+  desmMunVegBiomaProp[,i+62]<-desmMunVegBiomaProp[,i]/desmMunVegBiomaProp[,i+31]
+}
+desmMunVegBiomaProp<-desmMunVegBiomaProp[,-c(5:66)]
+
+
+#Multiplying the proportions and the total emissions caused by burning residual biomass: END OF THE CALCULATION
+desmQueimadaMunVegBioma<-desmMunVegBiomaProp%>%
+  left_join(x=desmMunVegBiomaProp,y=desmQueimadaVegBioma,by=c("Group.1"="Group.2.y","Group.3"="Group.1","Group.4"="Group.2.x"))
+
+for(i in 5:35){
+  desmQueimadaMunVegBioma[,i]<-desmQueimadaMunVegBioma[,i]*desmQueimadaMunVegBioma[,i+31]
+}
+desmQueimadaMunVegBioma<-desmQueimadaMunVegBioma[,c(1:35)]
+```
+
+## Emission factor per gas and vegetation type 
+```javascript
+ch4<-desmQueimadaMunVegBioma
+n2o<-desmQueimadaMunVegBioma
+ch4[ch4$Group.4=="campo",5:35]<-ch4[ch4$Group.4=="campo",5:35]*2.3/1000
+ch4[ch4$Group.4=="floresta",5:35]<-ch4[ch4$Group.4=="floresta",5:35]*6.8/1000
+n2o[n2o$Group.4=="campo",5:35]<-n2o[n2o$Group.4=="campo",5:35]*0.21/1000
+n2o[n2o$Group.4=="floresta",5:35]<-n2o[n2o$Group.4=="floresta",5:35]*0.2/1000
+```
+
+#Organizing the results
+```javascript
+ch4$GAS <- "CH4 (t)"
+n2o$GAS <- "N2O (t)" 
+
+ch4$SECTOR <- "Land use change and forests"
+n2o$SECTOR <- "Land use change and forests"
+
+ch4$LEVEL_2 <- "Vegetation residuals"
+n2o$LEVEL_2 <- "Vegetation residuals"
+
+ch4$LEVEL_3 <- ch4$Group.1
+n2o$LEVEL_3 <- n2o$Group.1
+
+ch4$LEVEL_4 <- "NA"
+n2o$LEVEL_4 <- "NA"
+
+ch4$LEVEL_5 <- "NA"
+n2o$LEVEL_5 <- "NA"
+
+ch4$LEVEL_6 <- "NA"
+n2o$LEVEL_6 <- "NA"
+
+ch4$TYPE <- "Emission"
+n2o$TYPE <- "Emission"
+
+ch4$CODIBGE <- ch4$Group.2
+n2o$CODIBGE <- n2o$Group.2
+
+ch4$CODBIOMASESTADOS<-substr(ch4$CODIBGE, start = 1, stop = 3)
+n2o$CODBIOMASESTADOS<-substr(n2o$CODIBGE, start = 1, stop = 3)
+
+ch4$STATE <- ch4$Group.3
+n2o$STATE <- n2o$Group.3
+
+ch4$ECONOMIC_ACTIVITY <- "AGROPEC"
+n2o$ECONOMIC_ACTIVITY <- "AGROPEC"
+
+ch4$PRODUCT <- "NA"
+n2o$PRODUCT <- "NA"
+
+colnames(ch4)[5:35]<-colnames(desm)[36:66]
+colnames(n2o)[5:35]<-colnames(desm)[36:66]
+
+str(ch4)
+names(ch4)
+ch4 <- ch4[, c(37:43, 36, 44:48,5:35)]
+names(n2o)
+n2o <- n2o[, c(37:43, 36, 44:48,5:35)]
+
+names(ch4)
+names(n2o)
+```
+
+## Generation of CO2e emissions according to GTP...GWP from ARs-
+```javascript
+#Generation of CO2 equivalent emissions according to GTP and GWP from AR 2, 4, 5, and 6
+TAR2 <- round((ch4[,14:44]*5)+(n2o [,14:44]*270))
+WAR2 <- round((ch4[,14:44]*21)+(n2o[,14:44]*310))
+TAR4 <- round((ch4[,14:44]*5)+(n2o [,14:44]*270))
+WAR4 <- round((ch4[,14:44]*25)+(n2o[,14:44]*298))
+TAR5 <- round((ch4[,14:44]*4)+(n2o [,14:44]*234))
+WAR5 <- round((ch4[,14:44]*28)+(n2o[,14:44]*265))
+TAR6 <- round((ch4[,14:44]*5.38)+(n2o [,14:44]*233))
+WAR6 <- round((ch4[,14:44]*27.9)+(n2o[,14:44]*273))
+
+TAR2 <- cbind(ch4[,1:13], TAR2)
+TAR2$GAS <- "CO2e (t) GTP-AR2"
+
+WAR2 <- cbind(ch4[,1:13], WAR2)
+WAR2$GAS <- "CO2e (t) GWP-AR2"
+
+TAR4 <- cbind(ch4[,1:13], TAR4)
+TAR4$GAS <- "CO2e (t) GTP-AR4"
+
+WAR4 <- cbind(ch4[,1:13], WAR4)
+WAR4$GAS <- "CO2e (t) GWP-AR4"
+
+TAR5 <- cbind(ch4[,1:13], TAR5)
+TAR5$GAS <- "CO2e (t) GTP-AR5"
+
+WAR5 <- cbind(ch4[,1:13], WAR5)
+WAR5$GAS <- "CO2e (t) GWP-AR5"
+
+TAR6 <- cbind(ch4[,1:13], TAR6)
+TAR6$GAS <- "CO2e (t) GTP-AR6"
+
+WAR6 <- cbind(ch4[,1:13], WAR6)
+WAR6$GAS <- "CO2e (t) GWP-AR6"
+
+residuos <- as.data.frame(rbind(n2o, ch4, TAR2, WAR2, TAR4, WAR4, TAR5, WAR5, TAR6, WAR6))
+
+residuos$`1970` <- 0
+residuos$`1971` <- 0
+residuos$`1972` <- 0
+residuos$`1973` <- 0
+residuos$`1974` <- 0
+residuos$`1975` <- 0
+residuos$`1976` <- 0
+residuos$`1977` <- 0
+residuos$`1978` <- 0
+residuos$`1979` <- 0
+residuos$`1980` <- 0
+residuos$`1981` <- 0
+residuos$`1982` <- 0
+residuos$`1983` <- 0
+residuos$`1984` <- 0
+residuos$`1985` <- 0
+residuos$`1986` <- 0
+residuos$`1987` <- 0
+residuos$`1988` <- 0
+residuos$`1989` <- 0
+residuos <- residuos[, c(1:13, 45:64, 14:44)]
+```
+
+#Exclude information "de" and "para" from the main table
+```javascript
+tabelao_full_mun2<-tabelao_full_mun%>%
+  group_by(SECTOR,LEVEL_2,LEVEL_3,LEVEL_4,LEVEL_5,LEVEL_6,TYPE,GAS,CODIBGE,CODBIOMASESTADOS,STATE,ECONOMIC_ACTIVITY,PRODUCT) %>% 
+  summarise(`1970`=sum(`1970`),`1971`=sum(`1971`),`1972`=sum(`1972`),`1973`=sum(`1973`),`1974`=sum(`1974`),`1975`=sum(`1975`),`1976`=sum(`1976`),
+            `1977`=sum(`1977`),`1978`=sum(`1978`),`1979`=sum(`1979`),`1980`=sum(`1980`),`1981`=sum(`1981`),
+            `1982`=sum(`1982`),`1983`=sum(`1983`),`1984`=sum(`1984`),`1985`=sum(`1985`),`1986`=sum(`1986`),`1987`=sum(`1987`),`1988`=sum(`1988`),`1989`=sum(`1989`),
+            `1990`=sum(`1990`),`1991`=sum(`1991`),`1992`=sum(`1992`),`1993`=sum(`1993`),`1994`=sum(`1994`),`1995`=sum(`1995`),`1996`=sum(`1996`),`1997`=sum(`1997`),
+            `1998`=sum(`1998`),`1999`=sum(`1999`),`2000`=sum(`2000`),`2001`=sum(`2001`),`2002`=sum(`2002`),`2003`=sum(`2003`),`2004`=sum(`2004`),`2005`=sum(`2005`),
+            `2006`=sum(`2006`),`2007`=sum(`2007`),`2008`=sum(`2008`),`2009`=sum(`2009`),`2010`=sum(`2010`),`2011`=sum(`2011`),`2012`=sum(`2012`),`2013`=sum(`2013`),
+            `2014`=sum(`2014`),`2015`=sum(`2015`),`2016`=sum(`2016`),`2017`=sum(`2017`),`2018`=sum(`2018`),`2019`=sum(`2019`),`2020`=sum(`2020`))
+
+emiss_aggrCO2 <-  tabelao_full_mun2
+emiss_aggrTAR2 <- tabelao_full_mun2
+emiss_aggrWAR2 <- tabelao_full_mun2
+emiss_aggrTAR4 <- tabelao_full_mun2
+emiss_aggrWAR4 <- tabelao_full_mun2
+emiss_aggrTAR5 <- tabelao_full_mun2
+emiss_aggrTAR6 <- tabelao_full_mun2
+emiss_aggrWAR6 <- tabelao_full_mun2
+
+emiss_aggrCO2$GAS <- "CO2 (t)"
+emiss_aggrTAR2$GAS <- "CO2e (t) GTP-AR2"
+emiss_aggrWAR2$GAS <- "CO2e (t) GWP-AR2"
+emiss_aggrTAR4$GAS <- "CO2e (t) GTP-AR4"
+emiss_aggrWAR4$GAS <- "CO2e (t) GWP-AR4"
+emiss_aggrTAR5$GAS <- "CO2e (t) GTP-AR5"
+emiss_aggrTAR6$GAS <- "CO2e (t) GTP-AR6"
+emiss_aggrWAR6$GAS <- "CO2e (t) GWP-AR6"
+
+tabelao_full_final_mun <- rbind(
+  tabelao_full_mun2,
+  emiss_aggrCO2,
+  emiss_aggrTAR2,
+  emiss_aggrWAR2,
+  emiss_aggrTAR4,
+  emiss_aggrWAR4,
+  emiss_aggrTAR5,
+  emiss_aggrTAR6,
+  emiss_aggrWAR6,
+  residuos)
+```
+
+### 5_Exporting intermediate file
+```javascript
+write.csv(tabelao_full_final_mun, file = "Results/5_SEEG_Tabelao_full_mun_col6.csv")
+```
+
+## Further organization -
+```javascript
+tabelao_full_final_mun$LEVEL_3 <- as.factor(tabelao_full_final_mun$LEVEL_3)
+levels(tabelao_full_final_mun$LEVEL_3) <- c("Amazonia",
+                                            "Caatinga",
+                                            "Cerrado",
+                                            "Atlantic Forest",
+                                            "Pampa",
+                                            "Pantanal")
+
+
+tabelao_full_final_mun$LEVEL_4 <- as.factor(tabelao_full_final_mun$LEVEL_4) 
+levels(tabelao_full_final_mun$LEVEL_4) <- c("Outside protected areas", "Within protected areas", "NA")
+
+tabelao_full_final_mun$STATE<-as.factor(tabelao_full_final_mun$STATE)
+levels(tabelao_full_final_mun$STATE) <- c("AC",
+                                          "AL",
+                                          "AP",
+                                          "AM",
+                                          "BA",
+                                          "CE",
+                                          "DF",
+                                          "ES",
+                                          "GO",
+                                          "MA",
+                                          "MT",
+                                          "MS",
+                                          "MG",
+                                          "PA",
+                                          "PB",
+                                          "PR",
+                                          "PE",
+                                          "PI",
+                                          "RJ",
+                                          "RN",
+                                          "RS",
+                                          "RO",
+                                          "RR",
+                                          "SC",
+                                          "SP",
+                                          "SE",
+                                          "TO")
+```
+# Final exporting of the table at the level of states 
+```javascript
+tabelao_full_final_estados <- tabelao_full_final_mun1
+tabelao_full_final_estados<-tabelao_full_final_estados%>%
+  group_by(SECTOR,LEVEL_2,LEVEL_3,LEVEL_4,LEVEL_5,LEVEL_6,TYPE,GAS,CODBIOMASESTADOS,STATE,ECONOMIC_ACTIVITY,PRODUCT) %>% 
+  summarise(`1970`=sum(`1970`),`1971`=sum(`1971`),`1972`=sum(`1972`),`1973`=sum(`1973`),`1974`=sum(`1974`),`1975`=sum(`1975`),`1976`=sum(`1976`),
+            `1977`=sum(`1977`),`1978`=sum(`1978`),`1979`=sum(`1979`),`1980`=sum(`1980`),`1981`=sum(`1981`),
+            `1982`=sum(`1982`),`1983`=sum(`1983`),`1984`=sum(`1984`),`1985`=sum(`1985`),`1986`=sum(`1986`),`1987`=sum(`1987`),`1988`=sum(`1988`),`1989`=sum(`1989`),
+            `1990`=sum(`1990`),`1991`=sum(`1991`),`1992`=sum(`1992`),`1993`=sum(`1993`),`1994`=sum(`1994`),`1995`=sum(`1995`),`1996`=sum(`1996`),`1997`=sum(`1997`),
+            `1998`=sum(`1998`),`1999`=sum(`1999`),`2000`=sum(`2000`),`2001`=sum(`2001`),`2002`=sum(`2002`),`2003`=sum(`2003`),`2004`=sum(`2004`),`2005`=sum(`2005`),
+            `2006`=sum(`2006`),`2007`=sum(`2007`),`2008`=sum(`2008`),`2009`=sum(`2009`),`2010`=sum(`2010`),`2011`=sum(`2011`),`2012`=sum(`2012`),`2013`=sum(`2013`),
+            `2014`=sum(`2014`),`2015`=sum(`2015`),`2016`=sum(`2016`),`2017`=sum(`2017`),`2018`=sum(`2018`),`2019`=sum(`2019`),`2020`=sum(`2020`))
+write.csv(tabelao_full_final_estados, file = "Results/6_TABELAO_MUT_ESTADOS.csv",row.names=F)
+```
+
+# Final exporting of the table at the level of Brazil (BR)  
+```javascript
+tabelaoBR <- tabelao_full_final_estados
+tabelaoBR$STATE <- "BR"
+tabelaoBR<-tabelaoBR%>%
+  group_by(SECTOR,LEVEL_2,LEVEL_3,LEVEL_4,LEVEL_5,LEVEL_6,TYPE,GAS,STATE,ECONOMIC_ACTIVITY,PRODUCT) %>% 
+  summarise(`1970`=sum(`1970`),`1971`=sum(`1971`),`1972`=sum(`1972`),`1973`=sum(`1973`),`1974`=sum(`1974`),`1975`=sum(`1975`),`1976`=sum(`1976`),
+            `1977`=sum(`1977`),`1978`=sum(`1978`),`1979`=sum(`1979`),`1980`=sum(`1980`),`1981`=sum(`1981`),
+            `1982`=sum(`1982`),`1983`=sum(`1983`),`1984`=sum(`1984`),`1985`=sum(`1985`),`1986`=sum(`1986`),`1987`=sum(`1987`),`1988`=sum(`1988`),`1989`=sum(`1989`),
+            `1990`=sum(`1990`),`1991`=sum(`1991`),`1992`=sum(`1992`),`1993`=sum(`1993`),`1994`=sum(`1994`),`1995`=sum(`1995`),`1996`=sum(`1996`),`1997`=sum(`1997`),
+            `1998`=sum(`1998`),`1999`=sum(`1999`),`2000`=sum(`2000`),`2001`=sum(`2001`),`2002`=sum(`2002`),`2003`=sum(`2003`),`2004`=sum(`2004`),`2005`=sum(`2005`),
+            `2006`=sum(`2006`),`2007`=sum(`2007`),`2008`=sum(`2008`),`2009`=sum(`2009`),`2010`=sum(`2010`),`2011`=sum(`2011`),`2012`=sum(`2012`),`2013`=sum(`2013`),
+            `2014`=sum(`2014`),`2015`=sum(`2015`),`2016`=sum(`2016`),`2017`=sum(`2017`),`2018`=sum(`2018`),`2019`=sum(`2019`),`2020`=sum(`2020`))
+
+
+write.csv(tabelaoBR, file = "Results/7_TABELAO_MUT_BR-10-01.csv",row.names=F)
+```
+# Final exporting of the table at the level of municipalities
+```javascript
+#Municipality names
+nomesmun<-read.csv("data/aux_data/nomes_mun_IBGE.csv",head=T,sep=";")
+nomesmun<-nomesmun[,1:2]
+
+nomesmun$GEOCODIGO2<-as.character(nomesmun$GEOCODIGO)
+tabelao_full_final_mun_corr$CODIBGE <- as.character(tabelao_full_final_mun_corr$CODIBGE)
+tabelao_full_final_mun_corr$CODIBGE<-as.character(str_sub(tabelao_full_final_mun_corr$CODIBGE,2,8))
+
+tabelao_full_final_mun1<-tabelao_full_final_mun_corr%>%
+  left_join(nomesmun,by=c("CODIBGE"="GEOCODIGO2"))
+tabelao_full_final_mun1<-tabelao_full_final_mun1[,c(1:9,66,10:64)]
+
+tabelao_full_final_mun1$STATE<-as.character(tabelao_full_final_mun1$STATE)
+lista.estados<-unique(tabelao_full_final_mun1$STATE)
+
+for(i in 1:length(lista.estados)){
+  write.csv(subset(tabelao_full_final_mun1, tabelao_full_final_mun1[,12] == lista.estados[i]),file=paste("Results/UF/TABELAO_MUT_MUN","_",lista.estados[i],".csv",sep=""),row.names = F,fileEncoding = "UTF-8")
+}
 ```javascript

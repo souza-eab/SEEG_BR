@@ -41,41 +41,41 @@ var listYears = ['1989_1990', '1990_1991', '1991_1992', '1992_1993', '1993_1994'
                  '2017_2018', '2018_2019', '2019_2020'];
 
 // Create an empty image to store each image and stack it as a new band
-var recipe = ee.Image([]);
+var trans = ee.Image([]);
 
 // Iteration for each year
 listYears.forEach(function(stack_img){
   // Read image for the year i
   var image_i = ee.Image(dir + '/' + prefix + stack_img);
-  // Stack into recipe
-  recipe = recipe.addBands(image_i);
+  // Stack into trans
+  trans = trans.addBands(image_i);
 });
 
 // Print stacked data
-print(recipe);
+print(trans);
 
 /*
 // Export as a gdrive file
     Export.image.toDrive({
-    image: recipe,
+    image: trans,
     description: prefix + 'stacked',
     folder: gfolder,
     scale: 30,
     fileFormat: 'GeoTIFF',
-    region: recipe.geometry(),
+    region: trans.geometry(),
     maxPixels: 1e13
     });
 */
 
 // Export as a GEE asset 
   Export.image.toAsset({
-    'image': recipe,
+    'image': trans,
     'description': prefix + 'stacked',
     'assetId': assetId + prefix + 'stacked',
     'pyramidingPolicy': {
         '.default': 'mode'
     },
-    'region': recipe.geometry(),
+    'region': trans.geometry(),
     'scale': 30,
     'maxPixels': 1e13
 });

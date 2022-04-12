@@ -21,10 +21,10 @@
 
 /* @. Set user parameters */// eg.
 
-// set directory for the output file
+// Set directory for the output file
 var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/2_1_Mask_stable/';
 
-// Set Asset collection  6.0 MapBiomas 
+// Set Asset from MapBiomas collection 6.0  
 var mapbioDir = 'projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1';
 var mapbiomas = ee.Image(mapbioDir)
 
@@ -32,7 +32,7 @@ var mapbiomas = ee.Image(mapbioDir)
 var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
-// Load the deforestation and regeneration masks, already filtered and noise eliminated
+// Load the filtered deforestation and regeneration masks
 var regenDir = 'projects/ee-seeg-brazil/assets/collection_9/v1/2_0_Temporal_filter_regeneration';
 var regen = ee.Image(regenDir);
 print("bandas regen", regen.bandNames());// regeneration since 1990
@@ -47,10 +47,10 @@ print("bandas", bandNames);
       mapbiomas = mapbiomas.select(bandNames);
 
 // 1986 -> 2020
-//////// Calculating frequency (number of years) in which each i_pixel was determined class_n
-// General rule (ratio period)
+//////// Calculate the frequency (number of years) in which each i_pixel was a determined class_n
+// General rule (ratio of the total number of years of the considered period)
 var exp = '100*((b(0)+b(1)+b(2)+b(3)+b(4)+b(5)+b(6)+b(7)+b(8)+b(9)+b(10)+b(11)+b(12)+b(13)+b(14)+b(15)' +
-    '+b(16)+b(17)+b(18)+b(19)+b(20)+b(21)+b(22)+b(23)+b(24)+b(25)+b(26)+b(27)+b(28)+b(29)+b(30)+b(31))/32)'; // Each collection adds one more year and it is important to check the classes of the current Mapbiomas collection, 2022.
+    '+b(16)+b(17)+b(18)+b(19)+b(20)+b(21)+b(22)+b(23)+b(24)+b(25)+b(26)+b(27)+b(28)+b(29)+b(30)+b(31))/32)'; // Each collection adds one more year and it is important to check the period of the Mapbiomas collection being used
 
 // Get frequency of each class
 var florFreq = mapbiomas.eq(3).expression(exp);                     //  Forest Formation
@@ -65,23 +65,23 @@ var silviFreq = mapbiomas.eq(9).expression(exp);                    // Forest Pl
 var pastFreq = mapbiomas.eq(15).expression(exp);                    // Pasture
 var agroAnnFreq = mapbiomas.eq(19).expression(exp);                 // Temporary Crop
 var canaFreq = mapbiomas.eq(20).expression(exp);                    // Sugar cane
-var agroFreq = mapbiomas.eq(21).expression(exp);                    // Mosaic Agriculture and Pasture
-var praiasFreq = mapbiomas.eq(23).expression(exp);                  // Beach, Dune and Sand Spot
+var agroFreq = mapbiomas.eq(21).expression(exp);                    // Mosaic of Agriculture and Pasture
+var praiasFreq = mapbiomas.eq(23).expression(exp);                  // Beach, Dune, and Sand
 var urbanFreq = mapbiomas.eq(24).expression(exp);                   // Urban Area
 var naoVegFreq = mapbiomas.eq(25).expression(exp);                  // Other non Vegetaded Areas
 var rockFreq = mapbiomas.eq(29).expression(exp);                    // Rocky Outcrop
 var mineFreq = mapbiomas.eq(30).expression(exp);                    // Mining
 var aquiFreq = mapbiomas.eq(31).expression(exp);                    // Aquaculture
-var aguaFreq = mapbiomas.eq(33).expression(exp);                    // River,Lake and Ocean
-var agroPerFreq = mapbiomas.eq(36).expression(exp);                 // Perennial Corp
+var aguaFreq = mapbiomas.eq(33).expression(exp);                    // River, Lake, and Ocean
+var agroPerFreq = mapbiomas.eq(36).expression(exp);                 // Perennial Crop
 var agroSojaFreq = mapbiomas.eq(39).expression(exp);                // Soybean
 var agroTempRice = mapbiomas.eq(40).expression(exp);                // Rice
 var agroTempFreq = mapbiomas.eq(41).expression(exp);                // Other temporary Crops
 var agroPerFreqCoffee = mapbiomas.eq(46).expression(exp);           // Coffee
 var agroPerFreqCitrus = mapbiomas.eq(47).expression(exp);           // Citrus
-var agroPerFreqOther = mapbiomas.eq(48).expression(exp);            // Other Perennial Crop
+var agroPerFreqOther = mapbiomas.eq(48).expression(exp);            // Other Perennial Crops
 
-////// Mask of native vegetation and water (freq >95%) stable
+////// Mask of stable (freq >95%) native vegetation and water
 var vegMask = ee.Image(0).clip(regions)
                          .where(florFreq.gt(95), 1)  
                          .where(savFreq.gt(95), 1)
@@ -92,7 +92,7 @@ var vegMask = ee.Image(0).clip(regions)
                          .where(naoFlorFreq.gt(95), 1)
                          .where(aguaFreq.gt(95), 1);
 
-//////Máscara de uso e afloramento rochoso (freq >99%)    estáveis                      
+////// Mask of stable (freq >99%) anthropic land use and rocky outcrop                
 var usoMask = ee.Image(0).clip(regions)                         
                           .where(silviFreq.gt(99), 1) 
                           .where(pastFreq.gt(99), 1)  
@@ -113,11 +113,12 @@ var usoMask = ee.Image(0).clip(regions)
                           .where(aquiFreq.gt(99), 1)              
                           .where(rockFreq.gt(0), 0);  
 
-/////Mapa base: 
+/////Base map: 
 var  baseMap = ee.Image(0).clip(regions)
-///Allocates most frequent class to the usage mask in the base map
-// Here the order matters, the sorting is hierarchical and check according to ATBD Mapbiomas. 
-                              .where(usoMask.eq(1), 21) //eg. class 21 lowest power in the hierarchy
+
+///Allocate most frequent class to the land use mask in the base map
+// Here the order matters, the sorting is hierarchical
+                              .where(usoMask.eq(1), 21) //eg. class 21 lowest level in the hierarchy
                               .where(usoMask.eq(1).and(silviFreq.gt(99)), 9) 
                               .where(usoMask.eq(1).and(pastFreq.gt(99)), 15) 
                               .where(usoMask.eq(1).and(agroAnnFreq.gt(99)), 19) 
@@ -137,7 +138,7 @@ var  baseMap = ee.Image(0).clip(regions)
                               .where(usoMask.eq(1).and(rockFreq.gt(0)), 29)                               
                         
 //  Native vegetation of higher hierarchical order                        
-// Allocates most frequent class in the native vegetation mask, with a criterion of 60% cut and then overlapping the stable native areas                         
+// Allocates most frequent class in the native vegetation mask, with a threshold cut of 60% and then overlap the stable native areas                         
                               .where(vegMask.eq(1).and(florFreq.gt(60)), 3)
                               .where(vegMask.eq(1).and(savFreq.gt(60)), 4)
                               .where(vegMask.eq(1).and(WrestFreq.gt(60)), 49) 
@@ -165,7 +166,7 @@ var  baseMap = ee.Image(0).clip(regions)
 // Merge                                                    
   var mapBiomas89Mask = mapBiomas89vegMask.where(mapBiomas89vegMask.eq(0), mapBiomas89UsoMask);
 
-// Fills in the unstable areas with the use masks and native vegetation in 1989
+// Fills in the unstable areas with the land use and native vegetation masks in 1989
   baseMap = baseMap.where(baseMap.eq(0).and(mapBiomas89Mask.eq(1)),
                                             mapbiomas.select("classification_1989"));
   baseMap = baseMap.updateMask(baseMap.neq(0));
@@ -180,7 +181,7 @@ var years = [
 var eeYears = ee.List(years);
 
 
-///// Create role for deforestation with regeneration in the same year
+///// Create rule for stabilizing land cover maps and generating a classification for secondary native vegetation (*100)
 var goSEEG1_1 = function (element, accumList) {
   // Asset previously generated elements into the function
   annualLoss = annualLoss.unmask(0); 
@@ -216,15 +217,15 @@ var goSEEG1_1 = function (element, accumList) {
       lastMapBioBand = ee.List([lastMapBioBand]);
 
 
-// Building the stabilized coverage map for year t      
+// Building the stabilized land cover map for year t      
 ///// Map in year t = map of t-1. Where deforestation (t) = 1, allocate class MapBiomas in year t
   var thisYearCoverMap = lastYearMap.where(thisYearLossMap.eq(1),
                                            mapbiomas.select(currentMapBioBand));
-///// Where regenerate (t) = 1, allocate MapBiomas class in year t (*100)
+///// Where regeneration (t) = 1, allocate MapBiomas class in year t and multiply by 100
       thisYearCoverMap = thisYearCoverMap.where(thisYearGainMap.eq(1),
                                            mapbiomas.select(currentMapBioBand)
                                            .multiply(100));
-//// Where there are classes 30 'Mining' or 24 'Urban area' in MapBiomas in year t (except 21), allocate in map year t                                 
+//// Where there are classes 30 (Mining) or 24 (Urban area) in MapBiomas in year t (except 21), allocate in map year t                                 
       thisYearCoverMap = thisYearCoverMap.where(mapbiomas.select(currentMapBioBand).eq(24)
                                                 .or(mapbiomas.select(currentMapBioBand).eq(30)),
                                                 mapbiomas.select(currentMapBioBand));
@@ -234,7 +235,7 @@ var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,
                                                  [1,  1,  1,  1,  1,  1,  1,  1,   1,  1,  1,  1,  1,  1], 0);
 
 
-//// Release transitions between use classes (returns use classes from the MapBiomas map in the year considered)                            
+//// Release transitions between land use classes (returns land use classes from the MapBiomas map in the year considered)                            
     thisYearCoverMap = thisYearCoverMap.where(thisYearLandUseMask.eq(1).and(mapbiomas.select(currentMapBioBand).eq(9)
                                                 .or(mapbiomas.select(currentMapBioBand).eq(15))
                                                 .or(mapbiomas.select(currentMapBioBand).eq(20))
@@ -253,7 +254,7 @@ var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,
       
       thisYearCoverMap = thisYearCoverMap.select([0], currentMapBioBand);
 
-/// Bands of past years to fill maps between 1986 and t-1, based on regeneration and deforestation data and mapbiomas  
+/// Bands of past years to fill maps between 1986 and t-1, based on regeneration and deforestation data and Mapbiomas  
   var pastBandsVoid = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
     previous.bandNames().get(0),
     previous.bandNames());
@@ -369,13 +370,13 @@ var pastFreqMapBio = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
                                                     pastConstMapBio);
                                                     
                                                     
-///// Where cross-cutting theme data occurs for the first time (year t) and was 'empty' in the base map,
-//// Fill in all previous years with original time series from MapBiomas
+///// Where cross-cutting theme data occurs for the first time (year t) and was empty in the base map,
+//// fill in all previous years with the original time series from MapBiomas
       adequatedPastMaps = adequatedPastMaps.select(pastBandsVoid).where((thisYearGainMap.eq(1)
                                                                         .and(lastYearMap.eq(0)))
                                                     ,pastConstMapBio);                                                                               
 
- /////Where there is regenerating (year t) and 'empty', fill all previous years with use class MapBiomas in t-1
+ ///// Where there is regeneration (year t) and 'empty', fill all previous years with land use class MapBiomas in t-1
       adequatedPastMaps = adequatedPastMaps.select(pastBandsVoid).where(
                                                 (lastYearMap.eq(0)).and( 
                                                 thisYearCoverMap.eq(9)
@@ -400,7 +401,7 @@ return ee.List(accumList).add(ee.Image(adequatedSack));
   
 };
 
-// Apply the function on the collection
+// Apply the function over the MapBiomas collection
 var mapsSEEG1_1 = eeYears.iterate(goSEEG1_1, ee.List([baseMap]));
     mapsSEEG1_1 = ee.List(mapsSEEG1_1);
 
@@ -408,10 +409,10 @@ var SEEGmap1_1 = ee.Image(mapsSEEG1_1.get(31));
 print('SEEGmap1_1 Maps_pos_desmate*regen', SEEGmap1_1 );
 
 ///////////////////////////////////
-//Export the stabilized coverage maps as an Image Collection
-//(you need to create an empty Image Collection in the Asset to store each image that is iteratively 
+//Export the stabilized land cover maps as an Image Collection
+//(you need to create an empty Image Collection in the Asset to receive and store each image that is iteratively exported)
 
-for (var i = 0; i < 32; i++){ //MAIS UM ANO
+for (var i = 0; i < 32; i++){ //Number of years in the collection being used
   var bandName = SEEGmap1_1.bandNames().get(i);
   var image = SEEGmap1_1.select([bandName]).set('year', ee.Number(1989).add(i));
   

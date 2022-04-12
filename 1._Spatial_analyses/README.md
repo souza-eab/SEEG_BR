@@ -21,7 +21,7 @@ Map.addLayer(Reg.select('regeneration2020').selfMask(), {'min': 0,'max': 1, 'pal
 ```
 [Link to script](https://code.earthengine.google.com/4051918e07c956ad8524957dff747d83)
 
-# 1.1 [1.1_Spatial_filter.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/1.1_Spatial_filter.js)
+# 1.1 [Spatial_filter.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/1.1_Spatial_filter.js)
 
 The second step is the application of a temporal filter in every pixel, of at least six years (three years before the transition, the year of transition, and two years after the transition). This filtering identifies pixels with a classification over time consistent with the expected transition. For instance, a pixel is identified as deforestation only when the transition from natural vegetation to anthropic land use is preceded by three years of classification as stable natural vegetation, followed by three years (including the transition year) as anthropic land use. To minimize the uncertainty associated with the years at the beginning and the end of the time series, the filtering rules consider more years before or after the given year, depending on the availability of maps in the time series.
 
@@ -41,7 +41,7 @@ Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 
 [Link to script](https://code.earthengine.google.com/2168f9616bebe4834b4dd9fe7f328c43)
 
 
-# 2.0 [2.0_Stabilized_cover.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Stabilized%20cover.js)
+# 2.0 [Stabilized_cover.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Stabilized%20cover.js)
 
 This script stabilizes the base maps from a MapBiomas collection (currently, col 6.0), for the generation of consistent transitions of land use and cover observed throughout the analyzed period within the deforestation and regeneration masks. This stabilizing analysis, applied to all years of the time series, includes the following steps <>:
 (1) At the pixel level, frequency maps are generated, which count the number of years in which each pixel is classified as each given class;

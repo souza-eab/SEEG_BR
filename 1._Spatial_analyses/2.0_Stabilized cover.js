@@ -9,13 +9,13 @@
 
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: Script to generate and stabilize annual coverage basemaps from a MapBiomas collection (eg. col 6.0)
+// 1: Script to generate and stabilize annual land cover basemaps from a MapBiomas collection
 // 1.1: Create your ImageCollection (eg. 2_1_Mask_stable)
 // 1.2: Set Asset
-// 1.3: Calculating frequency (number of years) in which each i_pixel was determined class_n
-// 1.4: Building the stabilized coverage map for year t      
-// 1.5: Class frequency window between t0 AND t
-// 1.6: Exporting data
+// 1.3: Calculate frequency (number of years) in which each i_pixel was a determined class_n
+// 1.4: Build the stabilized cover map for year t      
+// 1.5: Class frequency window between t0 and t
+// 1.6: Export data
 // @. ~~~~~~~~~~~~~~ // 
 
 

@@ -1,43 +1,42 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: RECLASSIFICATION TO GENERATE DESFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0) //////////////
-//////////  Coordination: Barbara Zimbres, Julia Shimbo, and Ane Alencar //////////////////////////////////////////////////////
+/////////// GOALS: TO CREATE A MASK OF DEFORESTATION FROM A MAPBIOMAS COLLECTION (eg. col 6.0) /////////////////////////////////
+//////////  Created by: Felipe Lenti, Barbara Zimbres /////////////////////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory /////////////////////////////////////////////////////////////////
-//////////  Citing: Zimbres et al.,2022.  ///////////////////////////////////////////////////////////////////////////////////
-/////////   Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////   Processing time <2h> in Google Earth Engine /////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
 // 1: SCRIPT TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
-// 1.1: Acess Asset MapBiomas and Biomes BRAZIL
-// 1.2: Remap layer col. 6.0 Mapiomas 
-// 1.3: Filter Temporal
-// 1.4: Applies the rule exceptions in the first two and last two years of the time series
-// 1.5: Exporting data
+// 1.1: Accessing the assets from the MapBiomas collection and Biomes of Brazil
+// 1.2: Reclassifying layers from Mapbiomas 
+// 1.3: Temporal filter
+// 1.4: Applying the temporal rules adapted to the first two and last two years of the time series
+// 1.5: Exporting the data
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.
 var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 // Set Asset
-// Asset Biomes brazilian
+// Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
-// Add ImageCollection Mapbiomas 6.0 
+// Load ImageCollection from Mapbiomas 6.0 
 var MapBiomas_col6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
 print(MapBiomas_col6);
 
-//Remap layers for native vegetation in 1985 to 1; what is anthropic, is 0; and what does not apply, is 9
+// Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
 var col6antrop85 = MapBiomas_col6.select('classification_1985').remap(
                   [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49],
                   [0,0,0,1, 0, 0, 0, 1, 1, 1, 9, 1, 1, 9, 1, 1, 9, 9, 1, 1, 1, 1, 1, 1, 0]);
 
-//Changing names of bands 
+// Changing band names
 col6antrop85 = col6antrop85.select([0],['deforestation1985']).int8();
 
 // List years
 var years = ['1985','1986','1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
 
-// Complete doing the same thing for the other years 
+// Reclassify all other years 
 for (var i_year=0;i_year<years.length; i_year++){
   var year = years[i_year];
 
@@ -48,7 +47,7 @@ for (var i_year=0;i_year<years.length; i_year++){
   col6antrop85 = col6antrop85.addBands(col6uso.select([0],['deforestation'+year])).int8();
 }
 
-// Generate the function that applies the general rule of time filter (3 years before and 2 years after the transition)
+// Generate a function that applies the general rule of the temporal filter (3 years before and 2 years after the transition)
 var geraMask3_3 = function(year){
   var mask =  col6antrop85.select('deforestation'+(year - 3)).eq(0)
               .and(col6antrop85.select('deforestation'+(year - 2)).eq(0))
@@ -60,7 +59,7 @@ var geraMask3_3 = function(year){
   return mask;
 };
 
-// Applies the rule exceptions in the first two (1986 and 1987) and last two years (2019 and 2020) of the time series
+// Apply rules adapted to the first two (1986 and 1987) and last two years (2019 and 2020) of the time series
 var imageZero = ee.Image(0);
 var mask86 =  col6antrop85.select('deforestation'+(1986 - 1)).eq(0)
               .and(col6antrop85.select('deforestation'+(1986    )).eq(1))
@@ -130,7 +129,7 @@ deforestation88 = deforestation88.unmask(imageZero);
 deforestation88 = deforestation88.updateMask(deforestation88.neq(0));
 deforestation88 = deforestation88.select(['deforestation1985'],['deforestation1988']);
 
-// Adds Bands 
+// Adds bands 
 deforestation = deforestation.addBands(deforestation88);
 
 // Generate the bands by applying the filter for all other years of the general rule (in this case, until 2019)
@@ -154,7 +153,7 @@ var vis = {
 };
 
 
-// View eg. 
+// Visualization 
 Map.addLayer(deforestation.select('deforestation2013'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2013");
 Map.addLayer(deforestation.select('deforestation2020'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2020");
 Map.addLayer(MapBiomas_col6.select('classification_2020'), vis,"Mapbiomas_2020");
@@ -177,47 +176,46 @@ Export.image.toAsset({
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: RECLASSIFICATION TO GENERATE REGENERATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0) //////////////
-//////////  Coordination: Barbara Zimbres, Julia Shimbo, and Ane Alencar /////////////////////////////////////////////////////
-//////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
-////////// Citing: Zimbres et al.,2022.  ///////////////////////////////////////////////////////////////////////////////////
-/////////  Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////// GOALS: TO CREATE A MASK OF REGENERATION FROM A MAPBIOMAS COLLECTION (eg. col 6.0) //////////////////////////////////
+//////////  Created by: Felipe Lenti, Barbara Zimbres /////////////////////////////////////////////////////////////////////////
+//////////  Developed by: IPAM, SEEG and Climate Observatory /////////////////////////////////////////////////////////////////
+/////////   Processing time <2h> in Google Earth Engine /////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: SCRIPT TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
-// 1.1: Acess Asset MapBiomas and Biomes BRAZIL
-// 1.2: Remap layer col. 6.0 Mapiomas 
-// 1.3: Filter Temporal
-// 1.4: Applies the rule exceptions in the first two and last two years of the time series
-// 1.5: Exporting data
+// 1: SCRIPT TO GENERATE REGENERATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 6.0)
+// 1.1: Accessing the assets from the MapBiomas collection and Biomes of Brazil
+// 1.2: Reclassifying layers from Mapbiomas 
+// 1.3: Temporal filter
+// 1.4: Applying the temporal rules adapted to the first two and last two years of the time series
+// 1.5: Exporting the data
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.
 
-// set directory for the output file
+// Set directory for the output file
 var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 // Set assets
-// Asset Biomes Brazil
+// Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
-// Add ImageCollection Mapbiomas 6.0
+//  Load ImageCollection from Mapbiomas 6.0 
 var MapBiomas_col6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
 
-//Remap layers for native vegetation in 1985 to 1; what is anthropic, is 0; and what does not apply, is 9
+// Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
 var col6forest85 = MapBiomas_col6.select('classification_1985').remap(
                   [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49],
                   [1,1,1,0, 1, 1, 1, 0, 0, 0, 9, 0, 0, 9, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 1]);
 
-// Selection names of bands 
+// Changing band names
 col6forest85 = col6forest85.select([0],['regeneration1985']).int8();
 
 // List years
 var years = ['1985','1986','1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
 
-// Complete doing the same thing for the other years
+// Reclassify all other years 
 for (var i_year=0;i_year<years.length; i_year++){ 
   var year = years[i_year];
 
@@ -228,7 +226,7 @@ for (var i_year=0;i_year<years.length; i_year++){
   col6forest85 = col6forest85.addBands(col6flor.select([0],['regeneration'+year])).int8();
 }
 
-// Generate the function that applies the general rule of time filter (3 years before and 2 years after the transition)
+// Generate a function that applies the general rule of the temporal filter (3 years before and 2 years after the transition)
 var geraMask3_3 = function(year){
   var mask =  col6forest85.select('regeneration'+(year - 3)).eq(0)
               .and(col6forest85.select('regeneration'+(year - 2)).eq(0))
@@ -240,7 +238,7 @@ var geraMask3_3 = function(year){
   return mask;
 };
 
-// Applies the rule exceptions in the first two (1986 and 1987) and last two years (2019 and 2020) of the time series
+// Apply rules adapted to the first two (1986 and 1987) and last two years (2019 and 2020) of the time series
 var imageZero = ee.Image(0);
   var mask86 =  col6forest85.select('regeneration'+(1986 - 1)).eq(0)
               .and(col6forest85.select('regeneration'+(1986    )).eq(1))
@@ -310,7 +308,7 @@ regeneration88 = regeneration88.unmask(imageZero);
 regeneration88 = regeneration88.updateMask(regeneration88.neq(0));
 regeneration88 = regeneration88.select(['regeneration1985'],['regeneration1988']);
 
-// Adds Bands
+// Adds bands
 regeneration = regeneration.addBands(regeneration88);
 
 // Generate the bands by applying the filter for all other years of the general rule (in this case, until 2019)
@@ -325,7 +323,7 @@ for (var i = 1989; i < 2019; i++) {
 regeneration = regeneration.addBands(mask19).addBands(mask20);
 print(regeneration);
 
-// View eg.
+// Visualization
 Map.addLayer(regeneration.select('regeneration2013'), {'min': 0,'max': 1, 'palette': 'blue'},'Regeneration_2013');
 Map.addLayer(regeneration.select('regeneration2020'), {'min': 0,'max': 1, 'palette': 'blue'},'Regeneration_2020');
 

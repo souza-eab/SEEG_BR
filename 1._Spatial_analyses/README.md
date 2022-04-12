@@ -183,7 +183,7 @@ print(recipe);
 
 # 4.0 [CalcAreaZone.ipynb](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/4.0_CalcAreaZone.ipynb)
 
-Create and export the areas of each transition annually, according to a oundingBox and/or region of interest (eg. municipalities in Brazil).
+Create and export the areas of each transition annually, according to a BoundingBox and/or region of interest (eg. municipalities in Brazil).
 
 
 [Link to script_in_Google_Collab](https://colab.research.google.com/drive/17HOAjssZNNneiIms1rDRRl2wypeOMqQd?usp=sharing) or 
@@ -192,7 +192,7 @@ Create and export the areas of each transition annually, according to a oundingB
 
 
 
-# Schema
-## In Development {
+# Scheme
+## Under Development {
 <img src='/aux/SEEG_v1_0.0.1.png' height='auto' width='auto' align='right'>
 

@@ -504,3 +504,233 @@ write.csv(tran_mun, "Results/2_tran_mun_intermediario.csv", row.names = F, fileE
 #' @examples
 seeg <- function(t1, t2, bi, uf, ap) {
 ``````
+## Organizing matrices with all possible transition cases
+``````javascript
+# (combinations of "de", "para", "ap", and "uf" in the case of forests in the Cerrado) per biome
+
+mCER1 <- expand.grid(  t1 = classesCE,
+                       t2 = classesCE,
+                       bioma = "CERRADO",
+                       uf = "OUTROS",
+                       ap = 0,
+                       stringsAsFactors = FALSE)
+
+
+mCER2 <- expand.grid(  t1 = classesCE,
+                       t2 = classesCE,
+                       bioma = "CERRADO",
+                       uf = "OUTROS",
+                       ap = 1,
+                       stringsAsFactors = FALSE)
+
+
+mCER3 <- expand.grid(  t1 = c(3, 300),
+                       t2 = classesCE,
+                       bioma = "CERRADO",
+                       uf = estadosCerrado,
+                       ap = 0,
+                       stringsAsFactors = FALSE)
+
+mCER4 <- expand.grid(  t1 = classesCE,
+                       t2 = c(3, 300),
+                       bioma = "CERRADO",
+                       uf = estadosCerrado,
+                       ap = 0,
+                       stringsAsFactors = FALSE)
+
+
+mCER5 <- expand.grid(  t1 = c(3, 300),
+                       t2 = classesCE,
+                       bioma = "CERRADO",
+                       uf = estadosCerrado,
+                       ap = 1,
+                       stringsAsFactors = FALSE)
+
+mCER6 <- expand.grid(  t1 = classesCE,
+                       t2 = c(3, 300),
+                       bioma = "CERRADO",
+                       uf = estadosCerrado,
+                       ap = 1,
+                       stringsAsFactors = FALSE)
+
+mCA1 <- expand.grid(  t1 = classesCA,
+                      t2 = classesCA,
+                      bioma = "CAATINGA",
+                      uf = "OUTROS",
+                      ap = 0,
+                      stringsAsFactors = FALSE)
+
+mCA2 <- expand.grid(  t1 = classesCA,
+                      t2 = classesCA,
+                      bioma = "CAATINGA",
+                      uf = "OUTROS",
+                      ap = 1,
+                      stringsAsFactors = FALSE)
+
+mMA1 <- expand.grid(  t1 = classesMA,
+                      t2 = classesMA,
+                      bioma = "MATA_ATLANTICA",
+                      uf = "OUTROS",
+                      ap = 0,
+                      stringsAsFactors = FALSE)
+
+mMA2 <- expand.grid(  t1 = classesMA,
+                      t2 = classesMA,
+                      bioma = "MATA_ATLANTICA",
+                      uf = "OUTROS",
+                      ap = 1,
+                      stringsAsFactors = FALSE)
+
+mAM1 <- expand.grid(  t1 = classesAM,
+                      t2 = classesAM,
+                      bioma = "AMAZONIA",
+                      uf = "OUTROS",
+                      ap = 0,
+                      stringsAsFactors = FALSE)
+
+
+mAM2 <- expand.grid(  t1 = classesAM,
+                      t2 = classesAM,
+                      bioma = "AMAZONIA",
+                      uf = "OUTROS",
+                      ap = 1,
+                      stringsAsFactors = FALSE)
+
+
+mPM1 <- expand.grid(  t1 = classesPM,
+                      t2 = classesPM,
+                      bioma = "PAMPA",
+                      uf = "OUTROS",
+                      ap = 0,
+                      stringsAsFactors = FALSE)
+
+
+mPM2 <- expand.grid(  t1 = classesPM,
+                      t2 = classesPM,
+                      bioma = "PAMPA",
+                      uf = "OUTROS",
+                      ap = 1,
+                      stringsAsFactors = FALSE)
+
+
+mPN1 <- expand.grid(  t1 = classesPN,
+                      t2 = classesPN,
+                      bioma = "PANTANAL",
+                      uf = "OUTROS",
+                      ap = 0,
+                      stringsAsFactors = FALSE)
+
+mPN2 <-expand.grid(  t1 = classesPN,
+                     t2 = classesPN,
+                     bioma = "PANTANAL",
+                     uf = "OUTROS",
+                     ap = 1,
+                     stringsAsFactors = FALSE)
+``````
+### Grouping all matrices 
+``````javascript
+matriz <- rbind(
+  mCA1, mCA2,
+  mPM1, mPM2,
+  mAM1, mAM2,
+  mMA1, mMA2,
+  mCER1, mCER2, mCER3, mCER4, mCER5, mCER6,
+  mPN1, mPN2
+)
+matriz <- matriz[!duplicated(matriz), ]
+``````
+## Applying function 'seeg' to attribute the specific equatio to each transition type
+``````javasript
+myTab <- data.frame(t(mapply(seeg, t1 = matriz$t1, t2 = matriz$t2, bi = matriz$bioma, uf = matriz$uf, ap = matriz$ap)))
+
+for (i in 1:ncol(myTab)) {
+  myTab[, i] <- unlist(myTab[, i])
+}
+
+myTab <- myTab[!duplicated(myTab), ]
+colnames(myTab) <- c("t1", "t2", "bioma", "uf", "equacao", "ap", "nota", "processo")
+``````
+### Filtering out not inventoried cases
+``````javascript
+myTab <- myTab[myTab$nota != "not inventoried transition", ]
+myTab[grep("NA", myTab$equacao), "equacao"] <- "class absent in the biome"
+``````
+### Matrices where the equations will be calculated to generate
+``````javascript
+# Matrices where the equations will be calculated to generate emission/removal estimates
+emiss_mun <- tran_mun
+emiss_mun$eq_inv <- "NULL"
+emiss_mun$processo <- "NULL"
+``````
+## Applying calculations ---------------------------------------------------
+``````javascript
+for (i in 1:nrow(emiss_mun)) {
+  print(paste0(i, "of", nrow(emiss_mun)))
+  thisRow <- emiss_mun[i, ]
+  eq <- as.character(myTab[myTab$t1 == thisRow$de &
+                             myTab$t2 == thisRow$para &
+                             as.character(myTab$bioma) == as.character(thisRow$bioma) &
+                             as.character(myTab$uf) == as.character(thisRow$uf) &
+                             myTab$ap == thisRow$ap, "equacao"])
+  
+  
+  note <- as.character(myTab[myTab$t1 == thisRow$de &
+                               myTab$t2 == thisRow$para &
+                               as.character(myTab$bioma) == as.character(thisRow$bioma) &
+                               as.character(myTab$uf) == as.character(thisRow$uf) &
+                               myTab$ap == thisRow$ap, "nota"])
+  
+  processo <- as.character(myTab[myTab$t1 == thisRow$de &
+                                   myTab$t2 == thisRow$para &
+                                   as.character(myTab$bioma) == as.character(thisRow$bioma) &
+                                   as.character(myTab$uf) == as.character(thisRow$uf) &
+                                   myTab$ap == thisRow$ap, "processo"])
+  
+  if (length(eq) == 0 || length(processo) == 0) {
+    emiss_mun[i, "eq_inv"] <- "not inventoried transition"
+    emiss_mun[i, "processo"] <- "not inventoried transition"
+  } else {
+    emiss_mun[i, "eq_inv"] <- note
+    emiss_mun[i, "processo"] <- processo
+    eq <- sub("A\\*", "", eq) # [2])
+    emiss_mun[i, !(names(emiss_mun) %in% c(
+      "codigo",
+      "codigobiomasestados",
+      "bioma",
+      "estado",
+      "ap",
+      "de",
+      "para",
+      "uf",
+      "eq_inv",
+      "processo"
+    ))] <- paste(emiss_mun[i, !(names(emiss_mun) %in% c(
+      "codigo",
+      "codigobiomasestados",
+      "bioma",
+      "estado",
+      "ap",
+      "de",
+      "para",
+      "uf",
+      "eq_inv",
+      "processo"
+    ))], "*", eq, sep = "")
+    
+    for (j in 1:ncol(emiss_mun[i, !(names(emiss_mun) %in% c(
+      "codigo",
+      "codigobiomasestados",
+      "bioma",
+      "estado",
+      "de",
+      "para",
+      "uf",
+      "eq_inv",
+      "processo",
+      "ap"
+    ))])) {
+      emiss_mun[i, j + 7] <- as.numeric(round(eval(parse(text = emiss_mun[i, j + 7]))))
+    }
+  }
+}
+``````

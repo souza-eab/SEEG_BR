@@ -1,16 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: Generate and Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0) //
-//////////  Coordination: Barbara Zimbres, Julia Shimbo, and Ane Alencar /////////////////////////////////////////////////////
+/////////// GOALS: Generate and export pairwise transition maps from a MapBiomas collection (eg. col 6.0) /////////////////////
+//////////  Created by: Felipe Lenti, Barbara Zimbres ////////////////////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
-//////////  Citing: Zimbres et al.,2022.  //////////////////////////////////////////////////////////////////////////////////
 /////////   Processing time <2h> in Google Earth Engine ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: Generate and Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0)
+// 1: Generate and export pairwise transition maps from a MapBiomas collection (eg. col 6.0)
 // 1.1: Set Asset
-// 1.2: Load the assets from the previouly step 'Mask_stable" in coverage 
-// 1.3:  Loop to do the arithmetic of bands with all pairs of years, multiplying t1 (y1) by 10000     
+// 1.2: Load the assets from the previous step 'Stabilized_cover'
+// 1.3: Loop to do the arithmetic of bands with all pairs of years, multiplying year 1 by 10000     
 // 1.4: Exporting data
 // @. ~~~~~~~~~~~~~~ //
 
@@ -26,13 +25,13 @@ var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
-//List years
+//List of years
 var years = ['1989', '1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019', '2020'];
 
-// Load the assets from the previouly step 'Mask_stable" in coverage 
+// Load the assets from the previous step 'Stabilized_cover'
 var coverage = ee.ImageCollection('projects/ee-seeg-brazil/assets/collection_9/v1/2_1_Mask_stable').aside(print);
 
-// Loop to do the arithmetic of bands with all pairs of years, multiplying t1 (y1) by 10000
+// Loop to do the arithmetic of bands with all pairs of years, multiplying year 1 by 10000
 years.forEach(function(year){
   var coveraget1 = coverage.filter(ee.Filter.eq("year", ee.Number.parse(year).int())).mosaic();
   var coveraget2 = coverage.filter(ee.Filter.eq("year", ee.Number.parse(year).add(1).int())).mosaic();
@@ -47,8 +46,8 @@ years.forEach(function(year){
 // Eg. we named it "Transitions" that is the name of the Image Collection  
 // // *** NOTE: Image pairs will be generated year by year until the last year +1, which does not exist. 
 // Please ignore the Task to export this last non-existing year pair (eg. 2021_2022)
-// Export Transition wall-to-wall mapping paired year from a MapBiomas collection (eg. col 6.0)
-Export.image.toAsset({
+
+  Export.image.toAsset({
   "image": Transitions2.unmask(0).uint32(),
   "description": 'SEEG_Transitions_'+ (parseInt(year))+'_'+(parseInt(year)+1),
   "assetId": 'projects/ee-seeg-brazil/assets/collection_9/v1/3_0_Transitions_maps/SEEG_Transitions_' + (parseInt(year))+'_'+(parseInt(year)+1), // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported

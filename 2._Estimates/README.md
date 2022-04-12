@@ -22,8 +22,26 @@ pacman::p_load(usethis, geojsonR, jsonlite, googledrive, openxlsx, ggplot2, tidy
 ```
 ## Reading the GeoJSON files
 ```javascript
-# eg. biomasestados <- read.csv("../biomas_estados.csv")
-biomasestados <- read.csv("data/aux_data/biomas_estados.csv")
-# Folder containing the GeoJSON files
-folder <- "data/SEEG_c9_v1"
+biomasestado.data <- list.files(folder, full.names = TRUE) %>%
+  map_df(function (file) {
+    dt = fromJSON(file,flatten = TRUE, simplifyDataFrame = TRUE)$features
+    1:length(dt$properties.featureid) %>% 
+      map_df(function(x) {
+        if(ncol(dt$properties.data[[x]] %>% as.tibble())==0) {
+          dt$properties.data[[x]] = tibble(V1=NA, V2 = NA)
+        }
+        as.tibble(dt$properties.data[[x]]) %>%
+          mutate(codigo = dt$properties.featureid[x],
+                 biomasestados =  as.numeric(str_sub(dt$properties.featureid[x],1,3)),
+                 areaprotegida = dt$properties.AP[x],
+                 periodo = sprintf("%s a %s", 
+                                   str_sub(dt$properties.ANO[x], 1,4), 
+                                   str_sub(dt$properties.ANO[x], 5,8)),
+                 para = V1 %% 10000, de = (V1-para)/10000)
+      })
+  })%>% 
+  left_join(biomasestados, by = c("biomasestados"="id"))%>%
+  select(codigo, codigobiomasestados = biomasestados, bioma = descricaobiomas, estado = descricaoestados, ap=areaprotegida, periodo, de, para, 
+         area_ha = V2) %>%
+  mutate(area_ha = area_ha*100)
 ```

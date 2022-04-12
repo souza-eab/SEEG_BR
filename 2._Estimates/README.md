@@ -503,4 +503,4 @@ write.csv(tran_mun, "Results/2_tran_mun_intermediario.csv", row.names = F, fileE
 #'
 #' @examples
 seeg <- function(t1, t2, bi, uf, ap) {
-``````javascript
+``````

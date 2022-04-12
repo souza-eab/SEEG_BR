@@ -85,3 +85,7 @@ tran_mun <- tran_mun %>%
 ```
 write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
 ```
+
+1_Exporting intermediate file  ------------------------------------------
+write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
+

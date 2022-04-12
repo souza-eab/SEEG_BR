@@ -962,3 +962,82 @@ tabelao_full_mun$DE <- as.character(tabelao_full_mun$DE)
 tabelao_full_mun$PARA <- as.character(tabelao_full_mun$PARA)
 tabelao_full_mun$CODBIOMASESTADOS <- as.character(tabelao_full_mun$CODBIOMASESTADOS)
 ``````
+
+### 4_ Exporting intermediate file ---------------------------------------------
+``````javascript
+write.csv(Results/tabelao_full_mun, file = "tabelao_full_col6.csv") # !!!
+``````
+
+## Classifying transitions that comprise deforestation 
+``````javascript
+# Definition of process type (SEEG LEVEL_5)
+deforestation<-c("Primary forest -- Non vegetated area",
+                 "Primary forest -- Planted forest",
+                 "Primary forest -- Pasture/Agriculture",
+                 "Secondary forest -- Non vegetated area",
+                 "Secondary forest -- Planted forest",
+                 "Secondary forest -- Pasture/Agriculture",
+                 "Primary non forest vegetation -- Non vegetated area",
+                 "Primary non forest vegetation -- Planted forest",
+                 "Primary non forest vegetation -- Pasture/Agriculture",
+                 "Secondary non forest vegetation -- Non vegetated area",
+                 "Secondary non forest vegetation -- Planted forest",
+                 "Secondary non forest vegetation -- Pasture/Agriculture")
+regeneration<-c("Planted forest -- Secondary forest",
+                "Planted forest -- Secondary non forest vegetation",
+                "Pasture/Agriculture -- Secondary forest",
+                "Pasture/Agriculture -- Secondary non forest vegetation",
+                "Non vegetated area -- Secondary forest",
+                "Non vegetated area -- Secondary non forest vegetation")
+others<-c("Planted forest -- Non vegetated area",
+          "Planted forest -- Pasture/Agriculture",
+          "Pasture/Agriculture -- Non vegetated area",
+          "Pasture/Agriculture -- Planted forest",
+          "Pasture/Agriculture -- Pasture/Agriculture",
+          "Non vegetated area -- Planted forest",
+          "Non vegetated area -- Pasture/Agriculture")
+stable<-c("Primary forest -- Primary forest",
+          "Primary non forest vegetation -- Primary non forest vegetation",
+          "Secondary forest -- Secondary forest",
+          "Secondary non forest vegetation -- Secondary non forest vegetation")
+
+tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 %in%
+                                  regeneration] <- "Regeneration"
+tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 %in%
+                                  stable] <- "Stable native vegetation"
+tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 %in%
+                                  deforestation] <- "Deforestation"
+tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 %in%
+                                  others] <- "Other types of land use change"
+tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 == "NA"] <- "NA"
+``````
+
+## Correction of the last year of the series
+``````javascript
+## Correction of the last year of the series based on the deforestation rates provided by official sources (PRODES Amazonia and PRODES Cerrado)
+#Official rates are input as auxiliary tables
+
+### PRODES rates at the level of biome --------------------------------------
+prodesam_bi<-read.csv("data/aux_data/prodesam_bi.csv",head=T,sep=";")
+prodesce_bi<-read.csv("data/aux_data/prodesce_bi.csv",head=T,sep=";")
+
+
+### PRODES rates at the level of state (UF) ---------------------------------
+prodesam_uf<-read.csv("data/aux_data/prodesam_uf.csv",head=T,sep=";")
+prodesce_uf<-read.csv("data/aux_data/ prodesce_uf.csv",head=T,sep=";")
+``````
+
+### Linear regression between PRODES rates and the emissions by SEEG --------
+desm<-tabelao_full_mun[tabelao_full_mun$LEVEL_5=="Deforestation"& tabelao_full_mun$TYPE == "Emission",]
+
+biomas_AUS<-desm%>%
+  group_by(LEVEL_3) %>% 
+  summarise(`X1970`=sum(`X1970`),`X1971`=sum(`X1971`),`X1972`=sum(`X1972`),`X1973`=sum(`X1973`),`X1974`=sum(`X1974`),`X1975`=sum(`X1975`),`X1976`=sum(`X1976`),
+            `X1977`=sum(`X1977`),`X1978`=sum(`X1978`),`X1979`=sum(`X1979`),`X1980`=sum(`X1980`),`X1981`=sum(`X1981`),
+            `X1982`=sum(`X1982`),`X1983`=sum(`X1983`),`X1984`=sum(`X1984`),`X1985`=sum(`X1985`),`X1986`=sum(`X1986`),`X1987`=sum(`X1987`),`X1988`=sum(`X1988`),`X1989`=sum(`X1989`),
+            `X1990`=sum(`X1990`),`X1991`=sum(`X1991`),`X1992`=sum(`X1992`),`X1993`=sum(`X1993`),`X1994`=sum(`X1994`),`X1995`=sum(`X1995`),`X1996`=sum(`X1996`),`X1997`=sum(`X1997`),
+            `X1998`=sum(`X1998`),`X1999`=sum(`X1999`),`X2000`=sum(`X2000`),`X2001`=sum(`X2001`),`X2002`=sum(`X2002`),`X2003`=sum(`X2003`),`X2004`=sum(`X2004`),`X2005`=sum(`X2005`),
+            `X2006`=sum(`X2006`),`X2007`=sum(`X2007`),`X2008`=sum(`X2008`),`X2009`=sum(`X2009`),`X2010`=sum(`X2010`),`X2011`=sum(`X2011`),`X2012`=sum(`X2012`),`X2013`=sum(`X2013`),
+            `X2014`=sum(`X2014`),`X2015`=sum(`X2015`),`X2016`=sum(`X2016`),`X2017`=sum(`X2017`),`X2018`=sum(`X2018`),`X2019`=sum(`X2019`),`X2020`=sum(`X2020`))
+
+

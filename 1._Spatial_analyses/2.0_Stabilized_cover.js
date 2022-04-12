@@ -196,12 +196,12 @@ var goSEEG1_1 = function (element, accumList) {
 /// Map of regeneration in year t
   var thisYearGainMap = regen.select(eeYears.indexOf(element));
 
-/// MapBiomas coverage in year t  
+/// MapBiomas cover in year t  
   var presentBand = bandNames.get(eeYears.indexOf(element).add(1));
       presentBand = ee.List([presentBand]);
   var presentMapBio = mapbiomas.select(presentBand);
 
-// MapBiomas coverage in year t-1 
+// MapBiomas cover in year t-1 
   var previous = ee.List(accumList).get(-1);
       previous = ee.Image(previous);
   

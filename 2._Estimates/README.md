@@ -24,7 +24,7 @@ biomasestados <- read.csv("data/aux_data/biomas_estados.csv")
 # Folder containing the GeoJSON files
 folder <- "data/SEEG_c9_v1"
 ```
-## Recode GeoJson && .csv // <Processing 2H> //
+## Recode GeoJson && .csv                           //Processing 2H //
 ```javascript
 # Base files of the transitions
 # containing the information: code of the municipality (codigo), code of the biome/state (codigobiomasestados),
@@ -65,7 +65,7 @@ tran_mun <- biomasestado.data %>%
 ```
 Rearranging the table
 ```javescript
-### ReClass matching Mapbiomas ---------------------------------------------------
+### ReClass matching Mapbiomas 
 # Reclassify some of the agriculture classes from MapBiomas to group them into less detailed classes (e.g. classes 46-48 into 36)
 # and remove secondary identification (*100) from anthropic classes <more_information>
 tran_mun <- tran_mun %>%
@@ -734,4 +734,231 @@ for (i in 1:nrow(emiss_mun)) {
     }
   }
 }
+
+# Definition of columns with annual estimates as numeric
+emiss_mun[, 8:38] <- as.numeric(unlist(emiss_mun[, 8:38]))
+
+``````
+
+### 3_Exporting intermediate files ------
+
+``````javascript
+write.csv(emiss_mun, file = "3_emiss_mun_col6_municipios.csv")
+
+``````
+
+### Organizing resulting matrix 
+``````javascript
+emiss_mun_filt <- emiss_mun
+emiss_mun_filt <- emiss_mun_filt[-grep("not inventoried transition", emiss_mun_filt$processo), ]
+unique(emiss_mun_filt$processo)
+
+# Generation oF the column "Atividade", differentiating the economic activity responsible for the transition (either CONSERVATION or PASTURE/AGRICULTURE
+emiss_mun_filt$atividade <- NA
+emiss_mun_filt$atividade[emiss_mun_filt$processo == "Removal in protected areas"] <- "CONSERV"
+emiss_mun_filt$atividade[emiss_mun_filt$processo != "Removal in protected areas"] <- "AGROPEC"
+
+# Generation oF the column "Tipo", differentiating between removal or emission
+emiss_mun_filt$tipo <- NA
+emiss_mun_filt[grep("Removal", emiss_mun_filt$processo), "tipo"] <- "Removal"
+emiss_mun_filt[-grep("Removal", emiss_mun_filt$processo), "tipo"] <- "Emission"
+``````
+### Associating transitions considered in the National Inventory
+``````javascript
+simp <- read.csv(file = "data/aux_data/class_inv_simpl_eng.csv", header = TRUE, sep = ";")
+emiss_mun_filt$transic <- emiss_mun_filt$eq_inv
+emiss_mun_filt$transic <- gsub("[[:digit:]]", "", emiss_mun_filt$transic)
+emiss_mun_filt$transic <- gsub("\\.", "", emiss_mun_filt$transic)
+emiss_mun_filt$transic <- gsub(" ", "", emiss_mun_filt$transic)
+emiss_mun_filt$transic <- gsub("-", " -- ", emiss_mun_filt$transic)
+
+for (i in 1:nrow(simp)) {
+  emiss_mun_filt$transic <- gsub(simp$inv[i], simp$seeg[i], emiss_mun_filt$transic)
+}
+
+unique(paste(emiss_mun_filt$transic, emiss_mun_filt$eq_inv))
+
+``````
+
+### Organizing column order 
+``````javascript
+emiss_mun_filt <- emiss_mun_filt[, c(
+  "processo", "bioma", "ap", "transic", "tipo", "estado", "atividade", "X1989.a.1990", "X1990.a.1991",
+  "X1991.a.1992", "X1992.a.1993",
+  "X1993.a.1994", "X1994.a.1995",
+  "X1995.a.1996", "X1996.a.1997",
+  "X1997.a.1998", "X1998.a.1999",
+  "X1999.a.2000", "X2000.a.2001",
+  "X2001.a.2002", "X2002.a.2003",
+  "X2003.a.2004", "X2004.a.2005",
+  "X2005.a.2006", "X2006.a.2007",
+  "X2007.a.2008", "X2008.a.2009",
+  "X2009.a.2010", "X2010.a.2011",
+  "X2011.a.2012", "X2012.a.2013",
+  "X2013.a.2014", "X2014.a.2015",
+  "X2015.a.2016", "X2016.a.2017",
+  "X2017.a.2018", "X2018.a.2019", "X2019.a.2020", "codigo",
+  "codigobiomasestados", "de", "para", "uf", "eq_inv"
+)]
+``````
+
+## Grouping and summarizing cases
+``````javascript
+emiss_aggr <- emiss_mun_filt %>%
+  group_by(
+    processo,
+    bioma,
+    ap,
+    transic,
+    tipo,
+    codigo,
+    codigobiomasestados,
+    estado,
+    atividade,
+    de,
+    para
+  ) %>%
+  summarise(
+    X1989.a.1990 = sum(X1989.a.1990), X1990.a.1991 = sum(X1990.a.1991),
+    X1991.a.1992 = sum(X1991.a.1992), X1992.a.1993 = sum(X1992.a.1993),
+    X1993.a.1994 = sum(X1993.a.1994), X1994.a.1995 = sum(X1994.a.1995),
+    X1995.a.1996 = sum(X1995.a.1996), X1996.a.1997 = sum(X1996.a.1997),
+    X1997.a.1998 = sum(X1997.a.1998), X1998.a.1999 = sum(X1998.a.1999),
+    X1999.a.2000 = sum(X1999.a.2000), X2000.a.2001 = sum(X2000.a.2001),
+    X2001.a.2002 = sum(X2001.a.2002), X2002.a.2003 = sum(X2002.a.2003),
+    X2003.a.2004 = sum(X2003.a.2004), X2004.a.2005 = sum(X2004.a.2005),
+    X2005.a.2006 = sum(X2005.a.2006), X2006.a.2007 = sum(X2006.a.2007),
+    X2007.a.2008 = sum(X2007.a.2008), X2008.a.2009 = sum(X2008.a.2009),
+    X2009.a.2010 = sum(X2009.a.2010), X2010.a.2011 = sum(X2010.a.2011),
+    X2011.a.2012 = sum(X2011.a.2012), X2012.a.2013 = sum(X2012.a.2013),
+    X2013.a.2014 = sum(X2013.a.2014), X2014.a.2015 = sum(X2014.a.2015),
+    X2015.a.2016 = sum(X2015.a.2016), X2016.a.2017 = sum(X2016.a.2017),
+    X2017.a.2018 = sum(X2017.a.2018), X2018.a.2019 = sum(X2018.a.2019),
+    X2019.a.2020 = sum(X2019.a.2020)
+  )
+``````
+
+### Building the final matrix in the format of SEEG
+``````javascript
+emiss_aggr$ano1970 <- 0
+emiss_aggr$ano1971 <- 0
+emiss_aggr$ano1972 <- 0
+emiss_aggr$ano1973 <- 0
+emiss_aggr$ano1974 <- 0
+emiss_aggr$ano1975 <- 0
+emiss_aggr$ano1976 <- 0
+emiss_aggr$ano1977 <- 0
+emiss_aggr$ano1978 <- 0
+emiss_aggr$ano1979 <- 0
+emiss_aggr$ano1980 <- 0
+emiss_aggr$ano1981 <- 0
+emiss_aggr$ano1982 <- 0
+emiss_aggr$ano1983 <- 0
+emiss_aggr$ano1984 <- 0
+emiss_aggr$ano1985 <- 0
+emiss_aggr$ano1986 <- 0
+emiss_aggr$ano1987 <- 0
+emiss_aggr$ano1988 <- 0
+emiss_aggr$ano1989 <- 0
+emiss_aggr$gases <- "CO2e (t) GWP-AR5"
+emiss_aggr$SETOR <- "Land use change and forests"
+emiss_aggr$LEVEL_5 <- "NA"
+emiss_aggr$PRODUCT <- "NA"
+newNames <- c(
+  "LEVEL_2",
+  "LEVEL_3",
+  "LEVEL_4",
+  "LEVEL_6",
+  "TYPE",
+  "CODIBGE",
+  "CODBIOMASESTADOS",
+  "STATE",
+  "ECONOMIC_ACTIVITY",
+  "DE",
+  "PARA",
+  "1990",
+  "1991",
+  "1992",
+  "1993",
+  "1994",
+  "1995",
+  "1996",
+  "1997",
+  "1998",
+  "1999",
+  "2000",
+  "2001",
+  "2002",
+  "2003",
+  "2004",
+  "2005",
+  "2006",
+  "2007",
+  "2008",
+  "2009",
+  "2010",
+  "2011",
+  "2012",
+  "2013",
+  "2014",
+  "2015",
+  "2016",
+  "2017",
+  "2018",
+  "2019",
+  "2020",
+  "1970",
+  "1971",
+  "1972",
+  "1973",
+  "1974",
+  "1975",
+  "1976",
+  "1977",
+  "1978",
+  "1979",
+  "1980",
+  "1981",
+  "1982",
+  "1983",
+  "1984",
+  "1985",
+  "1986",
+  "1987",
+  "1988",
+  "1989",
+  "GAS",
+  "SECTOR",
+  "LEVEL_5",
+  "PRODUCT"
+)
+
+i <- sapply(emiss_aggr, is.factor)
+emiss_aggr[i] <- lapply(emiss_aggr[i], as.character)
+
+str(emiss_aggr)
+names(emiss_aggr)
+names(emiss_aggr) <- newNames
+
+emiss_aggr <- emiss_aggr[, c(
+  "SECTOR", "LEVEL_2", "LEVEL_3", "LEVEL_4", "LEVEL_5", "LEVEL_6", "TYPE", "GAS", "CODIBGE",
+  "CODBIOMASESTADOS", "STATE", "ECONOMIC_ACTIVITY", "PRODUCT", "DE", "PARA",
+  "1970", "1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978", "1979",
+  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",
+  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",
+  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",
+  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"
+)]
+i <- sapply(emiss_aggr, is.factor)
+emiss_aggr[i] <- lapply(emiss_aggr[i], as.character)
+
+tabelao_full_mun <- emiss_aggr
+
+# type
+tabelao_full_mun$LEVEL_4 <- as.character(tabelao_full_mun$LEVEL_4)
+tabelao_full_mun$LEVEL_5 <- as.character(tabelao_full_mun$LEVEL_5)
+tabelao_full_mun$PRODUCT <- as.character(tabelao_full_mun$PRODUCT)
+tabelao_full_mun$DE <- as.character(tabelao_full_mun$DE)
+tabelao_full_mun$PARA <- as.character(tabelao_full_mun$PARA)
+tabelao_full_mun$CODBIOMASESTADOS <- as.character(tabelao_full_mun$CODBIOMASESTADOS)
 ``````

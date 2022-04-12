@@ -47,7 +47,7 @@ biomasestado.data <- list.files(folder, full.names = TRUE) %>%
   mutate(area_ha = area_ha*100)
 ```
 
-## 0_Exporting intermediate file
+## 0_Exporting intermediate file && Rearranging the table
 ```javascript
 write.csv(biomasestado.data, file = "Results/1_0_Dadosbrutos.csv", row.names = F, fileEncoding = "UTF-8")
 tran_mun <- biomasestado.data %>%
@@ -82,10 +82,198 @@ tran_mun <- tran_mun %>%
 
 ```
 ### 1_Exporting intermediate file  ------------------------------------------
-```
+```javascript
 write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
 ```
+## List of classes Mapbiomas (Collection 6) present in each biome --------
+```javascript
+### Amazon ------------------------------------------------------------
+sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "AMAZONIA"])))
+classesAM <- c(
+  3, # Forest Formation
+  4, # Savanna Formation
+  5, # Mangrove
+  9, # Forest Plantation
+  11, # Wetlands
+  12, # Grassland
+  15, # Pasture
+  20, # Sugar cane
+  21, # Mosaic Agriculture and Pasture
+  23, # Beach, Dune and Sand Spot
+  24, # Urban Area
+  25, # Other non Vegetaded Areas
+  30, # Mining
+  31, # Aquaculture
+  33, # River,Lake and Ocean,
+  39, # Soybean
+  36, # Perennial Corp
+  41, # Other temporary Crops
+  300,
+  400,
+  500,
+  1100,
+  1200
+)
 
-1_Exporting intermediate file  ------------------------------------------
-write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
+### Cerrado -----------------------------------------------------------------
+sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "CERRADO"])))
+classesCE <- c(
+  3, # Forest Formation
+  4, # Savanna Formation
+  5, # Mangrove
+  9, # Forest Plantation
+  11, # Wetlands
+  12, # Grassland
+  15, # Pasture
+  20, # Sugar cane
+  21, # Mosaic Agriculture and Pasture
+  23, # Beach, Dune and Sand Spot
+  24, # Urban Area
+  25, # Other non Vegetaded Areas
+  30, # Mining
+  31, # Aquaculture
+  33, # River,Lake and Ocean
+  36, # Perennial Corp
+  39, # Soybean
+  41, # Other temporary Crops
+  300,
+  400,
+  500,
+  1100,
+  1200
+)
 
+### Atlantic Forest ---------------------------------------------------------
+sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "MATA ATLANTICA"])))
+classesMA <- c(
+  3, # Forest Formation
+  4, # Savanna Formation
+  5, # Mangrove
+  9, # Forest Plantation
+  11, # Wetlands
+  12, # Grassland
+  13, # Other non Forest Formation
+  15, # Pasture
+  20, # Sugar cane
+  21, # Mosaic Agriculture and Pasture
+  23, # Beach, Dune and Sand Spot
+  24, # Urban Area
+  25, # Other non Vegetaded Areas
+  29, # Rocky Outcrop
+  30, # Mining
+  31, # Aquaculture
+  33, # River,Lake and Ocean
+  36, # Perennial Corp
+  39, # Soybean
+  41, # Other temporary Crops
+  49, # Wooded Restinga
+  300,
+  400,
+  500,
+  1100,
+  1200,
+  1300,
+  4900
+)
+
+### Caatinga ----------------------------------------------------------------
+sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "CAATINGA"])))
+classesCA <- c(
+  3, # Forest Formation
+  4, # Savanna Formation
+  5, # Mangrove
+  9, # Forest Plantation
+  11, # Wetlands
+  12, # Grassland
+  15, # Pasture
+  20, # Sugar cane
+  21, # Mosaic Agriculture and Pasture
+  23, # Beach, Dune and Sand Spot
+  24, # Urban Area
+  25, # Other non Vegetaded Areas
+  29, # Rocky Outcrop
+  30, # Mining
+  31, # Aquaculture
+  33, # River,Lake and Ocean
+  36, # Perennial Corp
+  39, # Soybean
+  41, # Other temporary Crops
+  300,
+  400,
+  500,
+  1200,
+  1300
+)
+
+### Pantanal ----------------------------------------------------------------
+sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "PANTANAL"])))
+classesPN <- c(
+  3, # Forest Formation
+  4, # Savanna Formation
+  5, # Mangrove
+  9, # Forest Plantation
+  11, # Wetlands
+  12, # Grassland
+  15, # Pasture
+  20, # Sugar cane
+  21, # Mosaic Agriculture and Pasture
+  24, # Urban Area
+  25, # Other non Vegetaded Areas
+  30, # Mining
+  33, # River,Lake and Ocean
+  39, # Soybean
+  41, # Other temporary Crops
+  300,
+  400,
+  1100,
+  1200
+)
+
+### Pampa -------------------------------------------------------------------
+sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "PAMPA"])))
+classesPM <- c(
+  3, # Forest Formation
+  9, # Forest Plantation
+  11, # Wetlands
+  12, # Grassland
+  15, # Pasture
+  21, # Mosaic Agriculture and Pasture  23,
+  24, # Urban Area
+  25, # Other non Vegetaded Areas
+  29, # Rocky Outcrop
+  30, # Mining
+  31, # Aquaculture
+  33, # River,Lake and Ocean
+  39, # Soybean
+  41, # Other temporary Crops
+  300,
+  1100,
+  1200
+)
+
+# Vetor
+biomas <- c(
+  "AMAZONIA", "CAATINGA", "CERRADO", "MATA_ATLANTICA",
+  "PAMPA", "PANTANAL"
+)
+
+## Correspondence between Mapbiomas classes and the classes from 4NI
+``````javascript
+# Correspondence between Mapbiomas classes and the classes from the Fourth National Inventory
+FM <- c(3, 4, 5, 49)
+FNM <- c(3, 4, 5, 49)
+FSec <- c(300, 400, 500, 4900)
+GM <- c(11, 12, 13)
+GNM <- c(11, 12, 13)
+GSec <- c(1100, 1200, 1300)
+Ref <- 9
+
+
+Ac <- c(20, 21, 36, 39, 41)
+Ap <- 15
+O <- c(23, 24, 25, 29, 30, 31, 33)
+
+classes <- sort(unique(c(FM, FNM, FSec, Ref, GM, GNM, GSec, Ac, Ap, O)))
+uso <- sort(unique(c(Ref, Ac, Ap, O)))
+nat <- c(FM, GM, FSec, GSec)
+```

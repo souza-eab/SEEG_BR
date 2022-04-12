@@ -6,12 +6,13 @@ Created by: Felipe Lenti, Barbara Zimbres (barbara.zimbres@ipam.org.br), Joao Si
 For clarification or an issue/bug report, please write to barbara.zimbres@ipam.org.br and/or edriano.souza@ipam.org.br
 Key activities in sections
 
-## Setting your project.R 
+## Setting your path [project.R](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-Projects)
 ```javascript
 ## Setting your project.R 
 ```
 ## Requerid packages
 ```javascript
+## install.packages("geojsonR") // eg. 
 library(pacman)
 pacman::p_load(usethis, geojsonR, jsonlite, googledrive, openxlsx, ggplot2, tidyverse, tidyr, dplyr, rlang)
 ``` 

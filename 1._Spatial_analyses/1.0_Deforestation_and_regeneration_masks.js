@@ -17,7 +17,7 @@
 /* @. Set user parameters */// eg.
 var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
-// Set Asset
+// Load Asset
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
@@ -145,7 +145,7 @@ deforestation = deforestation.addBands(mask19).addBands(mask20);
 print(deforestation);
 
 
-// get color-ramp module
+// Get color-ramp module
 var vis = {
     'min': 0,
     'max': 49,
@@ -197,7 +197,7 @@ Export.image.toAsset({
 // Set directory for the output file
 var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
-// Set assets
+// Load assets
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 

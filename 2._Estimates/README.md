@@ -10,25 +10,20 @@ For clarification or an issue/bug report, please write to barbara.zimbres@ipam.o
 Key activities in sections
 
 
-
+## Setting your project.R 
 ```javascript
 ## Setting your project.R 
-
 ```
 
-
-```javascript
 ## Requerid packages
+```javascript
 library(pacman)
 pacman::p_load(usethis, geojsonR, jsonlite, googledrive, openxlsx, ggplot2, tidyverse, tidyr, dplyr, rlang)
 ```
-
-
-```javascript
 ## Reading the GeoJSON files
-# biomasestados <- read.csv("../biomas_estados.csv")
+```javascript
+# eg. biomasestados <- read.csv("../biomas_estados.csv")
 biomasestados <- read.csv("data/aux_data/biomas_estados.csv")
 # Folder containing the GeoJSON files
 folder <- "data/SEEG_c9_v1"
-
 ```

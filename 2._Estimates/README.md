@@ -1027,7 +1027,7 @@ prodesam_uf<-read.csv("data/aux_data/prodesam_uf.csv",head=T,sep=";")
 prodesce_uf<-read.csv("data/aux_data/ prodesce_uf.csv",head=T,sep=";")
 ``````
 
-### Linear regression between PRODES rates and the emissions by SEEG --------
+### Linear regression between PRODES rates and the emissions by SEEG 
 desm<-tabelao_full_mun[tabelao_full_mun$LEVEL_5=="Deforestation"& tabelao_full_mun$TYPE == "Emission",]
 
 ``````javascript
@@ -1043,3 +1043,87 @@ biomas_AUS<-desm%>%
             `X2014`=sum(`X2014`),`X2015`=sum(`X2015`),`X2016`=sum(`X2016`),`X2017`=sum(`X2017`),`X2018`=sum(`X2018`),`X2019`=sum(`X2019`),`X2020`=sum(`X2020`))
 
 ``````
+#Final equations per biome
+```javascript
+#### Amazon ------------------------------------------------------------------
+#Amazonia
+summary(lm(t(biomas_AUS[1,22:51])~prodesam_bi$PRODES[1:30])) #a=173920094, b1= 49731, R2= 0.87
+
+#### Cerrado -----------------------------------------------------------------
+summary(lm(t(biomas_AUS[3,33:51])~prodesce_bi$PRODES[1:19])) #a=52829269, b1= 4828, R2= 0.80
+
+```
+#### Applying the equation to predict emissions in the final year
+```javascript
+#Applying the equation to predict emissions in the final year (2020)
+am2020<-173920094+49731*prodesam_bi$PRODES[31]
+ce2020<-52829269+4828*prodesce_bi$PRODES[20]
+
+tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"& tabelao_full_mun$LEVEL_5=="Desmatamento"),66]<-
+  tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66]/
+  sum(tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66])*am2020
+sum(tabelao_full_mun[tabelao_full_mun$LEVEL_3=="AMAZONIA"&tabelao_full_mun$LEVEL_5=="Desmatamento",66])
+
+tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66]<-
+  tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66]/
+  sum(tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66])*ce2020
+
+```
+
+#### For the other biomes
+```javascript
+#For the other biomes, emissions in 2020 (related to deforestation) are assumed to be the same as in 2019
+tabelao_full_mun[tabelao_full_mun$LEVEL_3=="CAATINGA"&tabelao_full_mun$LEVEL_5=="Deforestation",66]<-
+  tabelao_full_mun[tabelao_full_mun$LEVEL_3=="CAATINGA"&tabelao_full_mun$LEVEL_5=="Deforestation",65]
+
+tabelao_full_mun[tabelao_full_mun$LEVEL_3=="MATA_ATLANTICA"&tabelao_full_mun$LEVEL_5=="Deforestation",66]<-
+  tabelao_full_mun[tabelao_full_mun$LEVEL_3=="MATA_ATLANTICA"&tabelao_full_mun$LEVEL_5=="Deforestation",65]
+
+tabelao_full_mun[tabelao_full_mun$LEVEL_3=="PAMPA"&tabelao_full_mun$LEVEL_5=="Deforestation",66]<-
+  tabelao_full_mun[tabelao_full_mun$LEVEL_3=="PAMPA"&tabelao_full_mun$LEVEL_5=="Deforestation",65]
+
+tabelao_full_mun[tabelao_full_mun$LEVEL_3=="PANTANAL"&tabelao_full_mun$LEVEL_5=="Deforestation",66]<-
+  tabelao_full_mun[tabelao_full_mun$LEVEL_3=="PANTANAL"&tabelao_full_mun$LEVEL_5=="Deforestation",65]
+```
+## Calculating emissions by the burning of vegetation residuals
+```javascript
+desm$LEVEL_4[desm$LEVEL_4 == 1 ] <- 0 #does not matter whether it is within or without protected areas
+```
+### Grouping and summarizing emissions due to deforestation 
+```javascript
+desm<-desm%>%
+  group_by(SECTOR,LEVEL_2,LEVEL_3,LEVEL_4,LEVEL_5,TYPE,GAS,CODIBGE,
+           CODBIOMASESTADOS,STATE,ECONOMIC_ACTIVITY,PRODUCT,DE,PARA) %>% 
+  summarize(`1970`=sum(`1970`),`1971`=sum(`1971`),`1972`=sum(`1972`),`1973`=sum(`1973`),`1974`=sum(`1974`),`1975`=sum(`1975`),`1976`=sum(`1976`),
+            `1977`=sum(`1977`),`1978`=sum(`1978`),`1979`=sum(`1979`),`1980`=sum(`1980`),`1981`=sum(`1981`),
+            `1982`=sum(`1982`),`1983`=sum(`1983`),`1984`=sum(`1984`),`1985`=sum(`1985`),`1986`=sum(`1986`),`1987`=sum(`1987`),`1988`=sum(`1988`),`1989`=sum(`1989`),
+            `1990`=sum(`1990`),`1991`=sum(`1991`),`1992`=sum(`1992`),`1993`=sum(`1993`),`1994`=sum(`1994`),`1995`=sum(`1995`),`1996`=sum(`1996`),`1997`=sum(`1997`),
+            `1998`=sum(`1998`),`1999`=sum(`1999`),`2000`=sum(`2000`),`2001`=sum(`2001`),`2002`=sum(`2002`),`2003`=sum(`2003`),`2004`=sum(`2004`),`2005`=sum(`2005`),
+            `2006`=sum(`2006`),`2007`=sum(`2007`),`2008`=sum(`2008`),`2009`=sum(`2009`),`2010`=sum(`2010`),`2011`=sum(`2011`),`2012`=sum(`2012`),`2013`=sum(`2013`),
+            `2014`=sum(`2014`),`2015`=sum(`2015`),`2016`=sum(`2016`),`2017`=sum(`2017`),`2018`=sum(`2018`),`2019`=sum(`2019`),`2020`=sum(`2020`))
+
+desm$LEVEL_6 <- "NA"
+names(desm)
+desm <- desm[c(1:5, 66, 6:65)]
+```
+
+## Applying calculations of CH4 and N2O
+```javascript
+#Applying calculations of CH4 and N2O emissions based on the emissions of CO2 caused by deforestation
+
+### Emissions per state -----------------------------------------------------
+desmUF<-aggregate(desm[, c(36:66)], by = list(
+  desm$STATE),
+  FUN = "sum")
+
+
+### Emissions per state and biome -------------------------------------------
+desmUFBioma<-aggregate(desm[, c(36:66)], by = list(
+  desm$STATE,
+  desm$LEVEL_3),
+  FUN = "sum")
+
+#PS: CASES WHERE DEFORESTATION AREA EQUALS ZERO PREVENTS THE CALCULATIONS. ADDING 1 SOLVES THE PROBLEM
+zeros<-which(desmUFBioma==0,arr.ind = T)
+desmUFBioma[zeros]<-1
+```

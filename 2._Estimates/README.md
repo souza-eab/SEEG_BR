@@ -451,4 +451,56 @@ stk <- read.csv(file = "data/aux_data/estoques_biomas_QCN.csv", header = TRUE, s
 cer_uf <- read.table(file = "data/aux_data/estoques-floresta-cer-uf_QCN.txt", header = T)
 incr <- read.csv(file = "data/aux_data/incremento_QCN.csv", header = TRUE, sep = ";")
 
+``````
+
+### Rearranging stock table -------------------------------------------------
+``````javascript
+bio <- rep(stk$Bioma, each = 12)
+estq <- reshape(stk,
+                varying = list(colnames(stk[-1])),
+                times = names(stk[-1]),
+                timevar = "classe",
+                idvar = "Bioma",
+                ids = stk$Bioma,
+                direction = "long"
+)
+rownames(estq) <- NULL
+colnames(estq)[3] <- "estoque"
+head(estq, 72)
+
+### Rearranging increment table -------------------------------------------------
+inc <- reshape(incr,
+               varying = list(colnames(incr[-1])),
+               times = names(incr[-1]),
+               timevar = "classe",
+               idvar = "Bioma",
+               ids = incr$Bioma,
+               direction = "long"
+)
+rownames(inc) <- NULL
+colnames(inc)[3] <- "incremento"
+head(inc)
+``````
+
+### 2_Exporting intermediate file
+``````javascript
+# Exporting intermediate file
+write.csv(tran_mun, "Results/2_tran_mun_intermediario.csv", row.names = F, fileEncoding = "UTF-8")
+``````
+
+## Function SEEG built to associate the 4NI equation witch each  
+``````javascript
+#' Title: Function built to associate the Inventory equations with each transition type
+#'
+#' @param t1 class transition_time1
+#' @param t2 class transition_time2
+#' @param bi biomes
+#' @param uf states
+#' @param ap protected áreas
+#'
+#' @return
+#' @export
+#'
+#' @examples
+seeg <- function(t1, t2, bi, uf, ap) {
 ``````javascript

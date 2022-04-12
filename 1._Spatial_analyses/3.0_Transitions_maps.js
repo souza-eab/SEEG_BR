@@ -7,16 +7,15 @@
 
 // @. UPDATE HISTORIC EXECUTABLE//
 // 1: Generate and export pairwise transition maps from a MapBiomas collection (eg. col 6.0)
-// 1.1: Set Asset
-// 1.2: Load the assets from the previous step 'Stabilized_cover'
-// 1.3: Loop to do the arithmetic of bands with all pairs of years, multiplying year 1 by 10000     
-// 1.4: Exporting data
+// 1.1: Load the assets from the previous step 'Stabilized_cover'
+// 1.2: Loop to do the arithmetic of bands with all pairs of years, multiplying year 1 by 10000     
+// 1.3: Exporting data
 // @. ~~~~~~~~~~~~~~ //
 
 
 /* @. Set user parameters */// eg.
 
-// set directory for the output file
+// Set directory for the output file
 var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

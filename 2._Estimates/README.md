@@ -256,6 +256,7 @@ biomas <- c(
   "AMAZONIA", "CAATINGA", "CERRADO", "MATA_ATLANTICA",
   "PAMPA", "PANTANAL"
 )
+``````
 
 ## Correspondence between Mapbiomas classes and the classes from 4NI
 ``````javascript
@@ -268,7 +269,6 @@ GNM <- c(11, 12, 13)
 GSec <- c(1100, 1200, 1300)
 Ref <- 9
 
-
 Ac <- c(20, 21, 36, 39, 41)
 Ap <- 15
 O <- c(23, 24, 25, 29, 30, 31, 33)
@@ -276,4 +276,144 @@ O <- c(23, 24, 25, 29, 30, 31, 33)
 classes <- sort(unique(c(FM, FNM, FSec, Ref, GM, GNM, GSec, Ac, Ap, O)))
 uso <- sort(unique(c(Ref, Ac, Ap, O)))
 nat <- c(FM, GM, FSec, GSec)
-```
+``````
+## Stocks in the Cerrado biome vary according to state
+``````javascript
+estadosCerrado <- c(
+  "BA",
+  "DF",
+  "GO",
+  "MA",
+  "MT",
+  "MS",
+  "MG",
+  "PA",
+  "PR",
+  "PI",
+  "SP",
+  "TO"
+)
+
+estados_cer <- sort(c(
+  "BAHIA",
+  "DISTRITO FEDERAL",
+  "GOIAS",
+  "MARANHAO",
+  "MINAS GERAIS",
+  "MATO GROSSO DO SUL",
+  "MATO GROSSO",
+  "PARA",
+  "PIAUI",
+  "PARANA",
+  "SAO PAULO",
+  "TOCANTINS"
+))
+
+
+colnames(tran_mun) <- c(
+  "codigo", "codigobiomasestados", "bioma", "estado", "ap", "de", "para",
+  "X1989.a.1990", "X1990.a.1991",
+  "X1991.a.1992", "X1992.a.1993",
+  "X1993.a.1994", "X1994.a.1995",
+  "X1995.a.1996", "X1996.a.1997",
+  "X1997.a.1998", "X1998.a.1999",
+  "X1999.a.2000", "X2000.a.2001",
+  "X2001.a.2002", "X2002.a.2003",
+  "X2003.a.2004", "X2004.a.2005",
+  "X2005.a.2006", "X2006.a.2007",
+  "X2007.a.2008", "X2008.a.2009",
+  "X2009.a.2010", "X2010.a.2011",
+  "X2011.a.2012", "X2012.a.2013",
+  "X2013.a.2014", "X2014.a.2015",
+  "X2015.a.2016", "X2016.a.2017",
+  "X2017.a.2018", "X2018.a.2019", "X2019.a.2020"
+)
+``````
+### Aggregate and sum the transition areas according to the zones
+``````javascript
+# Aggregate and sum the transition areas according to the zones (municipalities, states, biomes and protected areas)
+tran_mun <- tran_mun %>%
+  group_by(
+    codigo,
+    codigobiomasestados, bioma, estado, ap, de, para
+  ) %>%
+  summarise(
+    X1989.a.1990 = sum(X1989.a.1990), X1990.a.1991 = sum(X1990.a.1991),
+    X1991.a.1992 = sum(X1991.a.1992), X1992.a.1993 = sum(X1992.a.1993),
+    X1993.a.1994 = sum(X1993.a.1994), X1994.a.1995 = sum(X1994.a.1995),
+    X1995.a.1996 = sum(X1995.a.1996), X1996.a.1997 = sum(X1996.a.1997),
+    X1997.a.1998 = sum(X1997.a.1998), X1998.a.1999 = sum(X1998.a.1999),
+    X1999.a.2000 = sum(X1999.a.2000), X2000.a.2001 = sum(X2000.a.2001),
+    X2001.a.2002 = sum(X2001.a.2002), X2002.a.2003 = sum(X2002.a.2003),
+    X2003.a.2004 = sum(X2003.a.2004), X2004.a.2005 = sum(X2004.a.2005),
+    X2005.a.2006 = sum(X2005.a.2006), X2006.a.2007 = sum(X2006.a.2007),
+    X2007.a.2008 = sum(X2007.a.2008), X2008.a.2009 = sum(X2008.a.2009),
+    X2009.a.2010 = sum(X2009.a.2010), X2010.a.2011 = sum(X2010.a.2011),
+    X2011.a.2012 = sum(X2011.a.2012), X2012.a.2013 = sum(X2012.a.2013),
+    X2013.a.2014 = sum(X2013.a.2014), X2014.a.2015 = sum(X2014.a.2015),
+    X2015.a.2016 = sum(X2015.a.2016), X2016.a.2017 = sum(X2016.a.2017),
+    X2017.a.2018 = sum(X2017.a.2018), X2018.a.2019 = sum(X2018.a.2019),
+    X2019.a.2020 = sum(X2019.a.2020)
+  ) %>%
+  ungroup()
+
+tran_mun <- data.frame(tran_mun)
+
+tran_mun$bioma <- as.factor(tran_mun$bioma)
+tran_mun$estado <- as.factor(tran_mun$estado)
+tran_mun$ap <- as.factor(tran_mun$ap)
+tran_mun$de <- as.factor(tran_mun$de)
+tran_mun$para <- as.factor(tran_mun$para)
+levels(tran_mun$bioma) <- c("AMAZONIA", "CAATINGA", "CERRADO", "MATA_ATLANTICA", "PAMPA", "PANTANAL")
+``````
+### Checking biome area quantified 
+``````javascript
+nrow(tran_mun[tran_mun$de == 3 &
+                tran_mun$para == 3 &
+                tran_mun$ap == 1 &
+                tran_mun$bioma == "AMAZONIA", ])
+
+nrow(tran_mun[tran_mun$de == 3 &
+                tran_mun$para == 3 &
+                tran_mun$ap == 1 &
+                tran_mun$bioma == "CERRADO", ])
+
+nrow(tran_mun[tran_mun$de == 3 &
+                tran_mun$para == 3 &
+                tran_mun$ap == 1 &
+                tran_mun$bioma == "CAATINGA", ])
+
+
+nrow(tran_mun[tran_mun$de == 3 &
+                tran_mun$para == 3 &
+                tran_mun$ap == 1 &
+                tran_mun$bioma == "MATA_ATLANTICA", ])
+
+
+nrow(tran_mun[tran_mun$de == 3 &
+                tran_mun$para == 3 &
+                tran_mun$ap == 1 &
+                tran_mun$bioma == "PAMPA", ])
+
+
+nrow(tran_mun[tran_mun$de == 3 &
+                tran_mun$para == 3 &
+                tran_mun$ap == 1 &
+                tran_mun$bioma == "PANTANAL", ])
+                
+# Selecting only those transition types that make sense for each given biome
+tran_mun <- tran_mun[(tran_mun$para %in% classes), ]
+tran_mun <- tran_mun[(tran_mun$de %in% classes), ]
+``````
+### Relate transitions involving forest in the Cerrado with each state 
+
+``````javascript
+# Relate transitions involving forest in the Cerrado with each state (keep UF=others for the other biomes)
+# UF = unit of the federation
+tran_mun$uf <- "OUTROS"
+
+for (i in 1:length(estadosCerrado)) {
+  tran_mun[tran_mun$bioma == "CERRADO" & tran_mun$estado == estados_cer[i] & tran_mun$de == 3, "uf"] <- estadosCerrado[i]
+  tran_mun[tran_mun$bioma == "CERRADO" & tran_mun$estado == estados_cer[i] & tran_mun$para == 3, "uf"] <- estadosCerrado[i]
+}
+``````

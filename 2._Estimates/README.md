@@ -81,11 +81,11 @@ tran_mun <- tran_mun %>%
   ))
 
 ```
-### 1_Exporting intermediate file  ------------------------------------------
+### 1_Exporting intermediate file 
 ```javascript
 write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
 ```
-## List of classes Mapbiomas (Collection 6) present in each biome --------
+## List of classes Mapbiomas (Collection 6) present in each biome 
 ```javascript
 ### Amazon ------------------------------------------------------------
 sort(as.numeric(unique(tran_mun$de[tran_mun$bioma == "AMAZONIA"])))

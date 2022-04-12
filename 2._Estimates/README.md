@@ -55,14 +55,16 @@ biomasestado.data <- list.files(folder, full.names = TRUE) %>%
   mutate(area_ha = area_ha*100)
 ```
 
-## 0_Exporting intermediate file && Rearranging the table
+## 0_Exporting intermediate file && 
 ```javascript
 write.csv(biomasestado.data, file = "Results/1_0_Dadosbrutos.csv", row.names = F, fileEncoding = "UTF-8")
 tran_mun <- biomasestado.data %>%
   arrange(codigo, periodo, de, para) %>%
   spread(key = periodo, value = area_ha, fill = 0) %>%
   filter(!is.na(bioma))
-
+```
+Rearranging the table
+```javescript
 ### ReClass matching Mapbiomas ---------------------------------------------------
 # Reclassify some of the agriculture classes from MapBiomas to group them into less detailed classes (e.g. classes 46-48 into 36)
 # and remove secondary identification (*100) from anthropic classes <more_information>
@@ -87,7 +89,6 @@ tran_mun <- tran_mun %>%
                        `4600` = "36", `4700` = "36",
                        `4800` = "36", `4900` = "49"
   ))
-
 ```
 ### 1_Exporting intermediate file 
 ```javascript

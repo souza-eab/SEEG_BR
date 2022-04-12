@@ -10,12 +10,20 @@ Key activities in sections
 ```javascript
 ## Setting your project.R 
 ```
-
 ## Requerid packages
 ```javascript
 library(pacman)
 pacman::p_load(usethis, geojsonR, jsonlite, googledrive, openxlsx, ggplot2, tidyverse, tidyr, dplyr, rlang)
 ``` 
+# Base file with codes for biome (bioma) and states (estado)
+```javascript
+# e.g.
+# biomasestados <- read.csv("../biomas_estados.csv")
+biomasestados <- read.csv("data/aux_data/biomas_estados.csv")
+
+# Folder containing the GeoJSON files
+folder <- "data/SEEG_c9_v1"
+```
 ## Recode GeoJson && .csv // <Processing 2H> //
 ```javascript
 # Base files of the transitions
@@ -417,3 +425,30 @@ for (i in 1:length(estadosCerrado)) {
   tran_mun[tran_mun$bioma == "CERRADO" & tran_mun$estado == estados_cer[i] & tran_mun$para == 3, "uf"] <- estadosCerrado[i]
 }
 ``````
+
+### Remove transitions of very small areas (< 1ha)
+
+``````javascript
+tran_mun <- tran_mun[!!rowSums(abs(tran_mun[(names(tran_mun) %in% c(
+  "X1989.a.1990", "X1990.a.1991", "X1991.a.1992",
+  "X1992.a.1993", "X1993.a.1994", "X1994.a.1995",
+  "X1995.a.1996", "X1996.a.1997", "X1997.a.1998",
+  "X1998.a.1999", "X1999.a.2000", "X2000.a.2001",
+  "X2001.a.2002", "X2002.a.2003", "X2003.a.2004",
+  "X2004.a.2005", "X2005.a.2006", "X2006.a.2007",
+  "X2007.a.2008", "X2008.a.2009", "X2009.a.2010",
+  "X2010.a.2011", "X2011.a.2012", "X2012.a.2013",
+  "X2013.a.2014", "X2014.a.2015", "X2015.a.2016",
+  "X2016.a.2017", "X2017.a.2018", "X2018.a.2019", "X2019.a.2020"
+))])) > 1, ]
+
+``````
+
+## Importing auxiliary data (Stock and increment tables)
+
+``````javascript
+stk <- read.csv(file = "data/aux_data/estoques_biomas_QCN.csv", header = TRUE, sep = ";")
+cer_uf <- read.table(file = "data/aux_data/estoques-floresta-cer-uf_QCN.txt", header = T)
+incr <- read.csv(file = "data/aux_data/incremento_QCN.csv", header = TRUE, sep = ";")
+
+``````javascript

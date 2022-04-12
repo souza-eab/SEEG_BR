@@ -1,15 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: EXCLUDE ISOLATED PIXELS AND REDUCE NOISE MAPBIOMAS (eg. col 6.0) ///////////////////////////////////
-//////////  Coordination: Barbara Zimbres, Julia Shimbo, and Ane Alencar /////////////////////////////////////////////////////
+/////////// GOALS: EXCLUDE ISOLATED PIXELS AND REDUCE NOISE FROM THE TIME SERIES //////////////////////////////////////////////
+//////////  Created by: Felipe Lenti, Barbara Zimbres ////////////////////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
-////////// Citing: Zimbres et al.,2022.  ///////////////////////////////////////////////////////////////////////////////////
 /////////  Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: EXCLUDE ISOLATED PIXELS AND REDUCE NOISE MAPBIOMAS
-// 1.1: Function that transforms an image collection into a single image with multiple bands
-// 1.2: Create Function that applies the Majority Filter (square_Kernel)
+// 1: EXCLUDE ISOLATED PIXELS AND REDUCE NOISE FROM THE MAPBIOMAS TIME SERIES
+// 1.1: Transform an image collection into a single image with multiple bands
+// 1.2: Create a function that applies the Majority Filter (squared_Kernel)
 // 1.3: Feature of the region of interest, in this case, all biomes in Brazil
 // 1.4: Specify spatial filter parameters
 // 1.5: Exporting data
@@ -17,7 +16,7 @@
 
 /* @. Set user parameters */// eg.
 
-// set directory for the output file
+// Set directory for the output file
 var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 
 
@@ -39,7 +38,7 @@ var collection2multiband = function (collection) {
     return ee.Image(multiBand);
 };
 
-// Create Function that applies the Majority Filter (square_Kernel)
+// Create a function that applies the Majority Filter (square_Kernel)
 var PostClassification = function(image) {
 
     this.init = function(image) {
@@ -107,13 +106,13 @@ var filterParams = [
 ];
 
 
-// From here on, we work from 1990, which is the initial period of official data presented by the National Inventory (QCN,2020) 
+// From here on, we work from 1990, which is the initial period of the official data presented by the National Inventories 
 var years = ['1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
 
-// Creat list years
+// Creat list of years
 var eeYears = ee.List(years);
 
-///// Input the Asset 'REGENERATION' mask asset exported from step 1.0
+///// Input the Asset 'REGENERATION MASK' exported from step 1.0
 var inputImage_regeneration = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1_0_Regeneration_masks'); // change to the asset you saved in the previous script
 
 // Apply functions
@@ -126,7 +125,7 @@ var result_regeneration = eeYears.map(function(year){
     return(filtered2.int8());
 });
 
-// Save the result as a multi-band (ImageCollection)
+// Save the result as a multi-band ImageCollection
 result_regeneration = collection2multiband(ee.ImageCollection.fromImages(result_regeneration));
 print(result_regeneration);
 
@@ -143,7 +142,7 @@ Export.image.toAsset({
     "region": Biomes.geometry().convexHull() // If desired, change here to the name of the desired region in Brazil
 });
 
-///// Input the Asset 'DESFORESTATION' mask asset exported from step 1.0  
+///// Input the Asset 'DEFORESTATION MASK' exported from step 1.0  
 var inputImage_deforestation = ee.Image('projects/ee-seeg-brazil/assets/collection_9/v1/1.0_Deforestation_masks'); // change to the asset saved by you in the previous script
 
 // Apply function 
@@ -156,7 +155,7 @@ var result_deforestation = eeYears.map(function(year){
     return(filtered2.int8());
 });
 
-// Save the result as a multi-band (ImageCollection)
+// Save the result as a multi-band ImageCollection
 result_deforestation = collection2multiband(ee.ImageCollection.fromImages(result_deforestation));
 print(result_deforestation);
 

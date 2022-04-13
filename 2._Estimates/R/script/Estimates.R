@@ -15,9 +15,9 @@ memory.limit(9999999999) # or your memory
 ## Setting your project.R  -------------
 # !!!
 
-### Requerid packages  -------------------------------------------------------
+### Required packages  -------------------------------------------------------
 # e.g.
-## install.packages("pacman") // or
+install.packages("pacman") #// or
 ## install.packages("usethis")
 #install.packages(c("usethis", "geojsonR", "jsonlite", "googledrive", "openxlsx", "ggplot2", "tidyverse", "tidyr", "dplyr", "rlang"))
 library(pacman)
@@ -77,8 +77,8 @@ tran_mun <- tran_mun %>%
                      `0` = "0", `3` = "3", `4` = "4", `5` = "5", `9` = "9", `11` = "11", `12` = "12", `13` = "13", `15` = "15", `20` = "20",
                      `21` = "21", `23` = "23", `24` = "24", `25` = "25", `29` = "29", `30` = "30", `31` = "31", `33` = "33", `39` = "39",
                      `40` = "39", `41` = "41", `46` = "36", `47` = "36", `48` = "36", `49` = "49", `300` = "300", `400` = "400",
-                     `500` = "500", `900` = "9", `1100` = "1100", `1200` = "1200", `1300` = "1300", `1500` = "1500",
-                     `2000` = "20", `2100` = "21", `2500` = "25", `2900` = "29", `3300` = "33", `3900` = "39",
+                     `500` = "500", `900` = "9", `1100` = "1100", `1200` = "1200", `1300` = "1300", `1500` = "15",
+                     `2000` = "20", `2100` = "21", `2500` = "25", `2900` = "29", `3300` = "33",`3600` = "36", `3900` = "39",
                      `4000` = "39", `4100` = "41", `4600` = "36", `4700` = "36", `4800` = "36",
                      `4900` = "49"
   )) %>%
@@ -87,8 +87,8 @@ tran_mun <- tran_mun %>%
                        `21` = "21", `23` = "23", `24` = "24", `25` = "25", `29` = "29", `30` = "30", `31` = "31", `33` = "33",
                        `39` = "39", `40` = "39", `41` = "41", `46` = "36", `47` = "36", `48` = "36", `49` = "49",
                        `300` = "300", `400` = "400", `500` = "500", `900` = "9", `1100` = "1100",
-                       `1200` = "1200", `1300` = "1300", `1500` = "1500", `2000` = "20",
-                       `2100` = "21", `2500` = "25", `2900` = "29", `3300` = "33",
+                       `1200` = "1200", `1300` = "1300", `1500` = "15", `2000` = "20",
+                       `2100` = "21", `2500` = "25", `2900` = "29", `3300` = "33",`3600` = "36",
                        `3900` = "39", `4000` = "39", `4100` = "41",
                        `4600` = "36", `4700` = "36",
                        `4800` = "36", `4900` = "49"
@@ -1491,8 +1491,8 @@ seeg <- function(t1, t2, bi, uf, ap) {
 }
 
 
-## Organizing matrices with all possible transition cases ------------------
-# (combinations of "de", "para", "ap", and "uf" in the case of forests in the Cerrado) per biome
+## Organizing matrices with all possible transition cases per biome ------------------
+# (combinations of "de", "para", "ap", and "uf" in the case of forests in the Cerrado) 
 
 mCER1 <- expand.grid(  t1 = classesCE,
                        t2 = classesCE,
@@ -1625,7 +1625,7 @@ matriz <- rbind(
 matriz <- matriz[!duplicated(matriz), ]
 
 
-## Applying function 'seeg' to attribute the specific equatio to each transition type--------
+## Applying function 'seeg' to attribute the specific equation to each transition type--------
 myTab <- data.frame(t(mapply(seeg, t1 = matriz$t1, t2 = matriz$t2, bi = matriz$bioma, uf = matriz$uf, ap = matriz$ap)))
 
 for (i in 1:ncol(myTab)) {
@@ -1641,11 +1641,12 @@ myTab[grep("NA", myTab$equacao), "equacao"] <- "class absent in the biome"
 
 ### Matrices where the equations will be calculated to generate ...--------
 # Matrices where the equations will be calculated to generate emission/removal estimates
+tran_mun<-data.frame(tran_mun)
 emiss_mun <- tran_mun
 emiss_mun$eq_inv <- "NULL"
 emiss_mun$processo <- "NULL"
 
-## Applying calculations //Functions 8_10H------------------------------------------------
+## Applying calculations //Functions 8 to 10H------------------------------------------------
 for (i in 1:nrow(emiss_mun)) {
   print(paste0(i, "of", nrow(emiss_mun)))
   thisRow <- emiss_mun[i, ]
@@ -1715,21 +1716,18 @@ for (i in 1:nrow(emiss_mun)) {
     }
   }
 }
-# Definition of columns with annual estimates as numeric
-emiss_mun[, 8:38] <- as.numeric(unlist(emiss_mun[, 8:38]))
 
 ### 3_Exporting intermediate files --------------------------------------------
 write.csv(emiss_mun, file = "Results/emiss_mun_col6_municipios.csv")
 
 ### Organizing resulting matrix ---------------------------------------------
 emiss_mun_filt <- emiss_mun
-emiss_mun_filt[, 8:38] <- as.numeric(unlist(emiss_mun_filt[, 8:38]))
+emiss_mun_filt[,8:38] <- as.numeric(unlist(emiss_mun_filt[,8:38]))
 
-## // * comment: Return 0_obs  
 emiss_mun_filt <- emiss_mun_filt[-grep("not inventoried transition", emiss_mun_filt$processo), ]
 unique(emiss_mun_filt$processo)
 
-# Generation oF the column "Atividade", differentiating the economic activity responsible for the transition (either CONSERVATION or PASTURE/AGRICULTURE
+# Generation of the column "Atividade", differentiating the economic activity responsible for the transition (either CONSERVATION or PASTURE/AGRICULTURE
 emiss_mun_filt$atividade <- NA
 emiss_mun_filt$atividade[emiss_mun_filt$processo == "Removal in protected areas"] <- "CONSERV"
 emiss_mun_filt$atividade[emiss_mun_filt$processo != "Removal in protected areas"] <- "AGROPEC"
@@ -1754,7 +1752,6 @@ for (i in 1:nrow(simp)) {
 
 unique(paste(emiss_mun_filt$transic, emiss_mun_filt$eq_inv))
 
-## // * comment: colnames UF (Out) - "uf"
 ### Organizing column order -------------------------------------------------
 emiss_mun_filt <- emiss_mun_filt[, c("processo", "bioma", "ap", "transic",
                                      "tipo", "estado", "atividade", 
@@ -1927,7 +1924,6 @@ emiss_aggr[i] <- lapply(emiss_aggr[i], as.character)
 
 tabelao_full_mun <- emiss_aggr
 
-# type
 tabelao_full_mun$LEVEL_4 <- as.character(tabelao_full_mun$LEVEL_4)
 tabelao_full_mun$LEVEL_5 <- as.character(tabelao_full_mun$LEVEL_5)
 tabelao_full_mun$PRODUCT <- as.character(tabelao_full_mun$PRODUCT)
@@ -1972,16 +1968,14 @@ stable<-c("Primary forest -- Primary forest",
           "Secondary forest -- Secondary forest",
           "Secondary non forest vegetation -- Secondary non forest vegetation")
 
-## // * comment: Talvez mais para baixo não funcionou
-tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 %in%
+tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
                                   regeneration] <- "Regeneration"
-tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 %in%
+tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
                                   stable] <- "Stable native vegetation"
-tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 %in%
+tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
                                   deforestation] <- "Deforestation"
-tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 %in%
+tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
                                   others] <- "Other types of land use change"
-tabelao_full_final_mun$LEVEL_5 [tabelao_full_final_mun$LEVEL_6 == "NA"] <- "NA"
 
 
 ## Correction of the last year of the series -------------------------------
@@ -1993,15 +1987,9 @@ prodesam_bi<-read.csv("data/aux_data/prodesam_bi.csv",head=T,sep=";")
 prodesce_bi<-read.csv("data/aux_data/prodesce_bi.csv",head=T,sep=";")
 
 
-### PRODES rates at the level of state (UF) ---------------------------------
-prodesam_uf<-read.csv("data/aux_data/prodesam_uf.csv",head=T,sep=";")
-prodesce_uf<-read.csv("data/aux_data/prodesce_uf.csv",head=T,sep=";")
-
-## // * comment: 
 ### Linear regression between PRODES rates and the emissions by SEEG --------
 desm<-tabelao_full_mun[tabelao_full_mun$LEVEL_5=="Deforestation"& tabelao_full_mun$TYPE == "Emission",]
 
-## // * comment: Os anos estavam com 'X'(X1970) -> 1970
 biomas_AUS<-desm%>%
   group_by(LEVEL_3) %>% 
   summarise(`1970`=sum(`1970`),`1971`=sum(`1971`),`1972`=sum(`1972`),`1973`=sum(`1973`),`1974`=sum(`1974`),`1975`=sum(`1975`),`1976`=sum(`1976`),
@@ -2014,10 +2002,7 @@ biomas_AUS<-desm%>%
 
 
 #Final equations per biome
-## // * comment: Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 0 (non-NA) cases
-# Final equations per biome --------------------------------------------------
-#### Amazon ------------------------------------------------------------------
-#Amazonia
+#Amazon
 summary(lm(t(biomas_AUS[1,22:51])~prodesam_bi$PRODES[1:30])) #a=173920094, b1= 49731, R2= 0.87
 
 #### Cerrado -----------------------------------------------------------------
@@ -2029,14 +2014,13 @@ summary(lm(t(biomas_AUS[3,33:51])~prodesce_bi$PRODES[1:19])) #a=52829269, b1= 48
 am2020<-173920094+49731*prodesam_bi$PRODES[31]
 ce2020<-52829269+4828*prodesce_bi$PRODES[20]
 
-tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"& tabelao_full_mun$LEVEL_5=="Desmatamento"),66]<-
-  tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66]/
-  sum(tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66])*am2020
-sum(tabelao_full_mun[tabelao_full_mun$LEVEL_3=="AMAZONIA"&tabelao_full_mun$LEVEL_5=="Desmatamento",66])
+tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"& tabelao_full_mun$LEVEL_5=="Deforestation"),66]<-
+  tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"&tabelao_full_mun$LEVEL_5=="Deforestation"),66]/
+  sum(tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="AMAZONIA"&tabelao_full_mun$LEVEL_5=="Deforestation"),66])*am2020
 
-tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66]<-
-  tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66]/
-  sum(tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Desmatamento"),66])*ce2020
+tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Deforestation"),66]<-
+  tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Deforestation"),66]/
+  sum(tabelao_full_mun[(tabelao_full_mun$LEVEL_3=="CERRADO"&tabelao_full_mun$LEVEL_5=="Deforestation"),66])*ce2020
 
 
 #### For the other biomes ----------------------------------------------------
@@ -2054,7 +2038,6 @@ tabelao_full_mun[tabelao_full_mun$LEVEL_3=="PANTANAL"&tabelao_full_mun$LEVEL_5==
   tabelao_full_mun[tabelao_full_mun$LEVEL_3=="PANTANAL"&tabelao_full_mun$LEVEL_5=="Deforestation",65]
 
 
-## // * comment: Zera tudo abaixo
 ## Calculating emissions by the burning of vegetation residuals ------------
 
 desm$LEVEL_4[desm$LEVEL_4 == 1 ] <- 0 #does not matter whether it is within or without protected areas
@@ -2206,7 +2189,6 @@ desmQueimadaVegBioma[desmQueimadaVegBioma$Group.2.x=="campo"&desmQueimadaVegBiom
 #### Distributing the burned biomass data per state/vegetation type i --------
 # Distributing the burned biomass data per state/vegetation type into the municipal level
 # According to the proportion of deforestation in each municipality
-# Total de emissao por estado/veg/bioma: desmQueimadaVegBioma
 
 #Emission caused by deforestation in each municipality/vegetation type/biome case
 desmMunVegBioma<-aggregate(desmVeg[, c(36:66)], by = list(
@@ -2458,7 +2440,7 @@ levels(tabelao_full_final_mun$STATE) <- c("AC",
 
 
 # Final exporting of the table at the level of states ---------------------
-tabelao_full_final_estados <- tabelao_full_final_mun1
+tabelao_full_final_estados <- tabelao_full_final_mun
 tabelao_full_final_estados<-tabelao_full_final_estados%>%
   group_by(SECTOR,LEVEL_2,LEVEL_3,LEVEL_4,LEVEL_5,LEVEL_6,TYPE,GAS,CODBIOMASESTADOS,STATE,ECONOMIC_ACTIVITY,PRODUCT) %>% 
   summarise(`1970`=sum(`1970`),`1971`=sum(`1971`),`1972`=sum(`1972`),`1973`=sum(`1973`),`1974`=sum(`1974`),`1975`=sum(`1975`),`1976`=sum(`1976`),

@@ -8,12 +8,14 @@
 # For clarification or an issue/bug report, please write to barbara.zimbres@ipam.org.br and/or edriano.souza@ipam.org.br
 # Key activities in sections
 -------------------------------------------------------
-#Start
+#
+##Start
 gc()
 memory.limit(9999999999) # or your memory
 
 ## Setting your project.R  -------------
-# !!!
+# !!! Eg. ~/Estimates
+# //! Create Folder: 'data'; 'R/script'; 'Results'
 
 ### Required packages  -------------------------------------------------------
 # e.g.
@@ -61,7 +63,7 @@ biomasestado.data <- list.files(folder, full.names = TRUE) %>%
   mutate(area_ha = area_ha*100)
 
 ### 0_Exporting intermediate file ---------------------------------------------
-write.csv(biomasestado.data, file = "Results/1_0_Dadosbrutos.csv", row.names = F, fileEncoding = "UTF-8")
+#write.csv(biomasestado.data, file = "Results/1_0_Dadosbrutos.csv", row.names = F, fileEncoding = "UTF-8")
 
 ## Rearranging the table -------------------------------------------------------
 tran_mun <- biomasestado.data %>%
@@ -95,7 +97,7 @@ tran_mun <- tran_mun %>%
   ))
 
 ### 1_Exporting intermediate file  ------------------------------------------
-write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
+#write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
 
 ## List of classes Mapbiomas (Collection 6) present in each biome --------
 ### Amazon ------------------------------------------------------------
@@ -472,7 +474,7 @@ head(inc)
 
 ### 2_Exporting intermediate file ---------------------------------------------
 # Exporting intermediate file
-write.csv(tran_mun, "Results/2_tran_mun_intermediario.csv", row.names = F, fileEncoding = "UTF-8")
+#write.csv(tran_mun, "Results/2_tran_mun_intermediario.csv", row.names = F, fileEncoding = "UTF-8")
 
 
 
@@ -483,7 +485,7 @@ write.csv(tran_mun, "Results/2_tran_mun_intermediario.csv", row.names = F, fileE
 #' @param t2 class transition_time2
 #' @param bi biomes
 #' @param uf states
-#' @param ap protected áreas
+#' @param ap protected Ã¡reas
 #'
 #' @return
 #' @export
@@ -1646,9 +1648,10 @@ emiss_mun <- tran_mun
 emiss_mun$eq_inv <- "NULL"
 emiss_mun$processo <- "NULL"
 
-## Applying calculations //Functions 8 to 10H------------------------------------------------
+## Applying calculations //Functions 12 to 10H------------------------------------------------
 for (i in 1:nrow(emiss_mun)) {
   print(paste0(i, "of", nrow(emiss_mun)))
+  print(paste0(i, "enter", nrow(emiss_mun)))
   thisRow <- emiss_mun[i, ]
   eq <- as.character(myTab[myTab$t1 == thisRow$de &
                              myTab$t2 == thisRow$para &
@@ -1712,13 +1715,13 @@ for (i in 1:nrow(emiss_mun)) {
       "processo",
       "ap"
     ))])) {
-      emiss_mun[i, j + 7] <- as.numeric(round(eval(parse(text = emiss_mun[i, j + 7]))))
+      emiss_mun[i,j+7] <- as.numeric(round(eval(parse(text = emiss_mun[i, j + 7]))))
     }
   }
 }
 
 ### 3_Exporting intermediate files --------------------------------------------
-write.csv(emiss_mun, file = "Results/emiss_mun_col6_municipios.csv")
+write.csv(emiss_mun, file = "Results/3_emiss_mun_col6_municipios.csv")
 
 ### Organizing resulting matrix ---------------------------------------------
 emiss_mun_filt <- emiss_mun
@@ -1757,21 +1760,21 @@ emiss_mun_filt <- emiss_mun_filt[, c("processo", "bioma", "ap", "transic",
                                      "tipo", "estado", "atividade", 
                                      "X1989.a.1990", "X1990.a.1991",
                                      "X1991.a.1992", "X1992.a.1993",
-                                      "X1993.a.1994", "X1994.a.1995",
-                                      "X1995.a.1996", "X1996.a.1997",
-                                      "X1997.a.1998", "X1998.a.1999",
-                                      "X1999.a.2000", "X2000.a.2001",
-                                      "X2001.a.2002", "X2002.a.2003",
-                                      "X2003.a.2004", "X2004.a.2005",
-                                      "X2005.a.2006", "X2006.a.2007",
-                                      "X2007.a.2008", "X2008.a.2009",
-                                      "X2009.a.2010", "X2010.a.2011",
-                                      "X2011.a.2012", "X2012.a.2013",
-                                      "X2013.a.2014", "X2014.a.2015",
-                                      "X2015.a.2016", "X2016.a.2017",
-                                      "X2017.a.2018", "X2018.a.2019",
-                                      "X2019.a.2020", "codigo",
-                                      "codigobiomasestados", "de", "para",
+                                     "X1993.a.1994", "X1994.a.1995",
+                                     "X1995.a.1996", "X1996.a.1997",
+                                     "X1997.a.1998", "X1998.a.1999",
+                                     "X1999.a.2000", "X2000.a.2001",
+                                     "X2001.a.2002", "X2002.a.2003",
+                                     "X2003.a.2004", "X2004.a.2005",
+                                     "X2005.a.2006", "X2006.a.2007",
+                                     "X2007.a.2008", "X2008.a.2009",
+                                     "X2009.a.2010", "X2010.a.2011",
+                                     "X2011.a.2012", "X2012.a.2013",
+                                     "X2013.a.2014", "X2014.a.2015",
+                                     "X2015.a.2016", "X2016.a.2017",
+                                     "X2017.a.2018", "X2018.a.2019",
+                                     "X2019.a.2020", "codigo", "uf",
+                                     "codigobiomasestados", "de", "para",
                                      "eq_inv" )]
 
 ## Grouping and summarizing cases ------------------------------------------
@@ -1969,13 +1972,13 @@ stable<-c("Primary forest -- Primary forest",
           "Secondary non forest vegetation -- Secondary non forest vegetation")
 
 tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
-                                  regeneration] <- "Regeneration"
+                            regeneration] <- "Regeneration"
 tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
-                                  stable] <- "Stable native vegetation"
+                            stable] <- "Stable native vegetation"
 tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
-                                  deforestation] <- "Deforestation"
+                            deforestation] <- "Deforestation"
 tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
-                                  others] <- "Other types of land use change"
+                            others] <- "Other types of land use change"
 
 
 ## Correction of the last year of the series -------------------------------

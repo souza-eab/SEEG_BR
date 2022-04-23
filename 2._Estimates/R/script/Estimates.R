@@ -8,12 +8,14 @@
 # For clarification or an issue/bug report, please write to barbara.zimbres@ipam.org.br and/or edriano.souza@ipam.org.br
 # Key activities in sections
 -------------------------------------------------------
-#Start
+#
+##Start
 gc()
 memory.limit(9999999999) # or your memory
 
 ## Setting your project.R  -------------
-# !!!
+# !!! Eg. ~/Estimates
+# //! Create Folder: 'data'; 'R/script'; 'Results'
 
 ### Required packages  -------------------------------------------------------
 # e.g.
@@ -61,7 +63,7 @@ biomasestado.data <- list.files(folder, full.names = TRUE) %>%
   mutate(area_ha = area_ha*100)
 
 ### 0_Exporting intermediate file ---------------------------------------------
-write.csv(biomasestado.data, file = "Results/1_0_Dadosbrutos.csv", row.names = F, fileEncoding = "UTF-8")
+#write.csv(biomasestado.data, file = "Results/1_0_Dadosbrutos.csv", row.names = F, fileEncoding = "UTF-8")
 
 ## Rearranging the table -------------------------------------------------------
 tran_mun <- biomasestado.data %>%
@@ -95,7 +97,7 @@ tran_mun <- tran_mun %>%
   ))
 
 ### 1_Exporting intermediate file  ------------------------------------------
-write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
+#write.csv(tran_mun, file = "Results/1_0_DadosbrutosRECT.csv", row.names = F, fileEncoding = "UTF-8") # !!!
 
 ## List of classes Mapbiomas (Collection 6) present in each biome --------
 ### Amazon ------------------------------------------------------------
@@ -472,7 +474,7 @@ head(inc)
 
 ### 2_Exporting intermediate file ---------------------------------------------
 # Exporting intermediate file
-write.csv(tran_mun, "Results/2_tran_mun_intermediario.csv", row.names = F, fileEncoding = "UTF-8")
+#write.csv(tran_mun, "Results/2_tran_mun_intermediario.csv", row.names = F, fileEncoding = "UTF-8")
 
 
 
@@ -1642,83 +1644,181 @@ myTab[grep("NA", myTab$equacao), "equacao"] <- "class absent in the biome"
 ### Matrices where the equations will be calculated to generate ...--------
 # Matrices where the equations will be calculated to generate emission/removal estimates
 tran_mun<-data.frame(tran_mun)
-emiss_mun <- tran_mun
-emiss_mun$eq_inv <- "NULL"
-emiss_mun$processo <- "NULL"
 
-## Applying calculations //Functions 8 to 10H------------------------------------------------
+
+tran_mun[381883,]
+tran_mun[381884,]
+emiss_mun1 <- tran_mun
+emiss_mun1$eq_inv <- "NULL"
+emiss_mun1$processo <- "NULL"
+emiss_mun1$processo <- "NULL"
+
+
+## Applying calculations //Functions 22 to 24H------------------------------------------------
+
+## checar se o arquivo de salvamento ja existe
+if (file.exists('./emiss_mun') == TRUE) {
+  ## se existir, carregar arquivo
+  file <- read.csv('emiss_mun.csv')[-1]
+} else {
+  ## se não, criar um recipiente vazio 
+  file <- as.data.frame(NULL)
+}
+
+## set saving interval
+save_interval = 1e4
+## set empty counter 
+counter = as.numeric(0)
+
+## salvar numero de referencia para processo
+ref_n <- nrow(file)
+
+
+
+## Applying calculations //Functions 22 to 24H------------------------------------------------
+
+## checar se o arquivo de salvamento ja existe
+if (file.exists('./emiss_mun') == TRUE) {
+  ## se existir, carregar arquivo
+  file <- read.csv('emiss_mun.csv')[-1]
+} else {
+  ## se não, criar um recipiente vazio 
+  file <- as.data.frame(NULL)
+}
+
+## set saving interval
+save_interval = 1e4
+## set empty counter 
+counter = as.numeric(0)
+
+## salvar numero de referencia para processo
+ref_n <- nrow(file)
+
+
+
+## checar se o arquivo de salvamento ja existe
+if (file.exists('emiss_mun') == TRUE) {
+  ## se existir, carregar arquivo
+  file <- read.csv('emiss_mun.csv')[-1]
+} else {
+  ## se não, criar um recipiente vazio 
+  file <- as.data.frame(NULL)
+}
+
+## set saving interval
+save_interval = 1e2
+## set empty counter 
+counter = as.numeric(0)
+
+## salvar numero de referencia para processo
+ref_n <- nrow(file)
+
+
+
 for (i in 1:nrow(emiss_mun)) {
-  print(paste0(i, "of", nrow(emiss_mun)))
-  thisRow <- emiss_mun[i, ]
-  eq <- as.character(myTab[myTab$t1 == thisRow$de &
-                             myTab$t2 == thisRow$para &
-                             as.character(myTab$bioma) == as.character(thisRow$bioma) &
-                             as.character(myTab$uf) == as.character(thisRow$uf) &
-                             myTab$ap == thisRow$ap, "equacao"])
-  
-  
-  note <- as.character(myTab[myTab$t1 == thisRow$de &
+  #print(paste0(i, "of", nrow(emiss_mun)))
+  for(i in 1:nrow(emiss_mun)) {
+    ## plotar display da tarefa
+    print(paste0('line ', i + ref_n, ' |x| ', round((i + ref_n) / nrow(emiss_mun) * 100, digits =
+                                                      1), '%'))
+    eq <- as.character(myTab[myTab$t1 == thisRow$de &
                                myTab$t2 == thisRow$para &
                                as.character(myTab$bioma) == as.character(thisRow$bioma) &
                                as.character(myTab$uf) == as.character(thisRow$uf) &
-                               myTab$ap == thisRow$ap, "nota"])
-  
-  processo <- as.character(myTab[myTab$t1 == thisRow$de &
-                                   myTab$t2 == thisRow$para &
-                                   as.character(myTab$bioma) == as.character(thisRow$bioma) &
-                                   as.character(myTab$uf) == as.character(thisRow$uf) &
-                                   myTab$ap == thisRow$ap, "processo"])
-  
-  if (length(eq) == 0 || length(processo) == 0) {
-    emiss_mun[i, "eq_inv"] <- "not inventoried transition"
-    emiss_mun[i, "processo"] <- "not inventoried transition"
-  } else {
-    emiss_mun[i, "eq_inv"] <- note
-    emiss_mun[i, "processo"] <- processo
-    eq <- sub("A\\*", "", eq) # [2])
-    emiss_mun[i, !(names(emiss_mun) %in% c(
-      "codigo",
-      "codigobiomasestados",
-      "bioma",
-      "estado",
-      "ap",
-      "de",
-      "para",
-      "uf",
-      "eq_inv",
-      "processo"
-    ))] <- paste(emiss_mun[i, !(names(emiss_mun) %in% c(
-      "codigo",
-      "codigobiomasestados",
-      "bioma",
-      "estado",
-      "ap",
-      "de",
-      "para",
-      "uf",
-      "eq_inv",
-      "processo"
-    ))], "*", eq, sep = "")
+                               myTab$ap == thisRow$ap, "equacao"])
     
-    for (j in 1:ncol(emiss_mun[i, !(names(emiss_mun) %in% c(
-      "codigo",
-      "codigobiomasestados",
-      "bioma",
-      "estado",
-      "de",
-      "para",
-      "uf",
-      "eq_inv",
-      "processo",
-      "ap"
-    ))])) {
-      emiss_mun[i, j + 7] <- as.numeric(round(eval(parse(text = emiss_mun[i, j + 7]))))
+    
+    note <- as.character(myTab[myTab$t1 == thisRow$de &
+                                 myTab$t2 == thisRow$para &
+                                 as.character(myTab$bioma) == as.character(thisRow$bioma) &
+                                 as.character(myTab$uf) == as.character(thisRow$uf) &
+                                 myTab$ap == thisRow$ap, "nota"])
+    
+    processo <- as.character(myTab[myTab$t1 == thisRow$de &
+                                     myTab$t2 == thisRow$para &
+                                     as.character(myTab$bioma) == as.character(thisRow$bioma) &
+                                     as.character(myTab$uf) == as.character(thisRow$uf) &
+                                     myTab$ap == thisRow$ap, "processo"])
+    
+    if (length(eq) == 0 || length(processo) == 0) {
+      emiss_mun[i, "eq_inv"] <- "not inventoried transition"
+      emiss_mun[i, "processo"] <- "not inventoried transition"
+    } else {
+      emiss_mun[i, "eq_inv"] <- note
+      emiss_mun[i, "processo"] <- processo
+      eq <- sub("A\\*", "", eq) # [2])
+      emiss_mun[i,!(
+        names(emiss_mun) %in% c(
+          "codigo",
+          "codigobiomasestados",
+          "bioma",
+          "estado",
+          "ap",
+          "de",
+          "para",
+          "uf",
+          "eq_inv",
+          "processo"
+        )
+      )] <- paste(emiss_mun[i,!(
+        names(emiss_mun) %in% c(
+          "codigo",
+          "codigobiomasestados",
+          "bioma",
+          "estado",
+          "ap",
+          "de",
+          "para",
+          "uf",
+          "eq_inv",
+          "processo"
+        )
+      )], "*", eq, sep = "")
+      
+      for (j in 1:ncol(emiss_mun[i,!(
+        names(emiss_mun) %in% c(
+          "codigo",
+          "codigobiomasestados",
+          "bioma",
+          "estado",
+          "de",
+          "para",
+          "uf",
+          "eq_inv",
+          "processo",
+          "ap"
+        )
+      )])) {
+        emiss_mun[i, j + 7] <-
+          as.numeric(round(eval(parse(text = emiss_mun[i, j + 7]))))
+      }
     }
   }
-}
-
+  thisRow <- emiss_mun[i,]
+  ## adiciona valor X na linha subsequente a ultima em file correspondente em data
+  line <- emiss_mun[ref_n + i , ]
+  ## insere o valor de interesse
+  line$get <- 'A'
+  ## empilha no objeto
+  file <- rbind(file, line)
+  ## soma +1 ao contador
+  counter <- counter + 1
+  ## quando o contador for == 1e4, salva o arquivo
+  if (counter == 1e2) {
+    print('saving file into ./')
+    ## save csv
+    write.csv(file, './emiss_mun.csv')
+    ## reseta o contador
+    counter = 0
+  }
+  ## parar quando chegar em i + nrow(file) == nrow(data)
+  if (i + ref_n == nrow(emiss_mun.csv)) {
+    print('end ====>')
+    break
+  }
+}  
 ### 3_Exporting intermediate files --------------------------------------------
-write.csv(emiss_mun, file = "Results/emiss_mun_col6_municipios.csv")
+#write.csv(emiss_mun, file = "Results/emiss_mun_col6_municipios.csv")
 
 ### Organizing resulting matrix ---------------------------------------------
 emiss_mun_filt <- emiss_mun
@@ -1757,21 +1857,21 @@ emiss_mun_filt <- emiss_mun_filt[, c("processo", "bioma", "ap", "transic",
                                      "tipo", "estado", "atividade", 
                                      "X1989.a.1990", "X1990.a.1991",
                                      "X1991.a.1992", "X1992.a.1993",
-                                      "X1993.a.1994", "X1994.a.1995",
-                                      "X1995.a.1996", "X1996.a.1997",
-                                      "X1997.a.1998", "X1998.a.1999",
-                                      "X1999.a.2000", "X2000.a.2001",
-                                      "X2001.a.2002", "X2002.a.2003",
-                                      "X2003.a.2004", "X2004.a.2005",
-                                      "X2005.a.2006", "X2006.a.2007",
-                                      "X2007.a.2008", "X2008.a.2009",
-                                      "X2009.a.2010", "X2010.a.2011",
-                                      "X2011.a.2012", "X2012.a.2013",
-                                      "X2013.a.2014", "X2014.a.2015",
-                                      "X2015.a.2016", "X2016.a.2017",
-                                      "X2017.a.2018", "X2018.a.2019",
-                                      "X2019.a.2020", "codigo",
-                                      "codigobiomasestados", "de", "para",
+                                     "X1993.a.1994", "X1994.a.1995",
+                                     "X1995.a.1996", "X1996.a.1997",
+                                     "X1997.a.1998", "X1998.a.1999",
+                                     "X1999.a.2000", "X2000.a.2001",
+                                     "X2001.a.2002", "X2002.a.2003",
+                                     "X2003.a.2004", "X2004.a.2005",
+                                     "X2005.a.2006", "X2006.a.2007",
+                                     "X2007.a.2008", "X2008.a.2009",
+                                     "X2009.a.2010", "X2010.a.2011",
+                                     "X2011.a.2012", "X2012.a.2013",
+                                     "X2013.a.2014", "X2014.a.2015",
+                                     "X2015.a.2016", "X2016.a.2017",
+                                     "X2017.a.2018", "X2018.a.2019",
+                                     "X2019.a.2020", "codigo", "uf",
+                                     "codigobiomasestados", "de", "para",
                                      "eq_inv" )]
 
 ## Grouping and summarizing cases ------------------------------------------
@@ -1969,13 +2069,13 @@ stable<-c("Primary forest -- Primary forest",
           "Secondary non forest vegetation -- Secondary non forest vegetation")
 
 tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
-                                  regeneration] <- "Regeneration"
+                            regeneration] <- "Regeneration"
 tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
-                                  stable] <- "Stable native vegetation"
+                            stable] <- "Stable native vegetation"
 tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
-                                  deforestation] <- "Deforestation"
+                            deforestation] <- "Deforestation"
 tabelao_full_mun$LEVEL_5 [tabelao_full_mun$LEVEL_6 %in%
-                                  others] <- "Other types of land use change"
+                            others] <- "Other types of land use change"
 
 
 ## Correction of the last year of the series -------------------------------

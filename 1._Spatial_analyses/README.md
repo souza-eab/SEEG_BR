@@ -41,7 +41,7 @@ Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 
 [Link to script](https://code.earthengine.google.com/2168f9616bebe4834b4dd9fe7f328c43)
 
 
-# 2.0 [Stabilized_cover.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Stabilized%20cover.js)
+# 2.0 [Stabilized_cover.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Stabilized_cover.js)
 
 This script stabilizes the base maps from a MapBiomas collection (currently, col 6.0), for the generation of consistent transitions of land use and cover observed throughout the analyzed period within the deforestation and regeneration masks. This stabilizing analysis, applied to all years of the time series, includes the following steps <>:
 (1) At the pixel level, frequency maps are generated, which count the number of years in which each pixel is classified as each given class;

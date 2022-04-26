@@ -1,6 +1,6 @@
 /* @. Set user parameters */// eg.
-// Set directory for the output file
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/Stabilized_cover_mb';
+// Set directory 'ImageCollection' for the output file
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/Stabilized_cover_mb_v1/';
 
 // Load Asset from MapBiomas collection 6.0  
 var mapbioDir = 'projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1';
@@ -213,7 +213,7 @@ var years = [
     1990, 1991, 1992, 1993, 1994, 1995, 1996,
     1997, 1998, 1999, 2000, 2001, 2002, 2003,
     2004, 2005, 2006, 2007, 2008, 2009, 2010,
-    2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019
+    2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,2020
 ]; 
 var eeYears = ee.List(years);
 

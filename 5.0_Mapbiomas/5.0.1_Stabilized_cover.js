@@ -1,6 +1,6 @@
 /* @. Set user parameters */// eg.
 // Set directory for the output file
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/Stabilized_cover_mb';
 
 // Load Asset from MapBiomas collection 6.0  
 var mapbioDir = 'projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1';

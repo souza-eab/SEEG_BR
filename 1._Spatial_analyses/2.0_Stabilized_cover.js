@@ -33,11 +33,11 @@ var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
 // Load the filtered deforestation and regeneration masks
-var regenDir = 'projects/ee-seeg-brazil/assets/collection_9/v1/2_0_Temporal_filter_regeneration';
+var regenDir = 'projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_regeneration';
 var regen = ee.Image(regenDir);
 print("bandas regen", regen.bandNames());// regeneration since 1990
 
-var annualDesm = 'projects/ee-seeg-brazil/assets/collection_9/v1/2_0_Temporal_filter_deforestation';
+var annualDesm = 'projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_deforestation';
 var annualLoss = ee.Image(annualDesm); // deforestation since 1990
 print("bandas annualLoss", annualLoss.bandNames());
 

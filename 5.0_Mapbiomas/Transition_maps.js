@@ -49,7 +49,7 @@ years.forEach(function(year){
   Export.image.toAsset({
   "image": Transitions2.unmask(0).uint32(),
   "description": 'SEEG_Transition_'+ (parseInt(year))+'_'+(parseInt(year)+1),
-  "assetId": 'projects/mapbiomas-workspace/SEEG/2022/3_0_Transition_maps/SEEG_Transition_mb' + (parseInt(year))+'_'+(parseInt(year)+1), // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
+  "assetId": 'projects/mapbiomas-workspace/SEEG/2022/3_0_Transition_maps/SEEG_Transition_mb_' + (parseInt(year))+'_'+(parseInt(year)+1), // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
   "scale": 30,
   "pyramidingPolicy": {
       '.default': 'mode'

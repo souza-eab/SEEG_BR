@@ -147,7 +147,7 @@ mut_OK9[,15:65] <- as.numeric(unlist(mut_OK9[,15:65])) #column with a estimates 
 ebt9<- mut_OK9 %>%
   #filter(`NIVEL 2` == "Alterações de Uso do Solo"|`NIVEL 2` == "Resíduos Florestais")%>% 
   filter (`NIVEL 2` == "Remoção em Áreas Protegidas"|`NIVEL 2` == "Remoção por Mudança de Uso da Terra"|`NIVEL 2` == "Remoção por Vegetação Secundária")%>% 
-  group_by(`NIVEL 2` , `Nome_Município`, CODIBGE) %>% #P2
+  group_by(`Nome_Município`, CODIBGE) %>% #P2
   #group_by(`Nome_Município`, CODIBGE) %>% #P2
   summarise('1990'=sum(`1990`),'1991'=sum(`1991`),'1992'=sum(`1992`),
             '1993'=sum(`1993`),'1994'=sum(`1994`),'1995'=sum(`1995`),
@@ -276,7 +276,7 @@ library(sp)
 
 roadbr<- read.csv(file= "c:/Users/edriano.souza/GitHub/3._Plots/vw_snv_rod.csv", header = T, sep= ",")
 
-coord_pontos <- dataset_finalSUD %>% 
+coord_pontos <- dataset_final1 %>% 
   mutate(VALOR2 = VALOR) %>% 
   #tidyr::drop_na(VALOR) %>% 
   st_centroid() 
@@ -615,6 +615,9 @@ ranksSUL  = top10SUL  %>%
 
 
 
+ranks = top10  %>%
+  mutate(ranks = order(order(VALOR, decreasing = F)))
+
 
 
 
@@ -794,11 +797,11 @@ a<- ggplot() +
   #scale_fill_distiller(palette = "Greens",type="seq", trans = "reverse", name="Mt Co2eq")+
   #scale_size_continuous(name="Mt Co2eq",breaks=seq(-25,0,5))+
   #theme(legend.direction = "vertical")+
-  geom_sf(data=dataset_finalSUD, aes(fill=VALOR), size=.125, color=alpha("gray",0.1))+
+  geom_sf(data=dataset_final1, aes(fill=VALOR), size=.125, color=alpha("gray",0.1))+
   scale_fill_distiller(palette = "Greens",type="seq", name="Mt Co2eq")+
   theme_minimal()+
   #geom_sf(data = all_reg, color=alpha("black",01), fill = NA)+
-  theme(legend.position=c(.69,.80), legend.box = "vertical",legend.justification = "center", legend.direction = "vertical")+
+  theme(legend.position=c(.89,.80), legend.box = "vertical",legend.justification = "center", legend.direction = "vertical")+
   theme(legend.key = element_blank())+
   ylab("") + xlab(" ")+
   #geom_sf(data = coord_pontos, aes(size = VALOR2)) + 
@@ -807,7 +810,7 @@ a<- ggplot() +
   #scale_size_continuous(name="Mt Co2eq",breaks=seq(-25,0,5))+
   #scale_size(trans = "reverse", name="Mt Co2eq",breaks=seq(-25,0,5))+
   #scale_fill_distiller(palette = "Greens",type="seq", name="Mt Co2eq")+
-  geom_sf_text(data=ranksSUD, aes(label=ranks))+
+  geom_sf_text(data=ranks, aes(label=ranks))+
   theme(legend.background = element_blank())+
   theme(legend.title = element_text(color = "black", family = "fonte.tt", size=9))+
   theme(axis.title = element_text(color = "black",family = "fonte.tt", size=9))+
@@ -826,9 +829,9 @@ a<- ggplot() +
     pad_y = unit(0.1, "in"),
     style = north_arrow_fancy_orienteering) +
   ggspatial::annotation_scale()
-plot(a)
+#plot(a)
 
-ggsave("P22_RemoSUD_.png", plot = a,dpi = 330)
+ggsave("P22_RemoBRR.png", plot = a,dpi = 330)
 
 max(as.numeric(coord_pontos$VALOR))
 plot(a)

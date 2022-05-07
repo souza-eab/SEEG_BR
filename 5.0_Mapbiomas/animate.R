@@ -345,10 +345,7 @@ a<- ggplot() +
   #scale_size_continuous(name="Mt Co2eq",breaks=seq(-25,0,5))+
   #theme(legend.direction = "vertical")+
   geom_sf(data=dataset_final1, aes(fill=VALOR), size=.125, color=alpha("black",0.1))+
-  scale_fill_distiller(palette = "Oranges",type="seq", name=expression('CO'[2]), labels = comma,
-                       breaks = c(0,10000,25000,50000,75000,100000,250000,500000, 750000,1000000,
-                                  2500000,5000000,7500000,100000000,250000000,500000000,750000000,
-                                  800000000))+
+  scale_fill_distiller(palette = "Oranges",type="seq", name=expression('CO'[2]), labels = comma)+
   #scale_fill_distiller()+
   theme_minimal()+
   #transition_states(ANO, transition_length = 1, state_length =1) +
@@ -357,16 +354,16 @@ a<- ggplot() +
   theme(axis.title=element_blank(),
         axis.text=element_blank(),
         axis.ticks=element_blank()) +
-  labs(title = '{as.integer(current_frame)}') +
+  labs(title = 'Emissões brutas - {as.integer(current_frame)}') +
   #theme(plot.title = element_text(hjust = 0, size = 22),
         #axis.ticks.y = element_blank(),  # These relate to the axes post-flip
         #axis.text.y  = element_blank(),  # These relate to the axes post-flip
         #plot.margin = margin(1,1,1,4, "cm")) +
   theme(legend.background = element_blank())+
   theme(plot.title = element_text(hjust = 0, size = 18))+
-  theme(legend.title = element_text(color = "black", family = "fonte.tt", size=12))+
+  theme(legend.title = element_text(color = "black", family = "fonte.tt", size=12, face = "bold"))+
   theme(axis.title = element_text(color = "black",family = "fonte.tt", size=12))+
-  theme(legend.text =  element_text(color = "black",family = "fonte.tt", size=12))+ # Aqui e a letra da legenda
+  theme(legend.text =  element_text(color = "black",family = "fonte.tt", size=12,face = "bold"))+ # Aqui e a letra da legenda
   theme(axis.title.x = element_text(color = "black",family = "fonte.tt", size=12, face = "bold"))+
   theme(axis.title.y = element_text(color = "black",family = "fonte.tt", size=14, face = "bold"))+ #Aqui é a legenda do eixo y 
   theme(axis.text.x = element_text(color = "black",family = "fonte.tt",size=12))+ #Aqui é a legenda do eixo x
@@ -381,11 +378,12 @@ a<- ggplot() +
     pad_y = unit(0.2, "in"),
     style = north_arrow_fancy_orienteering
   ) +
+  theme(legend.position=c(.88,.88), legend.box = "horizontal",legend.justification = "center")+
   ggspatial::annotation_scale()+
   #transition_states(ANO, transition_length = 1, state_length =1) +
   #coord_cartesian(clip = 'off') + 
   ease_aes('linear')
-animate(a, width = 800, height = 600, duration = 90)
+animate(a, width = 800, height = 600, duration = 39)
 anim_save("TS_Map_Emission_SEEG_v9_1_01.gif", dpi = 330) 
 anim_save("TS_Map_Emission_SEEG_v9_1_0.mp4")
   #ease_aes('circular-in-out')+

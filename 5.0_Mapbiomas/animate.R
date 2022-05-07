@@ -18,6 +18,8 @@ library(gapminder)
 library(gifski)
 library(av)
 library(readr)
+library(scales) 
+library(ggspatial) 
 theme_set(theme_classic())
 
 
@@ -242,7 +244,7 @@ df1 <- df %>%
 ## Create subsets ----------------------------------------------------------
 
 ## Master
-dataset_final1 = left_join(all_mun, df1, by=c("code_muni"="CODIBGE"))
+dataset_final1 = left_join(all_mun, df, by=c("code_muni"="CODIBGE"))
 dataset_final2 = left_join(ti, df1, by=c("name_muni"="Nome_Município"))
 
 ## Region
@@ -266,11 +268,11 @@ dataset_finalSUL = dataset_final1 %>%
 
 #Joint GEOBR -------------------------------------------------------------
 df10 <- dataset_finalN %>%
-  group_by(ANO)%>%
+  group_by(name_muni)%>%
   mutate(rank = min_rank(-VALOR) * 1, rank <= 10) %>%
   ungroup()
 
-df25 <- df10%>%
+df100 <- df10%>%
   filter(rank == "1" |rank == "2" |rank == "3"|rank == "4"|rank == "5"|
            rank == "6"|rank == "7"| rank == "8"|rank == "9"|rank == "10"|
            rank == "11"|rank == "12"|rank == "13"|rank == "14"|rank == "15"|
@@ -292,6 +294,8 @@ p <- ggplot(df100, aes(rank, group = `Nome_Município`,
   geom_tile(aes(y = VALOR/2,
                 height = VALOR,
                 width = 0.9), alpha = 0.8, color = FALSE) +
+  #theme_classic()+
+  #theme_clean()+
   # text in x-axis (requires clip = "off" in coord_*)
   # paste(country, " ")  is a hack to make pretty spacing, since hjust > 1 
   #   leads to weird artifacts in text spacing.
@@ -299,20 +303,31 @@ p <- ggplot(df100, aes(rank, group = `Nome_Município`,
   coord_flip(clip = "off", expand = T) +
   scale_y_continuous(labels = scales::comma) +
   scale_x_reverse() +
-  guides(color = FALSE, fill = FALSE) +
+  #guides(color = FALSE, fill = FALSE) +
   labs(title='{closest_state}', x = "", y = "Remoção Bruta em Milhões de Toneladas de CO2e (Mt Co2e - GWP_AR5)") +
   theme(plot.title = element_text(hjust = 0, size = 22),
         axis.ticks.y = element_blank(),  # These relate to the axes post-flip
         axis.text.y  = element_blank(),  # These relate to the axes post-flip
         plot.margin = margin(1,1,1,4, "cm")) +
     transition_states(ANO, transition_length = 1, state_length =1) +
+  #theme(legend.position=c(.33,.95), legend.box = "horizontal",legend.justification = "center")+
+  #theme(legend.key = element_blank())+
+  #theme(legend.key.height = unit(0.1, "mm"))+
+  theme(legend.background = element_blank())+
+  theme(legend.title = element_text(color = "black", family = "fonte.tt", size=11 ))+
+  theme(axis.title = element_text(color = "black",family = "fonte.tt", size=9))+
+  theme(legend.text =  element_text(color = "black",family = "fonte.tt", size=9, face = "bold"))+ # Aqui e a letra da legenda
+  theme(axis.title.x = element_text(color = "black",family = "fonte.tt", size=12, face = "bold"))+
+  #theme(axis.title.y = element_text(color = "black",family = "fonte.tt", size=10, face = "bold"))+ #Aqui é a legenda do eixo y 
+  theme(axis.text.x = element_text(color = "black",family = "fonte.tt",size=12))+ #Aqui é a legenda do eixo x
+  #theme(axis.text.y = element_text(color = "black",family = "fonte.tt",size=9))+#Aqui é a legenda do eixo y
   ease_aes('circular-in-out')
-animate(p, fps = 2, duration = 10, width = 800, height = 600)
+animate(p, fps = 2, duration = 30, width = 800, height = 600)
 
 
 
 
-ggplot(df25, aes(ANO, VALOR, group = Pais)) +
+ggplot(df10, aes(ANO, VALOR, group = `Nome_Município`)) +
   geom_line() +
   geom_segment(aes(xend = 2020, yend = VALOR), linetype =2, colour = "grey") +
   geom_point(size = 2) + 
@@ -320,7 +335,80 @@ ggplot(df25, aes(ANO, VALOR, group = Pais)) +
   transition_reveal(ANO) + 
   coord_cartesian(clip = 'off') + 
   labs(title = 'Emissão de CO2 no Setor Elétrico', y = 'CO2 (Mt)') +
-  scale_x_continuous("Ano", labels = df25$ANO, breaks = df25$ANO) +
+  scale_x_continuous("Ano", labels = df10$ANO, breaks = df10$ANO) +
   theme(plot.margin = margin(5.5, 40, 5.5, 5.5), 
         axis.text.x = element_text(face = "plain", size = 8))
   
+
+a<- ggplot() +
+  #scale_fill_distiller(palette = "Greens",type="seq", trans = "reverse", name="Mt Co2eq")+
+  #scale_size_continuous(name="Mt Co2eq",breaks=seq(-25,0,5))+
+  #theme(legend.direction = "vertical")+
+  geom_sf(data=dataset_final1, aes(fill=VALOR), size=.125, color=alpha("black",0.1))+
+  scale_fill_distiller(palette = "Oranges",type="seq", name=expression('CO'[2]), labels = comma,
+                       breaks = c(0,10000,25000,50000,75000,100000,250000,500000, 750000,1000000,
+                                  2500000,5000000,7500000,100000000,250000000,500000000,750000000,
+                                  800000000))+
+  #scale_fill_distiller()+
+  theme_minimal()+
+  #transition_states(ANO, transition_length = 1, state_length =1) +
+  #transition_time(ANO) +
+  transition_manual(ANO)+ 
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank()) +
+  labs(title = '{as.integer(current_frame)}') +
+  #theme(plot.title = element_text(hjust = 0, size = 22),
+        #axis.ticks.y = element_blank(),  # These relate to the axes post-flip
+        #axis.text.y  = element_blank(),  # These relate to the axes post-flip
+        #plot.margin = margin(1,1,1,4, "cm")) +
+  theme(legend.background = element_blank())+
+  theme(plot.title = element_text(hjust = 0, size = 18))+
+  theme(legend.title = element_text(color = "black", family = "fonte.tt", size=12))+
+  theme(axis.title = element_text(color = "black",family = "fonte.tt", size=12))+
+  theme(legend.text =  element_text(color = "black",family = "fonte.tt", size=12))+ # Aqui e a letra da legenda
+  theme(axis.title.x = element_text(color = "black",family = "fonte.tt", size=12, face = "bold"))+
+  theme(axis.title.y = element_text(color = "black",family = "fonte.tt", size=14, face = "bold"))+ #Aqui é a legenda do eixo y 
+  theme(axis.text.x = element_text(color = "black",family = "fonte.tt",size=12))+ #Aqui é a legenda do eixo x
+  theme(axis.text.y = element_text(color = "black",family = "fonte.tt",size=12))+
+  # Adiciona o Norte Geográfico
+  annotation_north_arrow(
+    location = "br",
+    which_north = "true",
+    height = unit(2, "cm"),
+    width = unit(2, "cm"),
+    pad_x = unit(0.2, "in"),
+    pad_y = unit(0.2, "in"),
+    style = north_arrow_fancy_orienteering
+  ) +
+  ggspatial::annotation_scale()+
+  #transition_states(ANO, transition_length = 1, state_length =1) +
+  #coord_cartesian(clip = 'off') + 
+  ease_aes('linear')
+animate(a, width = 800, height = 600, duration = 90)
+anim_save("TS_Map_Emission_SEEG_v9_1_01.gif", dpi = 330) 
+anim_save("TS_Map_Emission_SEEG_v9_1_0.mp4")
+  #ease_aes('circular-in-out')+
+animate(a)
+
+
+ggsave("P1_Col9_.png", plot = plot1,dpi = 300 )
+
+ggplot() +
+  geom_sf(data=merged, aes(fill=Valor), color= NA) +
+  labs(subtitle="Participação da agricultura no PIB", size=8) +
+  scale_fill_continuous(trans = "reverse") +
+  theme_minimal() +
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank()) +
+  labs(title = 'Year: {frame_time}') +
+  transition_time(Ano) +
+  ease_aes('linear')
+  
+
+p <- ggplot() + 
+  geom_sf(data=dataset_final1, aes(fill = VALOR, frame = ANO, text = `Nome_Município`)) + 
+  ggtitle("Obesity rates in the US over time") +
+  ggthemes::theme_map()
+plotly_json(p)

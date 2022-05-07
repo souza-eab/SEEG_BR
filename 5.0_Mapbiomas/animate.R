@@ -383,7 +383,7 @@ a<- ggplot() +
   #transition_states(ANO, transition_length = 1, state_length =1) +
   #coord_cartesian(clip = 'off') + 
   ease_aes('linear')
-animate(a, width = 800, height = 600, duration = 39)
+animate(a, width = 800, height = 600, duration = 39, res=320)
 anim_save("TS_Map_Emission_SEEG_v9_1_01.gif", dpi = 330) 
 anim_save("TS_Map_Emission_SEEG_v9_1_0.mp4")
   #ease_aes('circular-in-out')+

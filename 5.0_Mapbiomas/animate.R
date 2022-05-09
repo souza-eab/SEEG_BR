@@ -8,8 +8,8 @@ setwd('data_babi_area/')
 
 
 d1f <- read.table(file= "c:/Users/edriano.souza/GitHub/3._Plots/data_babi_area/MUT_MUN_02-05_porarea.csv",header = TRUE, sep = ",",
-                 strip.white = T, blank.lines.skip = TRUE,
-                 quote = "\"", encoding = "UTF-8",dec = ".", fill = TRUE, comment.char = "")
+                  strip.white = T, blank.lines.skip = TRUE,
+                  quote = "\"", encoding = "UTF-8",dec = ".", fill = TRUE, comment.char = "")
 
 
 library(tidyverse)
@@ -20,6 +20,8 @@ library(av)
 library(readr)
 library(scales) 
 library(ggspatial) 
+library(ggplot2) 
+library(geobr)
 theme_set(theme_classic())
 
 
@@ -53,7 +55,7 @@ mut9[,15:65] <- as.numeric(unlist(mut9[,15:65])) #column with a estimates yearly
 
 
 ### Return your directory eg.--------------------------------------------
-setwd('C:/Users/edriano.souza/GitHub/3._Plots')
+setwd('C:/Users/edriano.souza/GitHub/3._Plots/Apresentacao/')
 
 
 ### Recode ---------------------------------------------------------------
@@ -139,8 +141,9 @@ mut_OK9[,15:65] <- as.numeric(unlist(mut_OK9[,15:65])) #column with a estimates 
 
 
 ## Join table Emission and removals -------------------------------------------------
-ebt9<- mut_OK9 %>%
+ebt9 <- mut_OK9 %>%
   filter(`NIVEL 2` == "Alterações de Uso do Solo"|`NIVEL 2` == "Resíduos Florestais")%>% 
+  filter(`NIVEL 3` == "Caatinga")%>% 
   #filter (`NIVEL 2` == "Remoção em Áreas Protegidas"|`NIVEL 2` == "Remoção por Mudança de Uso da Terra"|`NIVEL 2` == "Remoção por Vegetação Secundária")%>% 
   group_by(`Nome_Município`, CODIBGE) %>% #P2
   #group_by(`Nome_Município`, CODIBGE) %>% #P2
@@ -229,87 +232,148 @@ colnames(df)
 
 
 ##############################
-all_mun <- read_municipality(year=2020)
+all_mun <- read_municipality(year=2020, code_muni = "all")
 
-all_reg <- read_region(year=2020)
-apendice_c_geo <- read_biomes(year = 2019) %>%
+all_reg <- read_region(year=2020)%>%
+  filter ()
+apendice_c_geo <-  read_biomes(year = 2019) %>%
+  filter(name_biome == "Caatinga")
+
   filter(name_biome == "Amazônia"| name_biome == "Cerrado"|name_biome == "Caatinga"|
            name_biome == "Mata Atlântica"| name_biome == "Pampa"| name_biome == "Pantanal")
 
 ti <- read_indigenous_land(date=202103)
 
-df1 <- df %>%
-  filter(ANO == "2019")
+df4 <- df %>%
+  filter(ANO != "2020")%>% 
+  #filter(`NIVEL 3` == "Caatinga")%>% 
+  tidyr::drop_na(VALOR) 
+dffff <- dataset_final1A %>%
+  
+df1 <-  dataset_final1 %>%  
+  filter(VALOR > 0) %>% 
+  tidyr::drop_na(VALOR) 
+#tidyr::drop_na(VALOR) 
 
 ## Create subsets ----------------------------------------------------------
 
 ## Master
-dataset_final1 = left_join(all_mun, df, by=c("code_muni"="CODIBGE"))
+dataset_final3 = left_join(all_mun, df4, by=c("code_muni"="CODIBGE"))
+
+dataset_final2 = left_join(apendice_c_geo, df3, by=c("name_biome"="Bioma"))
+
 dataset_final2 = left_join(ti, df1, by=c("name_muni"="Nome_Município"))
 
 ## Region
 dataset_finalN = dataset_final1 %>%
   filter(name_region == "Norte")
 
-dataset_finalNE = dataset_final1 %>%
+dataset_finalNE = dataset_final3 %>%
   filter(name_region == "Nordeste")
 
-dataset_finalCO = dataset_final1 %>%
+dataset_finalCO = dataset_final3 %>%
   filter(name_region == "Centro Oeste")
 
-dataset_finalSUD = dataset_final1 %>%
+dataset_finalSUD = dataset_final3 %>%
   filter(name_region == "Sudeste")
 
-dataset_finalSUL = dataset_final1 %>%
+dataset_finalSUL = dataset_final3 %>%
   filter(name_region == "Sul")
 
 
 
 
 #Joint GEOBR -------------------------------------------------------------
-df10 <- dataset_finalN %>%
-  group_by(name_muni)%>%
-  mutate(rank = min_rank(-VALOR) * 1, rank <= 10) %>%
+
+top10 <- 
+  dataset_finalNE  %>%  
+  group_by(ANO)%>%
+  #filter(name_region == "Norte")%>% 
+  # selecionar o top 10
+  top_n(10, VALOR)  
+
+
+rankTT <- top10  %>%
+  group_by(ANO)%>%
+  mutate(rank = min_rank(-VALOR) * 1) %>%
   ungroup()
 
-df100 <- df10%>%
-  filter(rank == "1" |rank == "2" |rank == "3"|rank == "4"|rank == "5"|
-           rank == "6"|rank == "7"| rank == "8"|rank == "9"|rank == "10"|
-           rank == "11"|rank == "12"|rank == "13"|rank == "14"|rank == "15"|
-           rank == "16"|rank == "17"|rank == "18"|rank == "19"|rank == "20"|
-           rank == "21"|rank == "22"|rank == "23"|rank == "24"|rank == "25")
+Wata1 <- 
+  rankTT %>% 
+  filter(rank == "1")
+Wata2 <- rankTT %>% 
+  filter(rank == "2")
+Wata3 <- rankTT %>% 
+  filter(rank == "3")
+Wata4 <- rankTT %>% 
+  filter(rank == "4")
+Wata5 <- rankTT %>% 
+  filter(rank == "5")
+Wata6 <- rankTT %>% 
+  filter(rank == "6")
+Wata7 <- rankTT %>% 
+  filter(rank == "7")
+Wata8 <- rankTT %>% 
+  filter(rank == "8")
+Wata9 <- rankTT %>% 
+  filter(rank == "9")
+Wata10 <- rankTT %>% 
+  filter(rank == "10")
+
+W100 <- rbind(Wata1,Wata2,Wata3,Wata4,Wata5,Wata6,Wata7,Wata8,Wata9,Wata10)
+  
+  
+d1$VALOR=as.numeric(levels(d1$VALOR))[d1$VALOR]
 
 
-df25$VALOR=as.numeric(levels(df25$VALOR))[df25$VALOR]
+W100$mun_and_state = paste(W100$name_muni,", ",W100$abbrev_state,sep = "")
 
-nb.cols <- 25
-mycolors <- colorRampPalette(brewer.pal(25, "Set2"))(nb.cols)
+#W10$VALOR=as.numeric(levels(W10$VALOR))[df1000$VALOR]
 
-p <- ggplot(df100, aes(rank, group = `Nome_Município`,
-                     fill = `VALOR`)) +
-  scale_fill_distiller(palette = "Oranges",type="div", name="Mt Co2eq")+
+
+p <- ggplot(W100, aes(rank, 
+                         fill = VALOR, color = as.factor(`mun_and_state`)))+
+  #scale__discrete()+
+  #scale_fill_distiller(palette = "Oranges",type="seq", name=expression('CO'[2]), labels = comma)+
   #scale_color_identity(palette = "Oranges",type="seq", name="Mt Co2eq")+
   #scale_color_paletteer_c("jcolors::pal12")+
   #scale_color_brewer(palette = "Oranges")+
   geom_tile(aes(y = VALOR/2,
                 height = VALOR,
-                width = 0.9), alpha = 0.8, color = FALSE) +
+                width = 0.9), alpha = 1) +
+  #scale_fill_distiller(palette = "Oranges",type="seq", name="Mt Co2eq")+
+  scale_fill_distiller(palette = "Oranges", type="seq", name="Mt Co2eq",
+                       limits = c(min(W100$VALOR, max(W100$VALOR))))+
+  #scale_colour_distiller(palette = "Oranges",type="seq")+
+  #scale_color_brewer()+
+  scale_colour_manual(values = c("#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
+                                 "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000"))+
   #theme_classic()+
   #theme_clean()+
   # text in x-axis (requires clip = "off" in coord_*)
   # paste(country, " ")  is a hack to make pretty spacing, since hjust > 1 
   #   leads to weird artifacts in text spacing.
-  geom_text(aes(y = 0, label = paste(`Nome_Município`, " ")), vjust = 0.2, hjust = 1) +
-  coord_flip(clip = "off", expand = T) +
+  geom_text(aes(y = 0, label = paste(`mun_and_state`, " ")), vjust = 0.2, hjust = 1) +
+  #geom_text(aes(y = 0 label = paste(`VALOR`, " ")), vjust = 0.4 hjust=1) + # value label
+  coord_flip(clip = "off", expand = FALSE) +
   scale_y_continuous(labels = scales::comma) +
   scale_x_reverse() +
-  #guides(color = FALSE, fill = FALSE) +
-  labs(title='{closest_state}', x = "", y = "Remoção Bruta em Milhões de Toneladas de CO2e (Mt Co2e - GWP_AR5)") +
+  guides(color = FALSE, fill = FALSE) +
+  labs(title = 'Emissões brutas - {as.integer(current_frame)}', x = "", y = "Emissão Bruta  de CO2e (GWP_AR5)") +
+  #labs(title='{closest_state}', x = "", y = "Remoção Bruta em Milhões de Toneladas de CO2e (Mt Co2e - GWP_AR5)") +
   theme(plot.title = element_text(hjust = 0, size = 22),
         axis.ticks.y = element_blank(),  # These relate to the axes post-flip
         axis.text.y  = element_blank(),  # These relate to the axes post-flip
-        plot.margin = margin(1,1,1,4, "cm")) +
-    transition_states(ANO, transition_length = 1, state_length =1) +
+        plot.margin = margin(1,1,1,5.2, "cm")) +
   #theme(legend.position=c(.33,.95), legend.box = "horizontal",legend.justification = "center")+
   #theme(legend.key = element_blank())+
   #theme(legend.key.height = unit(0.1, "mm"))+
@@ -318,16 +382,56 @@ p <- ggplot(df100, aes(rank, group = `Nome_Município`,
   theme(axis.title = element_text(color = "black",family = "fonte.tt", size=9))+
   theme(legend.text =  element_text(color = "black",family = "fonte.tt", size=9, face = "bold"))+ # Aqui e a letra da legenda
   theme(axis.title.x = element_text(color = "black",family = "fonte.tt", size=12, face = "bold"))+
+  theme(axis.title.y = element_text(color = "black",family = "fonte.tt", size=12, face = "bold"))+
   #theme(axis.title.y = element_text(color = "black",family = "fonte.tt", size=10, face = "bold"))+ #Aqui é a legenda do eixo y 
   theme(axis.text.x = element_text(color = "black",family = "fonte.tt",size=12))+ #Aqui é a legenda do eixo x
-  #theme(axis.text.y = element_text(color = "black",family = "fonte.tt",size=9))+#Aqui é a legenda do eixo y
-  ease_aes('circular-in-out')
-animate(p, fps = 2, duration = 30, width = 800, height = 600)
+  #theme(axis.text.y = element_text(color = "black",family = "fonte.tt",size=9))+
+  #transition_states(ANO, transition_length = 1, ??state_length = 1) +
+  transition_manual(ANO) +
+  #enter_grow() +
+  #exit_shrink() +
+  enter_fade() +
+  exit_fade()+
+  ease_aes('cubic-in-out')
+
+P<- p + scale_fill_brewer(palette="YlOrRd")
+# Scatter plot
+PP <- P + scale_color_brewer(palette="YlOrRd")
+animate(p, duration = 39, width = 800, height = 600)
+
+
+W10$
+  
+  
+p <- ggplot(W10, aes(rank, group = `Nome_Município`, 
+                     fill = VALOR)) +
+  geom_tile(aes(y = VALOR/2,
+                height = VALOR,
+                width = 0.9), alpha = 0.8, color = NA) +
+  # text in x-axis (requires clip = "off" in coord_*)
+  # paste(country, " ")  is a hack to make pretty spacing, since hjust > 1 
+  #   leads to weird artifacts in text spacing.
+  #geom_text(aes(y = 0, label = paste(`Nome_Município`, " ")), vjust = 0.2, hjust = 1) +
+  coord_flip(clip = "off", expand = FALSE) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_reverse() +
+  #guides(color = FALSE, fill = FALSE) +
+  labs(title='{closest_state}', x = "", y = "GFP per capita") +
+  theme(plot.title = element_text(hjust = 0, size = 22),
+        axis.ticks.y = element_blank(),  # These relate to the axes post-flip
+        axis.text.y  = element_blank(),  # These relate to the axes post-flip
+        plot.margin = margin(1,1,1,4, "cm")) +
+  transition_states(ANO, transition_length = 4, state_length = 1) +
+  ease_aes('cubic-in-out')
+
+animate(p,  duration = 39, width = 800, height = 600)
 
 
 
 
-ggplot(df10, aes(ANO, VALOR, group = `Nome_Município`)) +
+
+
+ggplot(w, aes(ANO, VALOR, group = `Nome_Município`)) +
   geom_line() +
   geom_segment(aes(xend = 2020, yend = VALOR), linetype =2, colour = "grey") +
   geom_point(size = 2) + 
@@ -338,14 +442,17 @@ ggplot(df10, aes(ANO, VALOR, group = `Nome_Município`)) +
   scale_x_continuous("Ano", labels = df10$ANO, breaks = df10$ANO) +
   theme(plot.margin = margin(5.5, 40, 5.5, 5.5), 
         axis.text.x = element_text(face = "plain", size = 8))
-  
+
 
 a<- ggplot() +
   #scale_fill_distiller(palette = "Greens",type="seq", trans = "reverse", name="Mt Co2eq")+
   #scale_size_continuous(name="Mt Co2eq",breaks=seq(-25,0,5))+
   #theme(legend.direction = "vertical")+
-  geom_sf(data=dataset_final1, aes(fill=VALOR), size=.125, color=alpha("black",0.1))+
-  scale_fill_distiller(palette = "Oranges",type="seq", name=expression('CO'[2]), labels = comma)+
+  #scale_fill_distiller(palette = "Oranges",type="seq",trans = "reverse", name=expression('CO'[2]), labels = comma)+
+  #scale_fill_distiller()+
+  geom_sf(data=dataset_finalNE, aes(fill=VALOR), size=.125, color=alpha("orange",0.09))+
+  scale_fill_distiller(palette = "Oranges",type="seq",trans = "reverse", name=expression('CO'[2]), labels = comma)+
+  #geom_sf(data=W100, aes(fill=VALOR), size=.125, color=alpha("black",0.05))+
   #scale_fill_distiller()+
   theme_minimal()+
   #transition_states(ANO, transition_length = 1, state_length =1) +
@@ -356,18 +463,18 @@ a<- ggplot() +
         axis.ticks=element_blank()) +
   labs(title = 'Emissões brutas - {as.integer(current_frame)}') +
   #theme(plot.title = element_text(hjust = 0, size = 22),
-        #axis.ticks.y = element_blank(),  # These relate to the axes post-flip
-        #axis.text.y  = element_blank(),  # These relate to the axes post-flip
-        #plot.margin = margin(1,1,1,4, "cm")) +
+  #axis.ticks.y = element_blank(),  # These relate to the axes post-flip
+  #axis.text.y  = element_blank(),  # These relate to the axes post-flip
+  #plot.margin = margin(1,1,1,4, "cm")) +
   theme(legend.background = element_blank())+
   theme(plot.title = element_text(hjust = 0, size = 18))+
-  theme(legend.title = element_text(color = "black", family = "fonte.tt", size=12, face = "bold"))+
-  theme(axis.title = element_text(color = "black",family = "fonte.tt", size=12))+
-  theme(legend.text =  element_text(color = "black",family = "fonte.tt", size=12,face = "bold"))+ # Aqui e a letra da legenda
-  theme(axis.title.x = element_text(color = "black",family = "fonte.tt", size=12, face = "bold"))+
-  theme(axis.title.y = element_text(color = "black",family = "fonte.tt", size=14, face = "bold"))+ #Aqui é a legenda do eixo y 
-  theme(axis.text.x = element_text(color = "black",family = "fonte.tt",size=12))+ #Aqui é a legenda do eixo x
-  theme(axis.text.y = element_text(color = "black",family = "fonte.tt",size=12))+
+  theme(legend.title = element_text(colour = "black", family = "fonte.tt", size=12, face = "bold"))+
+  theme(axis.title = element_text(colour = "black",family = "fonte.tt", size=12))+
+  theme(legend.text =  element_text(colour = "black",family = "fonte.tt", size=12,face = "bold"))+ # Aqui e a letra da legenda
+  theme(axis.title.x = element_text(colour = "black",family = "fonte.tt", size=12, face = "bold"))+
+  theme(axis.title.y = element_text(colour = "black",family = "fonte.tt", size=14, face = "bold"))+ #Aqui é a legenda do eixo y 
+  theme(axis.text.x = element_text(colour = "black",family = "fonte.tt",size=12))+ #Aqui é a legenda do eixo x
+  theme(axis.text.y = element_text(colour = "black",family = "fonte.tt",size=12))+
   # Adiciona o Norte Geográfico
   annotation_north_arrow(
     location = "br",
@@ -378,15 +485,15 @@ a<- ggplot() +
     pad_y = unit(0.2, "in"),
     style = north_arrow_fancy_orienteering
   ) +
-  theme(legend.position=c(.88,.88), legend.box = "horizontal",legend.justification = "center")+
+  theme(legend.position=c(.95,.95), legend.box = "horizontal",legend.justification = "center")+
   ggspatial::annotation_scale()+
   #transition_states(ANO, transition_length = 1, state_length =1) +
   #coord_cartesian(clip = 'off') + 
   ease_aes('linear')
-animate(a, width = 800, height = 600, duration = 39, res=320)
+animate(a, width = 800, height = 600, duration = 39)
 anim_save("TS_Map_Emission_SEEG_v9_1_01.gif", dpi = 330) 
 anim_save("TS_Map_Emission_SEEG_v9_1_0.mp4")
-  #ease_aes('circular-in-out')+
+#ease_aes('circular-in-out')+
 animate(a)
 
 
@@ -403,7 +510,7 @@ ggplot() +
   labs(title = 'Year: {frame_time}') +
   transition_time(Ano) +
   ease_aes('linear')
-  
+
 
 p <- ggplot() + 
   geom_sf(data=dataset_final1, aes(fill = VALOR, frame = ANO, text = `Nome_Município`)) + 

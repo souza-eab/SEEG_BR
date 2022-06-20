@@ -12,7 +12,7 @@
 //* @ Set user parameters *//
 var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect';
 //var version = '1'; // Version test - 1985- 2020
-var version = 'v1'; // Version QA (Weighted Average = Stk * %Area)
+var version = '2'; // Version QA (Weighted Average = Stk * %Area)
 
 // define biomes to be processed
 // to process a single biome, comment lines 
@@ -41,7 +41,7 @@ var list_qcn_classes = [3,  // Forest formation
 
 // define mapbiomas colelction 6.0 reclassification matrix
 var raw_mapbiomas  = [3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 39, 40, 41, 46, 47, 48, 49];   
-var reclass_vector = [3, 4, 5, 0, 11, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49];   
+var reclass_vector = [3, 4, 5, 0, 11, 12, 13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49];   
 
 // import QCN data
 var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_c')
@@ -54,7 +54,7 @@ var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster'
 var states = ee.Image('projects/mapbiomas-workspace/AUXILIAR/estados-2016-raster');
 
 // import Mapbiomas Collection 6.0
-var colecao6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
+var colecao6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1"); // Collection Public
 
 ///////////////////////////////////////
 /* @. Don't change below this line *///
@@ -122,33 +122,33 @@ list_biomes.forEach(function(biome_i) {
       // when biome equals amazonia
       if (biome_i == 1) {
         biome_name = 'amazonia';
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 162.89128848); //* 164.71443
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  173.05); //* 165.49274
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.52); //* 38.30
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 58.20); //* X //* Include class 11 Wetland  
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 49.8300); //*110.339 //*Grassland >2X 
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3),164.71443);    // 162.89128848); //* 164.71443
+            tot_rect = tot_rect.where(discordance_ijk.eq(4), 165.49274);    // 173.05); //* 165.49274
+            tot_rect = tot_rect.where(discordance_ijk.eq(5), 38.3000);      // 38.52); //* 38.30
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 58.200);      //58.20); //* X //* Include class 11 Wetland  
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 110.339);     // 49.8300);  //*110.339 //*Grassland >2X 
       }
       
       // when biome equals to mata atlantica
       if (biome_i == 2) {
         biome_name = 'mata_atlantica';
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 127.8127795);  //* 121.78
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  48.2497191);   //* 47.65
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  127.8127795);  //* 83.06
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 103.75);       //* 103.75 //* Include class 
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 13.89369925);  //* 13.91
-            tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);        //* 83.06  //* Include class 
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 13.89369925);  //* 104.70 //* Include class 
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 121.78172);  // 127.8127795);  //* 121.78
+            tot_rect = tot_rect.where(discordance_ijk.eq(4),  47.65106);   // 48.2497191);   //* 47.65
+            tot_rect = tot_rect.where(discordance_ijk.eq(5),  83.06);      // 127.8127795);  //* 83.06
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 103.75);     // 103.75);       //* 103.75 //* Include class 
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 13.9125);    // 13.89369925);  //* 13.91
+            tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);      // 83.06);        //* 83.06  //* Include class 
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 104.70);     // 13.89369925);  //* 104.70 //* Include class 
 
       }
       
       // when biome equals to pantanal
       if (biome_i == 3) {
         biome_name = 'pantanal';
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 98.10198434); //* 118.77 
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  37.53344167); //* 39.84
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 25.21);      //*25.21 //*Include class 
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 24.01225878); //* 23.24
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 118.76901);  // 98.10198434); //* 118.77 
+            tot_rect = tot_rect.where(discordance_ijk.eq(4),  39.83687);   // 37.53344167); //* 39.84
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 25.20831);   // 25.21);       //*25.21 //*Include class 
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 23.24079);   // 24.01225878); //* 23.24
       }
       
       // when biome equals to cerrado
@@ -156,43 +156,43 @@ list_biomes.forEach(function(biome_i) {
         biome_name = 'cerrado';
         // when discordance equal to forest formation
         var //tot_rect = biome_tot.where(states.eq(11).and(discordance_ijk.eq(3)), 79.80779548);      // RO //*Exclude
-            tot_rect = biome_tot.where(states.eq(15).and(discordance_ijk.eq(3)), 74.03587313);        // PA //*Include
-            tot_rect = tot_rect.where(states.eq(17).and(discordance_ijk.eq(3)),  64.27657895);        // TO 67.34568565
-            tot_rect = tot_rect.where(states.eq(21).and(discordance_ijk.eq(3)),  63.91879963);        // MA 62.68812168
-            tot_rect = tot_rect.where(states.eq(22).and(discordance_ijk.eq(3)),  66.068241);          // PI 61.74337814
-            tot_rect = tot_rect.where(states.eq(29).and(discordance_ijk.eq(3)),  67.18329178);        // BA 62.51979601
-            tot_rect = tot_rect.where(states.eq(31).and(discordance_ijk.eq(3)),  70.08654663);        // MG 64.73412216
-            tot_rect = tot_rect.where(states.eq(35).and(discordance_ijk.eq(3)),  84.98800092);        // SP 80.45093149
-            tot_rect = tot_rect.where(states.eq(41).and(discordance_ijk.eq(3)),  74.98246537);        // PR 74.80437684
-            tot_rect = tot_rect.where(states.eq(50).and(discordance_ijk.eq(3)),  99.27158356);        // MS 99.18537083
-            tot_rect = tot_rect.where(states.eq(51).and(discordance_ijk.eq(3)),  93.55501847);        // MT 97.45652989
-            tot_rect = tot_rect.where(states.eq(52).and(discordance_ijk.eq(3)),  70.01143121);        // GO 64.72447117
-            tot_rect = tot_rect.where(states.eq(53).and(discordance_ijk.eq(3)),  66.8596976);         // DF 71.41565647
+            tot_rect = biome_tot.where(states.eq(15).and(discordance_ijk.eq(3)),74.03587313);        // 74.03587313);        // PA //*Include
+            tot_rect = tot_rect.where(states.eq(17).and(discordance_ijk.eq(3)), 67.34568565);        // 64.27657895);        //* TO 67.34568565
+            tot_rect = tot_rect.where(states.eq(21).and(discordance_ijk.eq(3)), 62.68812168);        // 63.91879963);        //* MA 62.68812168
+            tot_rect = tot_rect.where(states.eq(22).and(discordance_ijk.eq(3)), 61.74337814);        // 66.068241);          //* PI 61.74337814
+            tot_rect = tot_rect.where(states.eq(29).and(discordance_ijk.eq(3)), 62.51979601);        // 67.18329178);        //* BA 62.51979601
+            tot_rect = tot_rect.where(states.eq(31).and(discordance_ijk.eq(3)), 64.73412216);        // 70.08654663);        //* MG 64.73412216
+            tot_rect = tot_rect.where(states.eq(35).and(discordance_ijk.eq(3)), 80.45093149);        // 84.98800092);        //* SP 80.45093149
+            tot_rect = tot_rect.where(states.eq(41).and(discordance_ijk.eq(3)), 74.80437684);        // 74.98246537);        //* PR 74.80437684
+            tot_rect = tot_rect.where(states.eq(50).and(discordance_ijk.eq(3)), 99.18537083);        // 99.27158356);        //* MS 99.18537083
+            tot_rect = tot_rect.where(states.eq(51).and(discordance_ijk.eq(3)), 97.45652989);        // 93.55501847);        //* MT 97.45652989
+            tot_rect = tot_rect.where(states.eq(52).and(discordance_ijk.eq(3)), 64.72447117);        // 70.01143121);        //* GO 64.72447117
+            tot_rect = tot_rect.where(states.eq(53).and(discordance_ijk.eq(3)), 71.41565647);        // 66.8596976);         //* DF 71.41565647
             
         // when discordance equal to other types of NV
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  39.99);       //*41.32 
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.26);       //*38.26 
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 36.21);       //*36.21  Include Class
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 24.75375483); //*24.94  
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34.76);       //*34.76 Include Class  
+            tot_rect = tot_rect.where(discordance_ijk.eq(4), 41.32);  // 39.99);       //*41.32 
+            tot_rect = tot_rect.where(discordance_ijk.eq(5), 38.26);  // 38.26);       //*38.26 
+            tot_rect = tot_rect.where(discordance_ijk.eq(11),36.21);  // 36.21);       //*36.21  Include Class
+            tot_rect = tot_rect.where(discordance_ijk.eq(12),24.94);  //24.75375483); //*24.94  
+            tot_rect = tot_rect.where(discordance_ijk.eq(49),34.76);  //34.76);       //*34.76 Include Class  
       }
       
       // when biome equal to caatinga
       if (biome_i == 5) {
         biome_name = 'caatinga';
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 101.8751897); //* 68.53
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  19.87407942); //* 20.30
-            tot_rect = biome_tot.where(discordance_ijk.eq(5), 170.54); //* 20.30 //* Include Class
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 12.83059147); //* 15.46
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 147.09); //* Include Class 
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3),68.53);  // 101.8751897 ; //* 68.53
+            tot_rect = tot_rect.where(discordance_ijk.eq(4), 20.30);  // 19.87407942 ; //* 20.30
+            tot_rect = biome_tot.where(discordance_ijk.eq(5),170.54); // 20.30       ; //*170.54); //* Include Class
+            tot_rect = tot_rect.where(discordance_ijk.eq(12),15.46);  // 12.83059147 ; //* 15.46
+            tot_rect = tot_rect.where(discordance_ijk.eq(49),147.09); // 147.09      ; //*Include Class 
       }
       
       // when biome equal to pampa
       if (biome_i == 6) {
         biome_name = 'pampa';
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 115.0286131); //* 76.03
-            tot_rect = tot_rect.where(discordance_ijk.eq(11),  11.74); //*Include Class
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 4.560158311); //* 21.84
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3),76.02510); // 115.0286131); //* 76.03
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 11.74); //*Include Class
+            tot_rect = tot_rect.where(discordance_ijk.eq(12),21.83686); //4.560158311); //* 21.84
       }
 
       // bind corrections of each class into a unique 'temp' obj 
@@ -210,6 +210,9 @@ list_biomes.forEach(function(biome_i) {
       }
       if (class_k == 12) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
+      }
+      if (class_k == 13) {
+      temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
       }
       if (class_k == 49) {
       temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));

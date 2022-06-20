@@ -1,3 +1,5 @@
+QCN_rectify_2021.js
+
 // Rectify 'c_total' of QCN per native vegetation classe by using Mapbiomas Collection 6.0 LCLUC as reference  
 // For any issue/bug, please write to <dhemerson.costa@ipam.org.br>, <> and/or <edriano.souza@ipam.org.br>
 // SEEG/Observatório do Clima and IPAM
@@ -10,9 +12,9 @@
 // 2.0 Perform 'c_total' correction for all biomes from 1985 to 2020 
 
 //* @ Set user parameters *//
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_rect';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect';
 //var version = '1'; // Version test - 1985- 2020
-var version = '2'; // Version Collection 6.0 
+var version = 'v1'; // Version QA (Weighted Average = Stk * %Area)
 
 // define biomes to be processed
 // to process a single biome, comment lines 
@@ -34,13 +36,14 @@ var list_mapb_years = [1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 199
 var list_qcn_classes = [3,  // Forest formation
                         4,  // Savanna formation 
                         5,  // Mangrove
+                        11, // Wetland
                         12, // Grassland
-                        49, // 
+                        49, // Wooded Restinga
                         ];
 
 // define mapbiomas colelction 6.0 reclassification matrix
 var raw_mapbiomas  = [3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 39, 40, 41, 46, 47, 48, 49];   
-var reclass_vector = [3, 4, 5, 0, 11, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  49];   
+var reclass_vector = [3, 4, 5, 0, 11, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49];   
 
 // import QCN data
 var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_c')
@@ -124,7 +127,7 @@ list_biomes.forEach(function(biome_i) {
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 162.89128848); //* 164.71443
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  173.05); //* 165.49274
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.52); //* 38.30
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 58,20); //* X //* Include class 11 Wetland  
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 58.20); //* X //* Include class 11 Wetland  
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 49.8300); //*110.339 //*Grassland >2X 
       }
       
@@ -155,7 +158,7 @@ list_biomes.forEach(function(biome_i) {
         biome_name = 'cerrado';
         // when discordance equal to forest formation
         var //tot_rect = biome_tot.where(states.eq(11).and(discordance_ijk.eq(3)), 79.80779548);      // RO //*Exclude
-            tot_rect = biome_tot.where(states.eq(15).and(discordance_ijk.eq(3)), 74.03587313);        // RO //*Include
+            tot_rect = biome_tot.where(states.eq(15).and(discordance_ijk.eq(3)), 74.03587313);        // PA //*Include
             tot_rect = tot_rect.where(states.eq(17).and(discordance_ijk.eq(3)),  64.27657895);        // TO 67.34568565
             tot_rect = tot_rect.where(states.eq(21).and(discordance_ijk.eq(3)),  63.91879963);        // MA 62.68812168
             tot_rect = tot_rect.where(states.eq(22).and(discordance_ijk.eq(3)),  66.068241);          // PI 61.74337814
@@ -171,25 +174,27 @@ list_biomes.forEach(function(biome_i) {
         // when discordance equal to other types of NV
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  39.99);       //*41.32 
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.26);       //*38.26 
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 36.21);       //*24.94  Include Class
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 36.21);       //*36.21  Include Class
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 24.75375483); //*24.94  
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34.76);       //* Include Class  
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34.76);       //*34.76 Include Class  
       }
       
       // when biome equal to caatinga
       if (biome_i == 5) {
         biome_name = 'caatinga';
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 101.8751897);
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  19.87407942);
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 12.83059147);
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 101.8751897); //* 68.53
+            tot_rect = tot_rect.where(discordance_ijk.eq(4),  19.87407942); //* 20.30
+            tot_rect = biome_tot.where(discordance_ijk.eq(5), 170.54); //* 20.30 //* Include Class
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 12.83059147); //* 15.46
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 147.09); //* Include Class 
       }
       
       // when biome equal to pampa
       if (biome_i == 6) {
         biome_name = 'pampa';
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 115.0286131);
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  12.77);
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 4.560158311);
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 115.0286131); //* 76.03
+            tot_rect = tot_rect.where(discordance_ijk.eq(11),  11.74); //*Include Class
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 4.560158311); //* 21.84
       }
 
       // bind corrections of each class into a unique 'temp' obj 
@@ -202,8 +207,14 @@ list_biomes.forEach(function(biome_i) {
       if (class_k == 5) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
       }
+      if (class_k == 11) {
+        temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
+      }
       if (class_k == 12) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
+      }
+      if (class_k == 49) {
+      temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
         
       // rename band
       temp = temp.rename('total_' + year_j);

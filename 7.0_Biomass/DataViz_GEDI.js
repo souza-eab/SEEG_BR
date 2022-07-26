@@ -1,7 +1,50 @@
 // Code Get link 
-//*@ <https://code.earthengine.google.com/08f71220885fc3c08cd8bcc9c1a8d0ef>
+//*@ <https://code.earthengine.google.com/c45a1dbb3505b01d9bfdf24f6d5470e2>
 
-// import 'c_total' from qcn
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////// GOALS: DataVis Biomass  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////  Created by: Edriano Souza  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////////////////////////
+/////////   Processing time <2h> in Google Earth Engine /////////////////////////////////////////////////////////////////////////////////////////
+// /////    For clarification or an issue/bug report, please write to edriano.souza@ipam.org.br and/or barbara.zimbres@ipam.org.br //////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+//*@ Mapbiomas ( LULC- pixel 30m)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+ // Asset Mapbimoas Col6
+var MapBiomas_col6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
+
+// Palettes
+var palettes = require('users/mapbiomas/modules:Palettes.js');
+var vis = {
+    'min': 0,
+    'max': 49,
+    'palette': palettes.get('classification6')
+    };
+
+Map.addLayer(MapBiomas_col6.select('classification_1985').clip(geometry), vis,"Mapbiomas_1985",false);
+Map.addLayer(MapBiomas_col6.select('classification_2020').clip(geometry), vis,"Mapbiomas_2020",false);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*@ QCN ( AGB_total - pixel 30_250m)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // import 'c_total' from qcn
 var qcn_total = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_c')
@@ -14,94 +57,159 @@ var qcn_total_rect = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2021/
                         .filterMetadata('biome', 'equals', 'cerrado')
                         .mosaic();
 
-
-// Add Asset Biomes_BR (Source: IBGE && INCRA, 2019)
-var BiomesBR = ee.FeatureCollection('projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR').filter('CD_LEGENDA == "CERRADO"');
-
-
-
 // define pallete
 var pal = require('users/gena/packages:palettes').matplotlib.viridis[7];
+var Mapp = require('users/joaovsiqueira1/packages:Mapp.js');
+var ColorRamp = require('users/joaovsiqueira1/packages:ColorRamp.js');
+
+var visFlo = {
+    bands: ['total'],
+    min: 1,
+    max: 75,
+    palette:["#fde725",
+            "#a0da39",
+            "#4ac16d",
+            "#1fa187",
+            "#277f8e",
+            "#365c8d",
+            "#46327e",
+            "#440154"
+            ]
+};
+
+
+var visFlo2 = {
+    bands: ['total_2020'],
+    min: 1,
+    max: 75,
+    palette:["#fde725",
+            "#a0da39",
+            "#4ac16d",
+            "#1fa187",
+            "#277f8e",
+            "#365c8d",
+            "#46327e",
+            "#440154"
+            ]
+};
+
+ColorRamp.init(
+    {
+        'orientation': 'horizontal',
+        'backgroundColor': '212121',
+        'fontColor': 'ffffff',
+        'height': '5px',
+        'width': '300px',
+    }
+);
+
+ColorRamp.add({
+    'title': '4CN - Biomassa (tC/ha)',
+    'min': visFlo.min,
+    'max': visFlo.max,
+    'palette': visFlo.palette,
+});
+
+ColorRamp.add({
+    'title': '4CN_Rectity - Biomassa (tC/ha)',
+    'min': visFlo2.min,
+    'max': visFlo2.max,
+    'palette': visFlo2.palette,
+});
+
+
+// Get legend widget
+var legend = ColorRamp.getWidget();
+
+Map.add(legend);
+
+
 
 // plot
-Map.addLayer(qcn_total.select(['total']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Total');
-Map.addLayer(qcn_total_rect.select(['total_2020']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Rect - 2020');
-Map.addLayer(qcn_total_rect.select(['total_1985']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Rect - 1985');
-Map.addLayer(qcn_total_rect.select(['total_1990']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Rect - 1990');
-Map.addLayer(qcn_total_rect.select(['total_1995']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Rect - 1995');
-Map.addLayer(qcn_total_rect.select(['total_2000']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Rect - 2000');
-Map.addLayer(qcn_total_rect.select(['total_2005']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Rect - 2005');
-Map.addLayer(qcn_total_rect.select(['total_2010']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Rect - 2010');
-Map.addLayer(qcn_total_rect.select(['total_2015']).clip(geometry), {min: 0, max: 168, palette: pal}, 'QCN Rect - 2015');
-//Map.addLayer(qcn_total_rect.select(['total_2020']), {min: 0, max: 168, palette: pal}, 'QCN Rect - 2020');
+Map.addLayer(qcn_total.select(['total']).clip(geometry),  visFlo, 'QCN_bruto Total');
+Map.addLayer(qcn_total_rect.clip(geometry), visFlo2, 'QCN Rectify');
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*@ GEDI l4b (AGBD - Biomass - pixel 1km)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var image = ee.Image('projects/mapbiomas-workspace/AUXILIAR/RASTER/regions/CERRADO');
 
-//GEDI
 var l4b = ee.Image('LARSE/GEDI/GEDI04_B_002')
 print(l4b)
 
-Map.addLayer(l4b.select('SE').clip(geometry), {min: 10, max: 50, palette: '000004,3b0f6f,8c2981,dd4a69,fe9f6d,fcfdbf'}, 'L4 Gedi_SE')
-Map.addLayer(l4b.select('MU').clip(geometry), {min: 10, max: 250, palette: '440154,414387,2a788e,23a884,7ad151,fde725'}, 'L4 Gedi Mean Biomass')
+var visFlo3 = {
+    bands: ['SE'],
+    min: 1,
+    max: 50,
+    palette:['#000004',
+            '#3b0f6f',
+            '#8c2981',
+            '#dd4a69',
+            '#fe9f6d',
+            '#fcfdbf'
+            ]
+};
+
+
+var visFlo4 = {
+    bands: ['MU'],
+    min: 1,
+    max: 75,
+    palette:["#fde725",
+            "#a0da39",
+            "#4ac16d",
+            "#1fa187",
+            "#277f8e",
+            "#365c8d",
+            "#46327e",
+            "#440154"
+            ]
+};
 
 
 
-var Mapp = require('users/joaovsiqueira1/packages:Mapp.js');
-
-Map.setOptions({
-  'styles': {
-    'Dark': Mapp.getStyle('Dark'),
-    'Dark2':Mapp.getStyle('Dark2'),
-    'Aubergine':Mapp.getStyle('Aubergine'),
-    'Silver':Mapp.getStyle('Silver'),
-    'Night':Mapp.getStyle('Night'),
-  }
+ColorRamp.add({
+    'title': 'L4 Gedi Mean Biomass',
+    'min': visFlo4.min,
+    'max': visFlo4.max,
+    'palette': visFlo4.palette,
 });
 
-Map.setOptions('SATELLITE');
 
-
-// import_mask
-var Mask_stable = ee.ImageCollection('projects/ee-seeg-brazil/assets/collection_9/v1/2_1_Mask_stable')
-  .toBands()
-  .aside(print);
-// Asset Mapbimoas Col6
-var MapBiomas_col6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
-
-// Add Asset Biomes_BR (Source: IBGE && INCRA, 2019)
-var BiomesBR = ee.FeatureCollection('projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR').filter('CD_LEGENDA == "CERRADO"');
- 
-// Palettes
-var palettes = require('users/mapbiomas/modules:Palettes.js');
-var vis = {
-    'min': 0,
-    'max': 49,
-    'palette': palettes.get('classification6')
-    };
-
-
-//Map Add Layer   
-Map.addLayer(Mask_stable.select(['SEEG_c9_v1_2020_classification_2020']).clip(geometry), vis, '2_1_Mask_stable_2020', false);
-Map.addLayer(Mask_stable.select(['SEEG_c9_v1_1985_classification_1985']).clip(geometry), vis, '2_1_Mask_stable_1985', false);
-Map.addLayer(MapBiomas_col6.select('classification_1985').clip(geometry), vis,"Mapbiomas_1985",false);
-Map.addLayer(MapBiomas_col6.select('classification_2020').clip(geometry), vis,"Mapbiomas_2020",false);
-
-var Mapp = require('users/joaovsiqueira1/packages:Mapp.js');
-
-Map.setOptions({
-  'styles': {
-    'Dark': Mapp.getStyle('Dark'),
-    'Dark2':Mapp.getStyle('Dark2'),
-    'Aubergine':Mapp.getStyle('Aubergine'),
-    'Silver':Mapp.getStyle('Silver'),
-    'Night':Mapp.getStyle('Night'),
-  }
+ColorRamp.add({
+    'title': 'L4 Gedi_SE',
+    'min': visFlo3.min,
+    'max': visFlo3.max,
+    'palette': visFlo3.palette,
 });
+
+
+
+//DataVis
+Map.addLayer(l4b.select('SE').clip(geometry), visFlo3, 'L4 Gedi_SE')
+Map.addLayer(l4b.select('MU').clip(geometry), visFlo4, 'L4 Gedi Mean Biomass')
+
+
+
 
 Map.setOptions('SATELLITE');
 Map.setCenter(-47.8657, -15.9119, 12);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*@ GEDI l2a ( Height - radius 25m)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 function bufferPoints(radius, bounds) {
@@ -152,6 +260,14 @@ var gediVis = {
 Map.centerObject(geometry,8);
 
 
+ColorRamp.add({
+    'title': 'rh100 metric',
+    'min': gediVis.min,
+    'max': gediVis.max,
+    'palette': gediVis.palette,
+});
+
+
 //Set proejection and scale
 var projection = dataset.first().projection()
 //.aside(print);
@@ -159,7 +275,7 @@ var scale = projection.nominalScale()
 //.aside(print);
 
 var mosaic = dataset.mosaic().setDefaultProjection({crs:projection, scale:scale});
-Map.addLayer(mosaic.select(0).clip(geometry), gediVis, 'metric');
+Map.addLayer(mosaic.select(0).clip(geometry), gediVis, 'rh100 metric');
 
 
 //Generating feature
@@ -188,8 +304,17 @@ var fills = empty.paint({
 // var palette = ['#801D08','#E32B04','#F08E17', '#35DA1E', '#32622C'];
 var palette = palettes.crameri.bamako[50].reverse()
 
-Map.addLayer(fills, {palette: palette, max:40}, 'colored fills');  
+Map.addLayer(fills, {palette: palette, max:40}, 'Colored fills rh98');  
 
   
+Map.setOptions({
+  'styles': {
+    'Dark': Mapp.getStyle('Dark'),
+    'Dark2':Mapp.getStyle('Dark2'),
+    'Aubergine':Mapp.getStyle('Aubergine'),
+    'Silver':Mapp.getStyle('Silver'),
+    'Night':Mapp.getStyle('Night'),
+  }
+});
 
-  
+Map.setOptions('SATELLITE');

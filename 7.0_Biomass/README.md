@@ -9,9 +9,15 @@ noise-filtered, and corrected for misalignment of overlapping flight lines. They
 The data were collected to measure forest canopy structure across Amazonian landscapes to monitor the effects
 of selective logging on forest biomass and carbon balance, and forest recovery over time.
 
-## We have  In biome Cerrado: Total = 321 Tiles in the  states GO and TO have dataLidar-flights-ALS. 
-
+## We have  In biome Cerrado: 
 ```javascript
-    (eg. GO1_A01_2018_LAS_1.laz/ FN3_A01_2014_P17_laz_4.laz)
+Total = 321 Tiles (📁) in the  states GO (n=120) and TO (n=201) have dataLidar-flights-ALS. 
+                (eg. GO1_A01_2018_LAS_1.laz/ FN3_A01_2014_P17_laz_4.laz)
 ```
+
+## The dataLidar Structure in the states in biome Cerrado
+In state GO dataLidar (1) are near municipalities (i) São João, Itapirapuã (*PC*), Trevânia, *line* Buenolandia to Jussara. Thus, region (ii) are near border with the state of Tocantins, are these: Monjolo, Grupelândia and São Pedro. *PC* - Principal component
+
+Already the second state dataset TO dataLidar (2) are near municipalities: Novo Horizonte, Jaú do Tocantins, Canoeiro, Alvorada, Salvação, Angico, Peixe, Novo Nilo, São Valério da Natividade and Água Branca (greater proportion in region South in the state).
+
 

@@ -3,7 +3,7 @@
 
 This dataset provides the complete catalog of point cloud data collected during LiDAR
 surveys over selected forest research sites across the Amazon rainforest in Brazil between 
-**2008 and 2018** for the Sustainable Landscapes Brazil Project. Flight lines were selected
+**2008 and 2018** for the **Sustainable Landscapes Brazil Project**. Flight lines were selected
 to overfly key field research sites in the Brazilian states of Acre, Amazonas, Bahia, Goias, 
 Mato Grosso, Para, Rondonia, Santa Catarina, and Sao Paulo. The point clouds have been georeferenced,
 noise-filtered, and corrected for misalignment of overlapping flight lines. They are provided in 1 km2 tiles.

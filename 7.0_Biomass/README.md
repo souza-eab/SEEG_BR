@@ -10,6 +10,9 @@ noise-filtered, and corrected for misalignment of overlapping flight lines. They
 The data were collected to measure forest canopy structure across Amazonian landscapes to monitor the effects
 of selective logging on forest biomass and carbon balance, and forest recovery over time.
 
+## Data Files
+Total de 128.6 GB in 3166 Files
+
 ## We have in biome Cerrado: 
 ```javascript
 Total = 321 Tiles📁 in the states GO (n=137) and TO (n=184) have dataLidar-flights-ALS. 

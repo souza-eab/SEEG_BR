@@ -11,7 +11,7 @@ of selective logging on forest biomass and carbon balance, and forest recovery o
 
 ## We have  In biome Cerrado: 
 ```javascript
-Total = 321 Tiles📁 in the  states GO (n=137) and TO (n=201) have dataLidar-flights-ALS. 
+Total = 321 Tiles📁 in the  states GO (n=137) and TO (n=184) have dataLidar-flights-ALS. 
                 (eg. GO1_A01_2018_LAS_1.laz/ FN3_A01_2014_P17_laz_4.laz)
 ```
 

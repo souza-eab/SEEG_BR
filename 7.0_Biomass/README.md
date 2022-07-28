@@ -27,7 +27,7 @@ Total = 321 Tiles📁 in the states GO (n=137) and TO (n=184) have dataLidar-fli
 Total = 302 Tiles📁 in the states BA (n=216), SC (n=29) and SP (57).
 ```
 
-## The dataLidar Structure in the states in biome Cerrado
+## The dataLidar Structure in the states and municipalities in biome Cerrado
 In state GOIAS-GO dataLidar (1) are near municipalities (i) São João, Itapirapuã (*PC*), Trevânia, *line* Buenolandia to Jussara. Thus, region (ii) are near border with the state of Tocantins, are these: Monjolo, Grupelândia and São Pedro. *PC* - Principal component
 
 Already the second state dataset TOCANTIS-TO dataLidar (2) are near municipalities: Novo Horizonte, Jaú do Tocantins, Canoeiro, Alvorada, Salvação, Angico, Peixe, Novo Nilo, São Valério da Natividade and Água Branca (greater proportion in region South in the state).

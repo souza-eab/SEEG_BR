@@ -24,7 +24,12 @@ Total = 321 Tiles📁 in the states GO (n=137) and TO (n=184) have dataLidar-fli
 
 ## We have in biome Atlantic Forest: 
 ```javascript
-Total = 302 Tiles📁 in the states BA (n=216), SC (n=29) and SP (57).
+Total = 302 Tiles📁 in the states BA (n=216), SC (n=29) and SP (n=57).
+```
+
+## We have in biome Amazon: 
+```javascript
+Total = 2543 Tiles📁 in the states AC (n=134), AM (n=116), MT (n=477), PA (n=1623) and RO (n=193)   .
 ```
 
 ## The dataLidar Structure in the states and municipalities in biome Cerrado

@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: Generate and export pairwise transition maps from a MapBiomas collection (eg. col 6.0) /////////////////////
-//////////  Created by: Felipe Lenti, Barbara Zimbres ////////////////////////////////////////////////////////////////////////
+/////////// GOALS: Generate and export pairwise transition maps from a MapBiomas collection ///////////////////////////////////
+//////////  Created by: Felipe Lenti, Barbara Zimbres, Edriano Souza /////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
 /////////   Processing time <2h> in Google Earth Engine ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: Generate and export pairwise transition maps from a MapBiomas collection (eg. col 6.0)
+// 1: Generate and export pairwise transition maps from a MapBiomas collection
 // 1.1: Load the assets from the previous step 'Stabilized_cover'
 // 1.2: Loop to do the arithmetic of bands with all pairs of years, multiplying year 1 by 10000     
 // 1.3: Exporting data
@@ -25,7 +25,7 @@ var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
 //List of years
-var years = ['1989', '1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019', '2020'];
+var years = ['1986','1987','1988','1989', '1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019', '2020','2021'];
 
 // Load the assets from the previous step 'Stabilized_cover'
 var cover = ee.ImageCollection('projects/ee-seeg-brazil/assets/collection_9/v1/2_1_Mask_stable').aside(print);

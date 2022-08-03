@@ -27,8 +27,8 @@ print(MapBiomas_col6);
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
 var col6antrop85 = MapBiomas_col6.select('classification_1985').remap(
-                  [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
-                  [0,0,0,1, 0, 0, 0, 1, 1, 1, 9, 1, 1, 9, 1, 1, 9, 9, 1, 1, 1, 1, 1, 1, 0,0,1]);
+                  [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49],
+                  [0,0,0,1, 0, 0, 0, 1, 1, 1, 9, 1, 1, 9, 1, 1, 9, 9, 1, 1, 1, 1, 1, 1, 0]);
 
 // Changing band names
 col6antrop85 = col6antrop85.select([0],['deforestation1985']).int8();
@@ -41,8 +41,8 @@ for (var i_year=0;i_year<years.length; i_year++){
   var year = years[i_year];
 
   var col6uso = MapBiomas_col6.select('classification_'+year).remap(
-                  [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
-                  [0,0,0,1, 0, 0, 0, 1, 1, 1, 9, 1, 1, 9, 1, 1, 9, 9, 1, 1, 1, 1, 1, 1, 0,0,1]);
+                  [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49],
+                  [0,0,0,1, 0, 0, 0, 1, 1, 1, 9, 1, 1, 9, 1, 1, 9, 9, 1, 1, 1, 1, 1, 1, 0]);
                     
   col6antrop85 = col6antrop85.addBands(col6uso.select([0],['deforestation'+year])).int8();
 }
@@ -206,8 +206,8 @@ var MapBiomas_col6 = ee.Image("projects/mapbiomas-workspace/public/collection6/m
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
 var col6forest85 = MapBiomas_col6.select('classification_1985').remap(
-                  [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
-                  [1,1,1,0, 1, 1, 1, 0, 0, 0, 9, 0, 0, 9, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 1,1,0]);
+                  [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49],
+                  [1,1,1,0, 1, 1, 1, 0, 0, 0, 9, 0, 0, 9, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 1]);
 
 // Changing band names
 col6forest85 = col6forest85.select([0],['regeneration1985']).int8();
@@ -220,8 +220,8 @@ for (var i_year=0;i_year<years.length; i_year++){
   var year = years[i_year];
 
   var col6flor = MapBiomas_col6.select('classification_'+year).remap(
-                  [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
-                  [1,1,1,0, 1, 1, 1, 0, 0, 0, 9, 0, 0, 9, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 1,1,0]);
+                  [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49],
+                  [1,1,1,0, 1, 1, 1, 0, 0, 0, 9, 0, 0, 9, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 1]);
                     
   col6forest85 = col6forest85.addBands(col6flor.select([0],['regeneration'+year])).int8();
 }

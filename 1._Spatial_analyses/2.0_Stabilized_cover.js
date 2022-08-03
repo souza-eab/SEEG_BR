@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: Script to generate and stabilize annual land cover basemaps from a MapBiomas collection (eg. col 6.0)///////
+/////////// GOALS: Script to generate and stabilize annual land cover basemaps from a MapBiomas collection ////////////////////
 //////////  Created by: Felipe Lenti, Barbara Zimbres, Edriano Souza /////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
 /////////  Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
@@ -56,6 +56,7 @@ var exp = '100*((b(0)+b(1)+b(2)+b(3)+b(4)+b(5)+b(6)+b(7)+b(8)+b(9)+b(10)+b(11)+b
 var florFreq = mapbiomas.eq(3).expression(exp);                     //  Forest Formation
 var savFreq = mapbiomas.eq(4).expression(exp);                      // Savanna Formation
 var WrestFreq = mapbiomas.eq(49).expression(exp);                   /// Wooded Restinga
+var SrestFreq = mapbiomas.eq(50).expression(exp);                   /// Shrubby Restinga
 var manFreq = mapbiomas.eq(5).expression(exp);                      /// Mangrove
 var umiFreq = mapbiomas.eq(11).expression(exp);                     /// Wetlands
 var grassFreq = mapbiomas.eq(12).expression(exp);                   // Grassland
@@ -80,12 +81,15 @@ var agroTempFreq = mapbiomas.eq(41).expression(exp);                // Other tem
 var agroPerFreqCoffee = mapbiomas.eq(46).expression(exp);           // Coffee
 var agroPerFreqCitrus = mapbiomas.eq(47).expression(exp);           // Citrus
 var agroPerFreqOther = mapbiomas.eq(48).expression(exp);            // Other Perennial Crops
+var agroCottonFreq = mapbiomas.eq(62).expression(exp);              // Cotton
+
 
 ////// Mask of stable (freq >95%) native vegetation and water
 var vegMask = ee.Image(0).clip(regions)
                          .where(florFreq.gt(95), 1)  
                          .where(savFreq.gt(95), 1)
                          .where(WrestFreq.gt(95), 1) 
+                         .where(SrestFreq.gt(95), 1) 
                          .where(manFreq.gt(95), 1)
                          .where(umiFreq.gt(95), 1)
                          .where(grassFreq.gt(95), 1)
@@ -103,7 +107,8 @@ var usoMask = ee.Image(0).clip(regions)
                           .where(agroPerFreqOther.gt(99), 1)      
                           .where(agroSojaFreq.gt(99), 1)          
                           .where(agroTempFreq.gt(99), 1)          
-                          .where(canaFreq.gt(99), 1)              
+                          .where(canaFreq.gt(99), 1)   
+                          .where(agroCottonFreq.gt(99), 1) 
                           .where(agroTempRice.gt(99), 1)                
                           .where(agroFreq.gt(99), 1)              
                           .where(praiasFreq.gt(99), 1)            
@@ -130,6 +135,7 @@ var  baseMap = ee.Image(0).clip(regions)
                               .where(usoMask.eq(1).and(agroTempFreq.gt(99)), 41)
                               .where(usoMask.eq(1).and(agroTempRice.gt(99)), 40)          
                               .where(usoMask.eq(1).and(canaFreq.gt(99)), 20)
+                              .where(usoMask.eq(1).and(agroCottonFreq.gt(99)), 62)
                               .where(usoMask.eq(1).and(praiasFreq.gt(99)), 23)
                               .where(usoMask.eq(1).and(urbanFreq.gt(99)), 24)
                               .where(usoMask.eq(1).and(naoVegFreq.gt(99)), 25)
@@ -142,6 +148,7 @@ var  baseMap = ee.Image(0).clip(regions)
                               .where(vegMask.eq(1).and(florFreq.gt(60)), 3)
                               .where(vegMask.eq(1).and(savFreq.gt(60)), 4)
                               .where(vegMask.eq(1).and(WrestFreq.gt(60)), 49) 
+                              .where(vegMask.eq(1).and(SrestFreq.gt(60)), 50) 
                               .where(vegMask.eq(1).and(manFreq.gt(60)), 5)
                               .where(vegMask.eq(1).and(umiFreq.gt(60)), 11)
                               .where(vegMask.eq(1).and(grassFreq.gt(60)), 12)
@@ -150,33 +157,34 @@ var  baseMap = ee.Image(0).clip(regions)
                               
                               .where(vegMask.eq(1).and(florFreq.gt(95)), 3) 
                               .where(vegMask.eq(1).and(savFreq.gt(95)), 4)
-                              .where(vegMask.eq(1).and(WrestFreq.gt(95)), 49) 
+                              .where(vegMask.eq(1).and(WrestFreq.gt(95)), 49)
+                              .where(vegMask.eq(1).and(SrestFreq.gt(95)), 50) 
                               .where(vegMask.eq(1).and(manFreq.gt(95)), 5)
                               .where(vegMask.eq(1).and(umiFreq.gt(95)), 11)
                               .where(vegMask.eq(1).and(grassFreq.gt(95)), 12)
                               .where(vegMask.eq(1).and(naoFlorFreq.gt(95)), 13);
                                      
-// To fill voids: 1989 map (except class 21)
-// Mask Native vegetation in 1989
-  var mapBiomas89vegMask = mapbiomas.select("classification_1989").remap([3, 4, 5, 49, 11, 12, 13], [1, 1, 1, 1, 1, 1, 1], 0);
+// To fill voids: 1985 map (except class 21)
+// Mask Native vegetation in 1985
+  var mapBiomas85vegMask = mapbiomas.select("classification_1985").remap([3, 4, 5, 49, 50, 11, 12, 13], [1, 1, 1, 1, 1, 1, 1, 1], 0);
 // Mask Land Use and Water in 1989
-  var mapBiomas89UsoMask = mapbiomas.select("classification_1989").remap([9, 15, 20, 23, 24, 25, 30, 31,  39, 40, 41, 46, 47, 48], 
-                                                                         [1,  1,  1,  1,  1,  1,  1,  1,   1,  1,  1,  1,  1,  1], 0);
+  var mapBiomas85UsoMask = mapbiomas.select("classification_1985").remap([9, 15, 20, 23, 24, 25, 30, 31,  39, 40, 41, 46, 47, 48, 62], 
+                                                                         [1,  1,  1,  1,  1,  1,  1,  1,   1,  1,  1,  1,  1,  1, 1], 0);
 // 
 // Merge                                                    
-  var mapBiomas89Mask = mapBiomas89vegMask.where(mapBiomas89vegMask.eq(0), mapBiomas89UsoMask);
+  var mapBiomas85Mask = mapBiomas85vegMask.where(mapBiomas85vegMask.eq(0), mapBiomas85UsoMask);
 
-// Fills in the unstable areas with the land use and native vegetation masks in 1989
-  baseMap = baseMap.where(baseMap.eq(0).and(mapBiomas89Mask.eq(1)),
-                                            mapbiomas.select("classification_1989"));
+// Fills in the unstable areas with the land use and native vegetation masks in 1985
+  baseMap = baseMap.where(baseMap.eq(0).and(mapBiomas85Mask.eq(1)),
+                                            mapbiomas.select("classification_1985"));
   baseMap = baseMap.updateMask(baseMap.neq(0));
-  baseMap = baseMap.select([0], ["classification_1989"]).unmask(0);
+  baseMap = baseMap.select([0], ["classification_1985"]).unmask(0);
 
-var years = [
+var years = [1986, 1987, 1988, 1989,
     1990, 1991, 1992, 1993, 1994, 1995, 1996,
     1997, 1998, 1999, 2000, 2001, 2002, 2003,
     2004, 2005, 2006, 2007, 2008, 2009, 2010,
-    2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020
+    2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
 ]; 
 var eeYears = ee.List(years);
 
@@ -231,8 +239,8 @@ var goSEEG1_1 = function (element, accumList) {
                                                 mapbiomas.select(currentMapBioBand));
 
 //This year anthropic land-use Mask
-var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,  39, 40, 41, 46, 47, 48],
-                                                 [1,  1,  1,  1,  1,  1,  1,  1,   1,  1,  1,  1,  1,  1], 0);
+var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,  39, 40, 41, 46, 47, 48, 62],
+                                                 [1,  1,  1,  1,  1,  1,  1,  1,   1,  1,  1,  1,  1,  1, 1], 0);
 
 
 //// Release transitions between land use classes (returns land use classes from the MapBiomas map in the year considered)                            
@@ -249,7 +257,8 @@ var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,
                                                 .or(mapbiomas.select(currentMapBioBand).eq(41))
                                                 .or(mapbiomas.select(currentMapBioBand).eq(46))
                                                 .or(mapbiomas.select(currentMapBioBand).eq(47))
-                                                .or(mapbiomas.select(currentMapBioBand).eq(48))),
+                                                .or(mapbiomas.select(currentMapBioBand).eq(48))
+                                                .or(mapbiomas.select(currentMapBioBand).eq(62))),
                                                 mapbiomas.select(currentMapBioBand));
       
       thisYearCoverMap = thisYearCoverMap.select([0], currentMapBioBand);
@@ -264,14 +273,14 @@ var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,
 /// MapBiomas maps to be used  
 /// Constant (stable classes)
   var pastConstMapBio = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
-    mapbiomas.select(lastMapBioBand, ee.List(["classification_1989"])),
+    mapbiomas.select(lastMapBioBand, ee.List(["classification_1985"])),
     mapbiomas.select(ee.List.repeat(ee.String(lastMapBioBand.get(0)), eeYears.indexOf(element).add(1)),
                      bandNames.slice(0, eeYears.indexOf(element).add(1))));
   pastConstMapBio = ee.Image(pastConstMapBio);
 
 ///// 
   var pastFreeMapBio = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
-    mapbiomas.select(["classification_1989"]),
+    mapbiomas.select(["classification_1985"]),
     mapbiomas.select(pastBandsVoid));
     
   pastFreeMapBio = ee.Image(pastFreeMapBio);
@@ -280,6 +289,7 @@ var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,
 var florFreq = pastFreeMapBio.eq(3).reduce(ee.Reducer.sum()) //OK
 var savFreq = pastFreeMapBio.eq(4).reduce(ee.Reducer.sum()) //OK
 var WrestFreq = pastFreeMapBio.eq(49).reduce(ee.Reducer.sum()) //OK
+var SrestFreq = pastFreeMapBio.eq(50).reduce(ee.Reducer.sum()) //OK
 var manFreq = pastFreeMapBio.eq(5).reduce(ee.Reducer.sum()) //OK
 var umiFreq = pastFreeMapBio.eq(11).reduce(ee.Reducer.sum()) //OK
 var grassFreq = pastFreeMapBio.eq(12).reduce(ee.Reducer.sum()) //OK
@@ -299,13 +309,14 @@ var agroTempFreq = pastFreeMapBio.eq(41).reduce(ee.Reducer.sum()) //OK
 var agroPerFreqCoffee = pastFreeMapBio.eq(46).reduce(ee.Reducer.sum()) //OK
 var agroPerFreqCitrus = pastFreeMapBio.eq(47).reduce(ee.Reducer.sum()) //OK
 var agroPerFreqOther = pastFreeMapBio.eq(48).reduce(ee.Reducer.sum()) //OK
+var agroCottonFreq = pastFreeMapBio.eq(62).reduce(ee.Reducer.sum()) //OK
 
 
-var frequencyWindow = florFreq.addBands(savFreq).addBands(WrestFreq).addBands(manFreq).addBands(umiFreq).addBands(grassFreq)
+var frequencyWindow = florFreq.addBands(savFreq).addBands(WrestFreq).addBands(SrestFreq).addBands(manFreq).addBands(umiFreq).addBands(grassFreq)
                               .addBands(naoFlorFreq).addBands(silviFreq).addBands(pastFreq).addBands(canaFreq)
                               .addBands(praiasFreq).addBands(urbanFreq).addBands(naoVegFreq).addBands(mineFreq)
                               .addBands(aquiFreq).addBands(agroSojaFreq).addBands(agroTempRice).addBands(agroTempFreq)
-                              .addBands(agroPerFreqCoffee).addBands(agroPerFreqCitrus).addBands(agroPerFreqOther);
+                              .addBands(agroPerFreqCoffee).addBands(agroPerFreqCitrus).addBands(agroPerFreqOther).addBands(agroCottonFreq);
                               
 var moreFrequent = ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
                                                     .eq(0), mapbiomas.select(currentMapBioBand),
@@ -315,51 +326,55 @@ var moreFrequent = ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
                                                     .eq(frequencyWindow.select(1)), ee.Image(4),
                      ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
                                                      .eq(frequencyWindow.select(2)), ee.Image(49),
+                                      ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
+                                                     .eq(frequencyWindow.select(3)), ee.Image(50),
                        ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                      .eq(frequencyWindow.select(3)), ee.Image(5),
+                                                      .eq(frequencyWindow.select(4)), ee.Image(5),
                         ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())               
-                                                       .eq(frequencyWindow.select(4)), ee.Image(11) ,
+                                                       .eq(frequencyWindow.select(5)), ee.Image(11) ,
                          ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                         .eq(frequencyWindow.select(5)), ee.Image(12) ,
+                                                         .eq(frequencyWindow.select(6)), ee.Image(12) ,
                            ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                           .eq(frequencyWindow.select(6)), ee.Image(13) ,
+                                                           .eq(frequencyWindow.select(7)), ee.Image(13) ,
                              ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                             .eq(frequencyWindow.select(7)), ee.Image(9) ,
+                                                             .eq(frequencyWindow.select(8)), ee.Image(9) ,
                                ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                               .eq(frequencyWindow.select(8)), ee.Image(15) ,
+                                                               .eq(frequencyWindow.select(9)), ee.Image(15) ,
                                 ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                               .eq(frequencyWindow.select(9)), ee.Image(20) ,
+                                                               .eq(frequencyWindow.select(10)), ee.Image(20) ,
                                  ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                 .eq(frequencyWindow.select(10)), ee.Image(23) ,
+                                                                 .eq(frequencyWindow.select(11)), ee.Image(23) ,
                                      ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                     .eq(frequencyWindow.select(11)), ee.Image(24) ,
+                                                                     .eq(frequencyWindow.select(12)), ee.Image(24) ,
                                        ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                       .eq(frequencyWindow.select(12)), ee.Image(25) ,
+                                                                       .eq(frequencyWindow.select(13)), ee.Image(25) ,
                                          ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                         .eq(frequencyWindow.select(13)), ee.Image(30) ,
+                                                                         .eq(frequencyWindow.select(14)), ee.Image(30) ,
                                            ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                           .eq(frequencyWindow.select(14)), ee.Image(31) ,
+                                                                           .eq(frequencyWindow.select(15)), ee.Image(31) ,
                                              ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                             .eq(frequencyWindow.select(15)), ee.Image(39) ,
+                                                                             .eq(frequencyWindow.select(16)), ee.Image(39) ,
                                                ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                                .eq(frequencyWindow.select(16)), ee.Image(40) ,
+                                                                                .eq(frequencyWindow.select(17)), ee.Image(40) ,
                                                  ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                                  .eq(frequencyWindow.select(17)), ee.Image(41) ,
+                                                                                  .eq(frequencyWindow.select(18)), ee.Image(41) ,
                                                     ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                                      .eq(frequencyWindow.select(18)), ee.Image(46) ,
+                                                                                      .eq(frequencyWindow.select(19)), ee.Image(46) ,
                                                       ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                                         .eq(frequencyWindow.select(19)), ee.Image(47) ,
+                                                                                         .eq(frequencyWindow.select(20)), ee.Image(47) ,
                                                         ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
-                                                                                          .eq(frequencyWindow.select(20)), ee.Image(48) ,
+                                                                                          .eq(frequencyWindow.select(21)), ee.Image(48) ,
+                                                                         ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
+                                                                                          .eq(frequencyWindow.select(22)), ee.Image(62) ,
                                                                                   mapbiomas.select(currentMapBioBand))
-                                                )))))))))))))))))))));
+                                                )))))))))))))))))))))));
     moreFrequent = ee.Image(moreFrequent);
     
 var pastFreqMapBio = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
-    ee.Image(moreFrequent.select([0], ["classification_1989"])),
+    ee.Image(moreFrequent.select([0], ["classification_1985"])),
     ee.Image(pastBandsVoid.iterate(function(element, accumImg){
       return ee.Image(accumImg).addBands(ee.Image(moreFrequent.select([0], [element]))).slice(1);
-    },ee.Image(moreFrequent.select([0], ["classification_1989"])))));
+    },ee.Image(moreFrequent.select([0], ["classification_1985"])))));
 
   pastFreqMapBio = ee.Image(pastFreqMapBio);
 
@@ -391,7 +406,8 @@ var pastFreqMapBio = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
                                                 .or(thisYearCoverMap.eq(41))
                                                 .or(thisYearCoverMap.eq(46))
                                                 .or(thisYearCoverMap.eq(47))
-                                                .or(thisYearCoverMap.eq(48))),
+                                                .or(thisYearCoverMap.eq(48))
+                                                .or(thisYearCoverMap.eq(62))),
                                                 pastFreqMapBio);
                                                 
 //// Stable map: past 'filled in' + current year map
@@ -405,21 +421,21 @@ return ee.List(accumList).add(ee.Image(adequatedSack));
 var mapsSEEG1_1 = eeYears.iterate(goSEEG1_1, ee.List([baseMap]));
     mapsSEEG1_1 = ee.List(mapsSEEG1_1);
 
-var SEEGmap1_1 = ee.Image(mapsSEEG1_1.get(31));
+var SEEGmap1_1 = ee.Image(mapsSEEG1_1.get(36));
 print('SEEGmap1_1 Maps_pos_desmate*regen', SEEGmap1_1 );
 
 ///////////////////////////////////
 //Export the stabilized land cover maps as an Image Collection
 //(you need to create an empty Image Collection in the Asset to receive and store each image that is iteratively exported)
 
-for (var i = 0; i < 32; i++){ //Number of years in the collection being used
+for (var i = 0; i < 37; i++){ //Number of years in the collection being used
   var bandName = SEEGmap1_1.bandNames().get(i);
-  var image = SEEGmap1_1.select([bandName]).set('year', ee.Number(1989).add(i));
+  var image = SEEGmap1_1.select([bandName]).set('year', ee.Number(1985).add(i));
   
   Export.image.toAsset({
     "image": image.unmask(0).uint32(),
-    "description": 'SEEG_c9_v1_'+ (1989+i),
-    "assetId": dir_output + 'SEEG_c9_v1_'+ (1989+i), /// Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
+    "description": 'SEEG_c9_v1_'+ (1985+i),
+    "assetId": dir_output + 'SEEG_c9_v1_'+ (1985+i), /// Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

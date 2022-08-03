@@ -15,7 +15,7 @@ We present a method to spatially allocate all of the emissions and removals due 
 
 2. ✨ Estimates.R [Estimates.R](https://github.com/souza-eab/SEEG_BR/tree/main/2._Estimates)
 
-3. 📂📊:earth_americas::world_map: Plots.R [Data_analyses.R](https://github.com/souza-eab/SEEG_BR/tree/main/3._Data_analyses)
+3. 📂📊:earth_americas::world_map: Plots.R [Data_analyses.R](https://github.com/souza-eab/SEEG_BR/3._Plots/1_Plot_X.R)
 
 ### How to use
 1. [Create an account](https://signup.earthengine.google.com/) in the Google Earth Engine plataform.

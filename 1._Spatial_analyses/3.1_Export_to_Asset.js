@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// GOALS: Export pairwise transition maps from a MapBiomas collection ////////////////////////////////////////////////
-//////////  Created by: Felipe Lenti, Barbara Zimbres ////////////////////////////////////////////////////////////////////////
+//////////  Created by: Felipe Lenti, Barbara Zimbres, Edriano Souza /////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
 //////////  Citing: Zimbres et al.,2022.  //////////////////////////////////////////////////////////////////////////////////
 /////////   Processing time <2h> in Google Earth Engine ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: Export pairwise transition maps from a MapBiomas collection (eg. col 6.0)
+// 1: Export pairwise transition maps from a MapBiomas collection
 // 1.1: Load asset
 // 1.2: Define the data path
 // 1.3: Define filename prefix     
@@ -34,11 +34,11 @@ var dir = 'projects/ee-seeg-brazil/assets/collection_9/v1/3_0_Transitions_maps';
 var prefix = 'SEEG_Transitions_';
 
 // Define pairs of years to be processed
-var listYears = ['1989_1990', '1990_1991', '1991_1992', '1992_1993', '1993_1994', '1994_1995', '1995_1996', 
+var listYears = ['1986_1987', '1987_1988', '1988_1989', '1989_1990', '1990_1991', '1991_1992', '1992_1993', '1993_1994', '1994_1995', '1995_1996', 
                  '1996_1997', '1997_1998', '1998_1999', '1999_2000', '2000_2001', '2001_2002', '2002_2003',
                  '2003_2004', '2004_2005', '2005_2006', '2006_2007', '2007_2008', '2008_2009', '2009_2010', 
                  '2010_2011', '2011_2012', '2012_2013', '2013_2014', '2014_2015', '2015_2016', '2016_2017',
-                 '2017_2018', '2018_2019', '2019_2020'];
+                 '2017_2018', '2018_2019', '2019_2020','2020_2021'];
 
 // Create an empty image to store each image and stack it as a new band
 var trans = ee.Image([]);

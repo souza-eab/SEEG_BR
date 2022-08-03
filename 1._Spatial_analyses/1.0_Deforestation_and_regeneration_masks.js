@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: TO CREATE A MASK OF DEFORESTATION FROM A MAPBIOMAS COLLECTION (eg. col 7.0) /////////////////////////////////
+/////////// GOALS: TO CREATE A MASK OF DEFORESTATION FROM A MAPBIOMAS COLLECTION ///////////////////////////////////////////////
 //////////  Created by: Felipe Lenti, Barbara Zimbres, Edriano Souza //////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory /////////////////////////////////////////////////////////////////
 /////////   Processing time <2h> in Google Earth Engine /////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: SCRIPT TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 7.0)
+// 1: SCRIPT TO GENERATE DEFORESTATION MASKS FROM A COLLECTION OF MAPBIOMAS
 // 1.1: Access the assets from the MapBiomas collection and Biomes of Brazil
 // 1.2: Reclassify layers from Mapbiomas 
 // 1.3: Temporal filter
@@ -22,16 +22,16 @@ var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 // Load ImageCollection from Mapbiomas 6.0 
-var MapBiomas_col6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
+var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
 print(MapBiomas_col6);
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
-var col6antrop85 = MapBiomas_col6.select('classification_1985').remap(
+var col_antrop85 = MapBiomas_col6.select('classification_1985').remap(
                   [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
                   [0,0,0,1, 0, 0, 0, 1, 1, 1, 9, 1, 1, 9, 1, 1, 9, 9, 1, 1, 1, 1, 1, 1, 0,0,1]);
 
 // Changing band names
-col6antrop85 = col6antrop85.select([0],['deforestation1985']).int8();
+col_antrop85 = col_antrop85.select([0],['deforestation1985']).int8();
 
 // List years
 var years = ['1985','1986','1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021'];
@@ -40,50 +40,50 @@ var years = ['1985','1986','1987','1988','1989','1990','1991','1992','1993','199
 for (var i_year=0;i_year<years.length; i_year++){
   var year = years[i_year];
 
-  var col6uso = MapBiomas_col6.select('classification_'+year).remap(
+  var col_uso = MapBiomas_col.select('classification_'+year).remap(
                   [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
                   [0,0,0,1, 0, 0, 0, 1, 1, 1, 9, 1, 1, 9, 1, 1, 9, 9, 1, 1, 1, 1, 1, 1, 0,0,1]);
                     
-  col6antrop85 = col6antrop85.addBands(col6uso.select([0],['deforestation'+year])).int8();
+  col_antrop85 = col_antrop85.addBands(col_uso.select([0],['deforestation'+year])).int8();
 }
 
 // Generate a function that applies the general rule of the temporal filter (3 years before and 2 years after the transition)
 var geraMask3_3 = function(year){
-  var mask =  col6antrop85.select('deforestation'+(year - 3)).eq(0)
-              .and(col6antrop85.select('deforestation'+(year - 2)).eq(0))
-              .and(col6antrop85.select('deforestation'+(year - 1)).eq(0))
-              .and(col6antrop85.select('deforestation'+(year    )).eq(1))
-              .and(col6antrop85.select('deforestation'+(year + 1)).eq(1))
-              .and(col6antrop85.select('deforestation'+(year + 2)).eq(1));
+  var mask =  col_antrop85.select('deforestation'+(year - 3)).eq(0)
+              .and(col_antrop85.select('deforestation'+(year - 2)).eq(0))
+              .and(col_antrop85.select('deforestation'+(year - 1)).eq(0))
+              .and(col_antrop85.select('deforestation'+(year    )).eq(1))
+              .and(col_antrop85.select('deforestation'+(year + 1)).eq(1))
+              .and(col_antrop85.select('deforestation'+(year + 2)).eq(1));
   mask = mask.mask(mask.eq(1));
   return mask;
 };
 
-// Apply rules adapted to the first two (1986 and 1987) and last two years (2019 and 2020) of the time series
+// Apply rules adapted to the first two (1986 and 1987) and last two years of the time series
 var imageZero = ee.Image(0);
-var mask86 =  col6antrop85.select('deforestation'+(1986 - 1)).eq(0)
-              .and(col6antrop85.select('deforestation'+(1986    )).eq(1))
-              .and(col6antrop85.select('deforestation'+(1986 + 1)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1986 + 2)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1986 + 3)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1986 + 4)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1986 + 5)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1986 + 6)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1986 + 7)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1986 + 8)).eq(1));
+var mask86 =  col_antrop85.select('deforestation'+(1986 - 1)).eq(0)
+              .and(col_antrop85.select('deforestation'+(1986    )).eq(1))
+              .and(col_antrop85.select('deforestation'+(1986 + 1)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1986 + 2)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1986 + 3)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1986 + 4)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1986 + 5)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1986 + 6)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1986 + 7)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1986 + 8)).eq(1));
               
   mask86 = mask86.mask(mask86.eq(1));
   mask86 = mask86.unmask(imageZero);  
   mask86 = mask86.updateMask(mask86.neq(0));
   mask86 = mask86.select([0], ['deforestation1986']);
 
-  var mask87 =  col6antrop85.select('deforestation'+(1987 - 2)).eq(0)
-              .and(col6antrop85.select('deforestation'+(1987 - 1)).eq(0))
-              .and(col6antrop85.select('deforestation'+(1987    )).eq(1))
-              .and(col6antrop85.select('deforestation'+(1987 + 1)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1987 + 2)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1987 + 3)).eq(1))
-              .and(col6antrop85.select('deforestation'+(1987 + 4)).eq(1));
+  var mask87 =  col_antrop85.select('deforestation'+(1987 - 2)).eq(0)
+              .and(col_antrop85.select('deforestation'+(1987 - 1)).eq(0))
+              .and(col_antrop85.select('deforestation'+(1987    )).eq(1))
+              .and(col_antrop85.select('deforestation'+(1987 + 1)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1987 + 2)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1987 + 3)).eq(1))
+              .and(col_antrop85.select('deforestation'+(1987 + 4)).eq(1));
               
   mask87 = mask87.mask(mask87.eq(1));
   mask87 = mask87.unmask(imageZero);  
@@ -91,29 +91,29 @@ var mask86 =  col6antrop85.select('deforestation'+(1986 - 1)).eq(0)
   mask87 = mask87.select([0], ['deforestation1987']);
   
   
-  var mask20 =  col6antrop85.select('deforestation'+(2020 - 6)).eq(0)
-            .and(col6antrop85.select('deforestation'+(2020 - 5)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2020 - 4)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2020 - 3)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2020 - 2)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2020 - 1)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2020    )).eq(1))
-            .and(col6antrop85.select('deforestation'+(2020 + 1)).eq(1));
+  var mask20 =  col_antrop85.select('deforestation'+(2020 - 6)).eq(0)
+            .and(col_antrop85.select('deforestation'+(2020 - 5)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2020 - 4)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2020 - 3)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2020 - 2)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2020 - 1)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2020    )).eq(1))
+            .and(col_antrop85.select('deforestation'+(2020 + 1)).eq(1));
               
   mask20 = mask20.mask(mask20.eq(1));
   mask20 = mask20.unmask(imageZero);  
   mask20 = mask20.updateMask(mask20.neq(0));
   mask20 = mask20.select([0], ['deforestation2020']);
   
-  var mask21 =  col6antrop85.select('deforestation'+(2021 - 8)).eq(0)
-            .and(col6antrop85.select('deforestation'+(2021 - 7)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2021 - 6)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2021 - 5)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2021 - 4)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2021 - 3)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2021 - 2)).eq(0))             
-            .and(col6antrop85.select('deforestation'+(2021 - 1)).eq(0))
-            .and(col6antrop85.select('deforestation'+(2021    )).eq(1));
+  var mask21 =  col_antrop85.select('deforestation'+(2021 - 8)).eq(0)
+            .and(col_antrop85.select('deforestation'+(2021 - 7)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2021 - 6)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2021 - 5)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2021 - 4)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2021 - 3)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2021 - 2)).eq(0))             
+            .and(col_antrop85.select('deforestation'+(2021 - 1)).eq(0))
+            .and(col_antrop85.select('deforestation'+(2021    )).eq(1));
             
   mask21 = mask21.mask(mask21.eq(1));
   mask21 = mask21.unmask(imageZero);  
@@ -132,7 +132,7 @@ deforestation88 = deforestation88.select(['deforestation1985'],['deforestation19
 // Adds bands 
 deforestation = deforestation.addBands(deforestation88);
 
-// Generate the bands by applying the filter for all other years of the general rule (in this case, until 2020)
+// Generate the bands by applying the filter for all other years of the general rule
 for (var i = 1989; i < 2020; i++) {
    var deforestation_general = geraMask3_3(i);
       deforestation_general = deforestation_general.unmask(imageZero);
@@ -156,8 +156,8 @@ var vis = {
 // Visualization 
 Map.addLayer(deforestation.select('deforestation2013'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2013");
 Map.addLayer(deforestation.select('deforestation2021'), {'min': 0,'max': 1, 'palette': 'red'},"Desm_2021");
-Map.addLayer(MapBiomas_col6.select('classification_2021'), vis,"Mapbiomas_2021");
-Map.addLayer(MapBiomas_col6.select('classification_2013'), vis,"Mapbiomas_2013"); 
+Map.addLayer(MapBiomas_col.select('classification_2021'), vis,"Mapbiomas_2021");
+Map.addLayer(MapBiomas_col.select('classification_2013'), vis,"Mapbiomas_2013"); 
 
 // Exporting data
 Export.image.toAsset({
@@ -177,14 +177,14 @@ Export.image.toAsset({
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////// GOALS: TO CREATE A MASK OF REGENERATION FROM A MAPBIOMAS COLLECTION (eg. col 7.0) //////////////////////////////////
+/////////// GOALS: TO CREATE A MASK OF REGENERATION FROM A MAPBIOMAS COLLECTION ////////////////////////////////////////////////
 //////////  Created by: Felipe Lenti, Barbara Zimbres, Edriano Souza //////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory /////////////////////////////////////////////////////////////////
 /////////   Processing time <2h> in Google Earth Engine /////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @. UPDATE HISTORIC EXECUTABLE//
-// 1: SCRIPT TO GENERATE REGENERATION MASKS FROM A COLLECTION OF MAPBIOMAS (eg. col 7.0)
+// 1: SCRIPT TO GENERATE REGENERATION MASKS FROM A COLLECTION OF MAPBIOMAS
 // 1.1: Accessing the assets from the MapBiomas collection and Biomes of Brazil
 // 1.2: Reclassifying layers from Mapbiomas 
 // 1.3: Temporal filter
@@ -201,16 +201,16 @@ var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
-//  Load ImageCollection from Mapbiomas 6.0 
-var MapBiomas_col6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
+//  Load ImageCollection from Mapbiomas
+var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
-var col6forest85 = MapBiomas_col6.select('classification_1985').remap(
+var col_forest85 = MapBiomas_col.select('classification_1985').remap(
                   [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
                   [1,1,1,0, 1, 1, 1, 0, 0, 0, 9, 0, 0, 9, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 1,1,0]);
 
 // Changing band names
-col6forest85 = col6forest85.select([0],['regeneration1985']).int8();
+col_forest85 = col_forest85.select([0],['regeneration1985']).int8();
 
 // List years
 var years = ['1985','1986','1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021'];
@@ -219,50 +219,50 @@ var years = ['1985','1986','1987','1988','1989','1990','1991','1992','1993','199
 for (var i_year=0;i_year<years.length; i_year++){ 
   var year = years[i_year];
 
-  var col6flor = MapBiomas_col6.select('classification_'+year).remap(
+  var col_flor = MapBiomas_col.select('classification_'+year).remap(
                   [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
                   [1,1,1,0, 1, 1, 1, 0, 0, 0, 9, 0, 0, 9, 0, 0, 9, 9, 0, 0, 0, 0, 0, 0, 1,1,0]);
                     
-  col6forest85 = col6forest85.addBands(col6flor.select([0],['regeneration'+year])).int8();
+  col_forest85 = col_forest85.addBands(col_flor.select([0],['regeneration'+year])).int8();
 }
 
 // Generate a function that applies the general rule of the temporal filter (3 years before and 2 years after the transition)
 var geraMask3_3 = function(year){
-  var mask =  col6forest85.select('regeneration'+(year - 3)).eq(0)
-              .and(col6forest85.select('regeneration'+(year - 2)).eq(0))
-              .and(col6forest85.select('regeneration'+(year - 1)).eq(0))
-              .and(col6forest85.select('regeneration'+(year    )).eq(1))
-              .and(col6forest85.select('regeneration'+(year + 1)).eq(1))
-              .and(col6forest85.select('regeneration'+(year + 2)).eq(1));
+  var mask =  col_forest85.select('regeneration'+(year - 3)).eq(0)
+              .and(col_forest85.select('regeneration'+(year - 2)).eq(0))
+              .and(col_forest85.select('regeneration'+(year - 1)).eq(0))
+              .and(col_forest85.select('regeneration'+(year    )).eq(1))
+              .and(col_forest85.select('regeneration'+(year + 1)).eq(1))
+              .and(col_forest85.select('regeneration'+(year + 2)).eq(1));
   mask = mask.mask(mask.eq(1));
   return mask;
 };
 
 // Apply rules adapted to the first two (1986 and 1987) and last two years (2019 and 2020) of the time series
 var imageZero = ee.Image(0);
-  var mask86 =  col6forest85.select('regeneration'+(1986 - 1)).eq(0)
-              .and(col6forest85.select('regeneration'+(1986    )).eq(1))
-              .and(col6forest85.select('regeneration'+(1986 + 1)).eq(1))
-              .and(col6forest85.select('regeneration'+(1986 + 2)).eq(1))
-              .and(col6forest85.select('regeneration'+(1986 + 3)).eq(1))
-              .and(col6forest85.select('regeneration'+(1986 + 4)).eq(1))
-              .and(col6forest85.select('regeneration'+(1986 + 5)).eq(1))
-              .and(col6forest85.select('regeneration'+(1986 + 6)).eq(1))
-              .and(col6forest85.select('regeneration'+(1986 + 7)).eq(1))
-              .and(col6forest85.select('regeneration'+(1986 + 8)).eq(1));
+  var mask86 =  col_forest85.select('regeneration'+(1986 - 1)).eq(0)
+              .and(col_forest85.select('regeneration'+(1986    )).eq(1))
+              .and(col_forest85.select('regeneration'+(1986 + 1)).eq(1))
+              .and(col_forest85.select('regeneration'+(1986 + 2)).eq(1))
+              .and(col_forest85.select('regeneration'+(1986 + 3)).eq(1))
+              .and(col_forest85.select('regeneration'+(1986 + 4)).eq(1))
+              .and(col_forest85.select('regeneration'+(1986 + 5)).eq(1))
+              .and(col_forest85.select('regeneration'+(1986 + 6)).eq(1))
+              .and(col_forest85.select('regeneration'+(1986 + 7)).eq(1))
+              .and(col_forest85.select('regeneration'+(1986 + 8)).eq(1));
               
   mask86 = mask86.mask(mask86.eq(1));
   mask86 = mask86.unmask(imageZero);  
   mask86 = mask86.updateMask(mask86.neq(0));
   mask86 = mask86.select([0], ['regeneration1986']);
 
-  var mask87 =  col6forest85.select('regeneration'+(1987 - 2)).eq(0)
-              .and(col6forest85.select('regeneration'+(1987 - 1)).eq(0))
-              .and(col6forest85.select('regeneration'+(1987    )).eq(1))
-              .and(col6forest85.select('regeneration'+(1987 + 1)).eq(1))
-              .and(col6forest85.select('regeneration'+(1987 + 2)).eq(1))
-              .and(col6forest85.select('regeneration'+(1987 + 3)).eq(1))
-              .and(col6forest85.select('regeneration'+(1987 + 4)).eq(1));
+  var mask87 =  col_forest85.select('regeneration'+(1987 - 2)).eq(0)
+              .and(col_forest85.select('regeneration'+(1987 - 1)).eq(0))
+              .and(col_forest85.select('regeneration'+(1987    )).eq(1))
+              .and(col_forest85.select('regeneration'+(1987 + 1)).eq(1))
+              .and(col_forest85.select('regeneration'+(1987 + 2)).eq(1))
+              .and(col_forest85.select('regeneration'+(1987 + 3)).eq(1))
+              .and(col_forest85.select('regeneration'+(1987 + 4)).eq(1));
 
   mask87 = mask87.mask(mask87.eq(1));
   mask87 = mask87.unmask(imageZero);  
@@ -270,29 +270,29 @@ var imageZero = ee.Image(0);
   mask87 = mask87.select([0], ['regeneration1987']);
   
   
-  var mask20 =  col6forest85.select('regeneration'+(2020 - 6)).eq(0)
-            .and(col6forest85.select('regeneration'+(2020 - 5)).eq(0))
-            .and(col6forest85.select('regeneration'+(2020 - 4)).eq(0))
-            .and(col6forest85.select('regeneration'+(2020 - 3)).eq(0))
-            .and(col6forest85.select('regeneration'+(2020 - 2)).eq(0))
-            .and(col6forest85.select('regeneration'+(2020 - 1)).eq(0))
-            .and(col6forest85.select('regeneration'+(2020    )).eq(1))
-            .and(col6forest85.select('regeneration'+(2020 + 1)).eq(1));
+  var mask20 =  col_forest85.select('regeneration'+(2020 - 6)).eq(0)
+            .and(col_forest85.select('regeneration'+(2020 - 5)).eq(0))
+            .and(col_forest85.select('regeneration'+(2020 - 4)).eq(0))
+            .and(col_forest85.select('regeneration'+(2020 - 3)).eq(0))
+            .and(col_forest85.select('regeneration'+(2020 - 2)).eq(0))
+            .and(col_forest85.select('regeneration'+(2020 - 1)).eq(0))
+            .and(col_forest85.select('regeneration'+(2020    )).eq(1))
+            .and(col_forest85.select('regeneration'+(2020 + 1)).eq(1));
               
   mask20 = mask20.mask(mask20.eq(1));
   mask20 = mask20.unmask(imageZero);  
   mask20 = mask20.updateMask(mask20.neq(0));
   mask20 = mask20.select([0], ['regeneration2020']);
   
-  var mask21 =  col6forest85.select('regeneration'+(2021 - 8)).eq(0)
-            .and(col6forest85.select('regeneration'+(2021 - 7)).eq(0))
-            .and(col6forest85.select('regeneration'+(2021 - 6)).eq(0))
-            .and(col6forest85.select('regeneration'+(2021 - 5)).eq(0))
-            .and(col6forest85.select('regeneration'+(2021 - 4)).eq(0))
-            .and(col6forest85.select('regeneration'+(2021 - 3)).eq(0))
-            .and(col6forest85.select('regeneration'+(2021 - 2)).eq(0))             
-            .and(col6forest85.select('regeneration'+(2021 - 1)).eq(0))
-            .and(col6forest85.select('regeneration'+(2021   )).eq(1));
+  var mask21 =  col_forest85.select('regeneration'+(2021 - 8)).eq(0)
+            .and(col_forest85.select('regeneration'+(2021 - 7)).eq(0))
+            .and(col_forest85.select('regeneration'+(2021 - 6)).eq(0))
+            .and(col_forest85.select('regeneration'+(2021 - 5)).eq(0))
+            .and(col_forest85.select('regeneration'+(2021 - 4)).eq(0))
+            .and(col_forest85.select('regeneration'+(2021 - 3)).eq(0))
+            .and(col_forest85.select('regeneration'+(2021 - 2)).eq(0))             
+            .and(col_forest85.select('regeneration'+(2021 - 1)).eq(0))
+            .and(col_forest85.select('regeneration'+(2021   )).eq(1));
               
   mask21 = mask21.mask(mask21.eq(1));
   mask21 = mask21.unmask(imageZero);  
@@ -311,7 +311,7 @@ regeneration88 = regeneration88.select(['regeneration1985'],['regeneration1988']
 // Adds bands
 regeneration = regeneration.addBands(regeneration88);
 
-// Generate the bands by applying the filter for all other years of the general rule (in this case, until 2020)
+// Generate the bands by applying the filter for all other years of the general rule
 for (var i = 1989; i < 2020; i++) {
    var regeneration_general = geraMask3_3(i);
       regeneration_general = regeneration_general.unmask(imageZero);

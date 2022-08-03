@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// GOALS: Script to generate and stabilize annual land cover basemaps from a MapBiomas collection (eg. col 6.0)///////
-//////////  Created by: Felipe Lenti, Barbara Zimbres ////////////////////////////////////////////////////////////////////////
+//////////  Created by: Felipe Lenti, Barbara Zimbres, Edriano Souza /////////////////////////////////////////////////////////
 //////////  Developed by: IPAM, SEEG and Climate Observatory ////////////////////////////////////////////////////////////////
 /////////  Processing time <2h> in Google Earth Engine ////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,22 +35,22 @@ var regions = ee.FeatureCollection(assetRegions);
 // Load the filtered deforestation and regeneration masks
 var regenDir = 'projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_regeneration';
 var regen = ee.Image(regenDir);
-print("bandas regen", regen.bandNames());// regeneration since 1990
+print("bandas regen", regen.bandNames());// regeneration since 1986
 
 var annualDesm = 'projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_deforestation';
-var annualLoss = ee.Image(annualDesm); // deforestation since 1990
+var annualLoss = ee.Image(annualDesm); // deforestation since 1986
 print("bandas annualLoss", annualLoss.bandNames());
 
-// Selects bands from the MapBiomas collection starting in 1989 (makes up the pair from the 1989-1990 transition, which will be the first to be considered)
+// Selects bands from the MapBiomas collection starting in 1985 (makes up the pair from the 1985-1986 transition, which will be the first to be considered)
 var bandNames = mapbiomas.bandNames().slice(4);
 print("bandas", bandNames);
       mapbiomas = mapbiomas.select(bandNames);
 
-// 1986 -> 2020
+// 1985 -> 2020
 //////// Calculate the frequency (number of years) in which each i_pixel was a determined class_n
 // General rule (ratio of the total number of years of the considered period)
 var exp = '100*((b(0)+b(1)+b(2)+b(3)+b(4)+b(5)+b(6)+b(7)+b(8)+b(9)+b(10)+b(11)+b(12)+b(13)+b(14)+b(15)' +
-    '+b(16)+b(17)+b(18)+b(19)+b(20)+b(21)+b(22)+b(23)+b(24)+b(25)+b(26)+b(27)+b(28)+b(29)+b(30)+b(31))/32)'; // Each collection adds one more year and it is important to check the period of the Mapbiomas collection being used
+    '+b(16)+b(17)+b(18)+b(19)+b(20)+b(21)+b(22)+b(23)+b(24)+b(25)+b(26)+b(27)+b(28)+b(29)+b(30)+b(31)+b(32)+b(33)+b(34)+b(35)+b(36))/37)'; // Each collection adds one more year and it is important to check the period of the Mapbiomas collection being used
 
 // Get frequency of each class
 var florFreq = mapbiomas.eq(3).expression(exp);                     //  Forest Formation

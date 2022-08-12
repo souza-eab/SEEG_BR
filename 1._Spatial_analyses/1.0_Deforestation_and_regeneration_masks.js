@@ -15,18 +15,18 @@
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
 
 // Load Asset
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 // Load ImageCollection from Mapbiomas 6.0 
-var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
-print(MapBiomas_col6);
+var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2");
+print(MapBiomas_col);
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
-var col_antrop85 = MapBiomas_col6.select('classification_1985').remap(
+var col_antrop85 = MapBiomas_col.select('classification_1985').remap(
                   [3,4,5,9,11,12,13,15,20,21,23,24,25,29,30,31,32,33,39,40,41,46,47,48,49,50,62],
                   [0,0,0,1, 0, 0, 0, 1, 1, 1, 9, 1, 1, 9, 1, 1, 9, 9, 1, 1, 1, 1, 1, 1, 0,0,1]);
 
@@ -195,14 +195,14 @@ Export.image.toAsset({
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
 
 // Load assets
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 //  Load ImageCollection from Mapbiomas
-var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1");
+var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2");
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
 var col_forest85 = MapBiomas_col.select('classification_1985').remap(

@@ -18,14 +18,14 @@
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 
 // Export parameters
 var gfolder = 'TEMP';                // google drive folder 
-var assetId = 'projects/mapbiomas-workspace/SEEG/2021/Col9'; // asset link
+var assetId = 'projects/mapbiomas-workspace/SEEG/2022/Col10'; // asset link
 
 // Define the data path
 var dir = 'projects/ee-seeg-brazil/assets/collection_9/v1/3_0_Transitions_maps';

@@ -28,8 +28,8 @@ var gfolder = 'TEMP';                // google drive folder
 var assetId = 'projects/mapbiomas-workspace/SEEG/2022/Col10'; // asset link
 
 // Define the data path
-var dir = 'projects/ee-seeg-brazil/assets/collection_9/v1/3_0_Transitions_maps';
-
+var dir = 'projects/ee-seeg-brazil/assets/collection_10/v1/3_0_Transition_maps';
+           
 // Define filename prefix
 var prefix = 'SEEG_Transitions_';
 
@@ -71,7 +71,7 @@ print(trans);
   Export.image.toAsset({
     'image': trans,
     'description': prefix + 'stacked',
-    'assetId': assetId + prefix + 'stacked',
+    'assetId': dir_output + prefix + 'stacked',
     'pyramidingPolicy': {
         '.default': 'mode'
     },
@@ -79,4 +79,3 @@ print(trans);
     'scale': 30,
     'maxPixels': 1e13
 });
-

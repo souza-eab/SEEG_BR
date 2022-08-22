@@ -16,7 +16,7 @@
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,10 +25,10 @@ var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
 //List of years
-var years = ['1986','1987','1988','1989', '1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019', '2020','2021'];
+var years = ['1985','1986','1987','1988','1989', '1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019', '2020','2021'];
 
 // Load the assets from the previous step 'Stabilized_cover'
-var cover = ee.ImageCollection('projects/ee-seeg-brazil/assets/collection_9/v1/2_1_Mask_stable').aside(print);
+var cover = ee.ImageCollection('projects/ee-seeg-brazil/assets/collection_10/v1/2_1_Mask_stable').aside(print);
 
 // Loop to do the arithmetic of bands with all pairs of years, multiplying year 1 by 10000
 years.forEach(function(year){
@@ -44,12 +44,12 @@ years.forEach(function(year){
 // Create an empty Image Collection in your Asset to store each image that is iteratively being exported
 // Eg. we named it "Transitions" that is the name of the Image Collection  
 // // *** NOTE: Image pairs will be generated year by year until the last year +1, which does not exist. 
-// Please ignore the Task to export this last non-existing year pair (eg. 2021_2022)
+// Please ignore the Task to export this last non-existing pair (eg. 2021_2022)
 
   Export.image.toAsset({
   "image": Transitions2.unmask(0).uint32(),
   "description": 'SEEG_Transitions_'+ (parseInt(year))+'_'+(parseInt(year)+1),
-  "assetId": 'projects/ee-seeg-brazil/assets/collection_9/v1/3_0_Transitions_maps/SEEG_Transitions_' + (parseInt(year))+'_'+(parseInt(year)+1), // Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
+  "assetId": 'projects/ee-seeg-brazil/assets/collection_10/v1/3_0_Transition_maps/SEEG_Transitions_' + (parseInt(year))+'_'+(parseInt(year)+1), // Enter the address and name 'project/seeg/col10/v1'of the Asset to be exported
   "scale": 30,
   "pyramidingPolicy": {
       '.default': 'mode'

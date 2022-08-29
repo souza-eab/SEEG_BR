@@ -4,7 +4,7 @@ The generation of annual transitions, upon which equations and emission factors 
 
 Click on the title of each section to be redirected to an executable script.
 
-# 1.0 [Deforestation and Regeneration masks.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/1.0_Deforestation_and_regeneration_masks.js)
+# 1.0 [Deforestation and Regeneration masks.js](https://github.com/souza-eab/SEEG_BR/blob/v_10.0.1/1._Spatial_analyses/1.0_Deforestation_and_regeneration_masks.js)
 
 The first step for the calculations of SEEG Land Use Change Sector is to classify yearly transitions as ‘deforestation’ or ‘regeneration’ of the natural vegetation. With the generation of these spatial masks, spurious transitions, resulting from errors of classification, are removed. Building these masks involves, first, the reclassification of all land cover classes from the MapBiomas time series into two classes: **Natural vegetation and Anthropic land use**. Based on the MapBiomas collection 6.0 [legend](https://mapbiomas-br-site.s3.amazonaws.com/downloads/Colecction%206/Cod_Class_legenda_Col6_MapBiomas_BR.pdf), these two classes include:
 
@@ -21,7 +21,7 @@ Map.addLayer(Reg.select('regeneration2020').selfMask(), {'min': 0,'max': 1, 'pal
 ```
 [Link to script](https://code.earthengine.google.com/4051918e07c956ad8524957dff747d83)
 
-# 1.1 [Spatial_filter.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/1.1_Spatial_filter.js)
+# 1.1 [Spatial_filter.js](https://github.com/souza-eab/SEEG_BR/blob/v_10.0.1/1._Spatial_analyses/1.1_Spatial_filter.js)
 
 The second step is the application of a temporal filter in every pixel, of at least six years (three years before the transition, the year of transition, and two years after the transition). This filtering identifies pixels with a classification over time consistent with the expected transition. For instance, a pixel is identified as deforestation only when the transition from natural vegetation to anthropic land use is preceded by three years of classification as stable natural vegetation, followed by three years (including the transition year) as anthropic land use. To minimize the uncertainty associated with the years at the beginning and the end of the time series, the filtering rules consider more years before or after the given year, depending on the availability of maps in the time series.
 
@@ -41,7 +41,7 @@ Map.addLayer(Reg_filter.select('regeneration2020').selfMask(), {'min': 0,'max': 
 [Link to script](https://code.earthengine.google.com/2168f9616bebe4834b4dd9fe7f328c43)
 
 
-# 2.0 [Stabilized_cover.js](https://github.com/souza-eab/SEEG_BR/blob/main/1._Spatial_analyses/2.0_Stabilized_cover.js)
+# 2.0 [Stabilized_cover.js](https://github.com/souza-eab/SEEG_BR/blob/v_10.0.1/1._Spatial_analyses/2.0_Stabilized_cover.js)
 
 This script stabilizes the base maps from a MapBiomas collection (currently, col 6.0), for the generation of consistent transitions of land use and cover observed throughout the analyzed period within the deforestation and regeneration masks. This stabilizing analysis, applied to all years of the time series, includes the following steps <>:
 (1) At the pixel level, frequency maps are generated, which count the number of years in which each pixel is classified as each given class;

@@ -22,10 +22,10 @@
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_9/v1/2_1_Mask_stable/';
+var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/2_1_Mask_stable_v2/';
 
 // Load Asset from MapBiomas collection 6.0  
-var mapbioDir = 'projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1';
+var mapbioDir = "projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2";
 var mapbiomas = ee.Image(mapbioDir)
 
 // Feature of the region of interest, in this case, all biomes in Brazil
@@ -33,20 +33,20 @@ var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
 // Load the filtered deforestation and regeneration masks
-var regenDir = 'projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_regeneration';
+var regenDir = 'projects/ee-seeg-brazil/assets/collection_10/v1/1_1_Temporal_filter_regeneration';
 var regen = ee.Image(regenDir);
 print("bandas regen", regen.bandNames());// regeneration since 1986
 
-var annualDesm = 'projects/ee-seeg-brazil/assets/collection_9/v1/1_1_Temporal_filter_deforestation';
+var annualDesm = 'projects/ee-seeg-brazil/assets/collection_10/v1/1_1_Temporal_filter_deforestation';
 var annualLoss = ee.Image(annualDesm); // deforestation since 1986
 print("bandas annualLoss", annualLoss.bandNames());
 
 // Selects bands from the MapBiomas collection starting in 1985 (makes up the pair from the 1985-1986 transition, which will be the first to be considered)
-var bandNames = mapbiomas.bandNames().slice(4);
+var bandNames = mapbiomas.bandNames();
 print("bandas", bandNames);
       mapbiomas = mapbiomas.select(bandNames);
 
-// 1985 -> 2020
+// 1985 -> 2021
 //////// Calculate the frequency (number of years) in which each i_pixel was a determined class_n
 // General rule (ratio of the total number of years of the considered period)
 var exp = '100*((b(0)+b(1)+b(2)+b(3)+b(4)+b(5)+b(6)+b(7)+b(8)+b(9)+b(10)+b(11)+b(12)+b(13)+b(14)+b(15)' +
@@ -434,8 +434,8 @@ for (var i = 0; i < 37; i++){ //Number of years in the collection being used
   
   Export.image.toAsset({
     "image": image.unmask(0).uint32(),
-    "description": 'SEEG_c9_v1_'+ (1985+i),
-    "assetId": dir_output + 'SEEG_c9_v1_'+ (1985+i), /// Enter the address and name 'project/seeg/col9/v1'of the Asset to be exported
+    "description": 'SEEG_c10_v1_'+ (1985+i),
+    "assetId": dir_output + 'SEEG_c10_v1_'+ (1985+i),
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

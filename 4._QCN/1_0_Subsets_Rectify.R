@@ -107,8 +107,6 @@ amz_mapb_FA<- amz %>%
          |C_pretvizi_OK== "Sd"|C_pretvizi_OK== "Pm"|C_pretvizi_OK== "") %>%
   mutate(MAPBIOMAS_C7 = 3)%>% 
   mutate(G_class_C7 = "FA")
-
-
 ##### Classes de Floresta Natural -------------------------------------------------------
 amz_mapb_F<- amz %>% 
   filter(tipo== "NATURAL") %>%
@@ -146,7 +144,6 @@ amz_mapb_SA<- amz %>%
   #Class Ta > Not Include
   mutate(MAPBIOMAS_C7 = 4)%>%
   mutate(G_class_C7 = "SA")
-
 ##### Classes de Savana Natural -------------------------------------------------------
 amz_mapb_S<- amz %>% 
   filter(tipo== "NATURAL")%>%
@@ -164,7 +161,6 @@ amz_mapb_MA<- amz %>%
   filter(C_pretvizi_OK== "Pf")%>%
   mutate(MAPBIOMAS_C7 = 5)%>%
   mutate(G_class_C7 = "MA")
-
 ##### Classes de Mangue Natural -------------------------------------------------------
 amz_mapb_M<- amz %>% 
   filter(tipo== "NATURAL")%>%
@@ -178,7 +174,6 @@ amz_mapb_WA<- amz %>%
   filter(C_pretvizi_OK== "Pa")%>%
   mutate(MAPBIOMAS_C7 = 11)%>%
   mutate(G_class_C7 = "WA")
-
 ##### Classes de Campo Alagado e Área Pantanosa -------------------------------------------------------
 amz_mapb_W<- amz %>% 
   filter(tipo== "NATURAL")%>%
@@ -194,7 +189,6 @@ amz_mapb_GA<- amz %>%
          |C_pretvizi_OK== "Lb"|C_pretvizi_OK== "Sp"|C_pretvizi_OK== "Tp") %>%
   mutate(MAPBIOMAS_C7 = 12)%>%
   mutate(G_class_C7 = "GA")
-
 #####  Classes de Formação Campestre Natural-------------------------------------------------------
 amz_mapb_G<- amz %>% 
   filter(tipo== "NATURAL")%>%
@@ -212,7 +206,7 @@ amz_mapb_NAs <- amz %>%
   
 
 ### Rbind subsets -------------------------------------------------------
-amz_c7_segg_c10 <- rbind(
+amz_c7_segg_c10 <- rm(
   amz_mapb_FA, 
   amz_mapb_F,
   amz_mapb_GA,
@@ -225,22 +219,27 @@ amz_c7_segg_c10 <- rbind(
   amz_mapb_W,
   amz_mapb_NAs)
 
-
 ### Write subsets -------------------------------------------------------
-
-rectify_class <-amz_c7_segg_c10[,c(1,2,11,12,13,14)]
-
-
-#Printar as csv para concatenar com o QGIS
-write.csv(rectify_class,file = "data/AMZ_data_reclass",row.names=F,fileEncoding = "UTF-8")
-
-
+rectify_class_8bit <-amz_c7_segg_c10[,c(1,2,13)]
+write.csv(rectify_class_8bit,file = "data/AMZ_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
+rm(rectify_class_8bit)
+#rectify_class_16bit <-amz_c7_segg_c10 [,c(1,2,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_8bit)
+#rectify_class_32bit <-amz_c7_segg_c10 [,c(1,2,11,12,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_32bit)
 rm(list=ls())
 
 
 
 
+
+
+###########------------------------------------------------------------------)
 ## Biome Cerrado ------------------------------------------------------------------
+###########------------------------------------------------------------------)
+
 
 ### Input-------------------------------------------------------------------------
 #getwd('patch_your_project')
@@ -373,18 +372,24 @@ cer_mapb_Res <- cer %>%
 
 ### Rbind subsets -------------------------------------------------------
 
-todosNA<-rbind(cer_mapb_FLO,cer_mapb_S,cer_mapb_G,cer_mapb_DUN,cer_mapb_AR,cer_mapb_W,cer_mapb_Res, cer_mapb_M)
-
-class <-todosNA[,c(2,13,14)]
-class1 <-todosNAA[,c(2,13,14)]
+cer_c7_segg_c10<-rbind(cer_mapb_FLO,cer_mapb_S,cer_mapb_G,cer_mapb_DUN,cer_mapb_AR,cer_mapb_W,cer_mapb_Res, cer_mapb_M)
 
 
-setwd("C:/Users/edriano.souza/OneDrive - INSTITUTO DE PESQUISA AMBIENTAL DA AMAZÃNIA/Mapbiomas/class_csv/OKK")
 
-#Printar as csv para concatenar com o QGIS
-write.csv(class,file = "Cer_Teste2_MAPbiomas_NA.csv",row.names=F,fileEncoding = "UTF-8")
-write.csv(class1,file = "Cer_MapBiomas_v1_.csv",row.names=F,fileEncoding = "UTF-8")
-rm(list=ls())
+### Write subsets -------------------------------------------------------
+
+rectify_class_8bit <-cer_c7_segg_c10[,c(1,2,15)]
+write.csv(rectify_class_8bit,file = "data/CER_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
+rm(rectify_class_8bit)
+
+#rectify_class_16bit <-cer_c7_segg_c10 [,c(1,2,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_8bit)
+
+#rectify_class_32bit <-cer_c7_segg_c10 [,c(1,2,11,12,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_32bit)
+
 
 rm(list=ls())
 
@@ -402,7 +407,7 @@ ca <- read.csv("C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/caating
 #Tratar Caatinga
 colnames(ca)
 summary(ca)
-cbind(names(ca)
+cbind(names(ca))
 
 
 #Nomes das colunas
@@ -476,8 +481,6 @@ ca_mapb_AR<- ca %>%
  mutate(MAPBIOMAS_C7 = 29)%>%
   mutate(G_class_C7 = "AR")
 
-
-
 #Class Wooded Restinga 4CN && ID_Mapbiomas = 49
 ca_mapb_Res <- ca %>% 
   filter(C_pretvizi_OK== "Pm") %>%
@@ -487,23 +490,32 @@ ca_mapb_Res <- ca %>%
 
 
 ### Rbind subsets -------------------------------------------------------
-todos<-rbind(ca_mapb_FLO,ca_mapb_S, ca_mapb_G,ca_mapb_M,ca_mapb_DUN,ca_mapb_AR,ca_mapb_Res)
+ca_c7_segg_c10 <-rbind(ca_mapb_FLO,ca_mapb_S, ca_mapb_G,ca_mapb_M,ca_mapb_DUN,ca_mapb_AR,ca_mapb_Res)
 
+str(ca_c7_segg_c10)
 
+### Write subsets -------------------------------------------------------
 
+rectify_class_8bit <-ca_c7_segg_c10[,c(1,2,14)]
+write.csv(rectify_class_8bit,file = "data/CAA_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
+rm(rectify_class_8bit)
 
-#Printar as csv para concatenar com o QGIS
-write.csv(class,file = "Caa_Teste_MAPbiomas_NA.csv",row.names=F,fileEncoding = "UTF-8")
-write.csv(class1,file = "Caa_MAPbiomas.csv",row.names=F,fileEncoding = "UTF-8")
+#rectify_class_16bit <-ca_c7_segg_c10[,c(1,2,14,15)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_8bit)
+
+#rectify_class_32bit <-ca_c7_segg_c10[,c(1,2,11,12,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_32bit)
+
 
 rm(list=ls())
 
 
-
-
-
+#------------------------------------------------------------------
 ## Biome Mata Atlântica ------------------------------------------------------------------
-
+#------------------------------------------------------------------
+  
 ### Input-------------------------------------------------------------------------
 #getwd('patch_your_project')
 
@@ -604,29 +616,33 @@ m_atl_mapb_Res <- m_atl %>%
 
 
 ### Rbind subsets -------------------------------------------------------
-todos<-rbind(m_atl_mapb_FLO,m_atl_mapb_S, m_atl_mapb_G,m_atl_mapb_M,m_atl_mapb_W,m_atl_mapb_DUN,m_atl_mapb_AR,m_atl_mapb_Res)
+m_atl_c7_segg_c10<-rbind(m_atl_mapb_FLO,m_atl_mapb_S, m_atl_mapb_G,m_atl_mapb_M,m_atl_mapb_W,m_atl_mapb_DUN,m_atl_mapb_AR,m_atl_mapb_Res)
 
+str(m_atl_c7_segg_c10)
 
-class <-todosNA[,c(2,12)]
-class1 <-todosNAA[,c(2,12)]
+### Write subsets -------------------------------------------------------
 
+rectify_class_8bit <-m_atl_c7_segg_c10[,c(1,2,13)]
+write.csv(rectify_class_8bit,file = "data/m_atl_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
+rm(rectify_class_8bit)
 
-setwd("C:/Users/edriano.souza/OneDrive - INSTITUTO DE PESQUISA AMBIENTAL DA AMAZÃNIA/Mapbiomas/class_csv/OKK")
-#Printar as csv para conm_atltenar com o QGIS
-write.csv(class,file = "M_atl_Teste_MAPbiomas_NA.csv",row.names=F,fileEncoding = "UTF-8")
-write.csv(class1,file = "Mata_MAPbiomas.csv",row.names=F,fileEncoding = "UTF-8")
+#rectify_class_16bit <-m_atl_c7_segg_c10[,c(1,2,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_8bit)
 
+#rectify_class_32bit <-m_atl_c7_segg_c10[,c(1,2,11,12,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_32bit)
 rm(list=ls())
 
 
 
 
 
-
-
-
+#------------------------------------------------------------------
 ## Biome Pantanal  ------------------------------------------------------------------
-
+#------------------------------------------------------------------
+  
 ### Input-------------------------------------------------------------------------
 #getwd('patch_your_project')
 

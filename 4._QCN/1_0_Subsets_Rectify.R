@@ -37,7 +37,6 @@ amz <- mutate(amz, C_pretvizi_OK = C_pretvizi) #Criar variável de classe igual 
 str(names(amz)) #Conferência
 
 
-
 ### Resume class_fito -------------------------------------------------------
 
 #### Classes de Floresta -------------------------------------------------------
@@ -75,7 +74,7 @@ joinF<- amz_class_NAT %>%
   left_join(amz_class_FA,by=c("C_pretvizi_OK"="C_pretvizi_OK"))
 view(joinF)
 
-rm('amz_class_F','amz_class_NAT','amz_class_FA')
+#rm('amz_class_F','amz_class_NAT','amz_class_FA')
 #rm('joinF','p_class','p_class_A','p_class_N')
 dev.off()  
 
@@ -133,8 +132,8 @@ amz_mapb_F<- amz %>%
          ############################### Acontece só aqui
          |C_pretvizi_OK== "Rl"
          |C_pretvizi_OK== "Rs"
-         |C_pretvizi_OK== "Ta"
-         |C_pretvizi_OK== "Tg") %>%
+         |C_pretvizi_OK== "Ta") %>%
+         #|C_pretvizi_OK== "Tg") %>%
   mutate(MAPBIOMAS_C7 = 0)%>% 
   mutate(G_class_C7 = "F")
 
@@ -213,7 +212,7 @@ amz_mapb_NAs <- amz %>%
   
 
 ### Rbind subsets -------------------------------------------------------
-amz_c7_segg_c10 <- rm(
+amz_c7_segg_c10 <- rbind(
   amz_mapb_FA, 
   amz_mapb_F,
   amz_mapb_GA,
@@ -225,22 +224,16 @@ amz_c7_segg_c10 <- rm(
   amz_mapb_WA,
   amz_mapb_W,
   amz_mapb_NAs)
-rm(amz_c7_segg_c10)
-rm(amz_mapb_F)
 
 
-todos<-rbind(amz_mapb__, amz_mapb_C,amz_mapb_CA,amz_mapb_F,amz_mapb_FA,amz_mapb_M,amz_mapb_MA,amz_mapb_NF,amz_mapb_NFA,amz_mapb_S,amz_mapb_SA)
+### Write subsets -------------------------------------------------------
 
+rectify_class <-amz_c7_segg_c10[,c(1,2,11,12,13,14)]
 
-class <-todos[,c(1,2,12,13)]
-
-
-
-setwd("C:/Users/edriano.souza/OneDrive - INSTITUTO DE PESQUISA AMBIENTAL DA AMAZÃNIA/Mapbiomas/class_csv/OKK")
 
 #Printar as csv para concatenar com o QGIS
-write.csv(class,file = "AMZ_data_reclass",row.names=F,fileEncoding = "UTF-8")
-write.csv(todos,file = "AMZ_data_",row.names=F,fileEncoding = "UTF-8")
+write.csv(rectify_class,file = "data/AMZ_data_reclass",row.names=F,fileEncoding = "UTF-8")
+
 
 rm(list=ls())
 
@@ -819,4 +812,5 @@ write.csv(class1,file = "pam_MAPbiomas.csv",row.names=F,fileEncoding = "UTF-8")
 
 
 rm(list=ls())
+
 

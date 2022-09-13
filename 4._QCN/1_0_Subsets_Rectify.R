@@ -1,8 +1,10 @@
+###########------------------------------------------------------------------)
 # GOALS -------------------------------------------------------------------
 ## {                                                                                                                                                                    ##
 # */  Script para gerar tabelas auxiliares para relacionar as fitofisionimas do IBGE como entradas da QCN 
 # */ para retificar e classificar conforme MapBiomas - Coleção 7.
 ## }                                                                                                                                                                    ##
+###########------------------------------------------------------------------)
 
 ## Bibliotecas 
 #install.packages('tidyverse') Instalar biblioteca
@@ -15,8 +17,9 @@ library(ggplot2)
 gc()
 memory.limit (9999999999999)
 
-
+###########------------------------------------------------------------------)
 ## Biome Amazon ------------------------------------------------------------------
+###########------------------------------------------------------------------)
 
 ### Input-------------------------------------------------------------------------
 #getwd('patch_your_project')
@@ -265,9 +268,7 @@ str(names(cer)) #Conferência
 
 
 ### Resume class_fito -------------------------------------------------------
-
 #colnames(df)
-
 cer_class<- cer %>%
   group_by(categvizi,C_pretvizi_OK) %>%
   count(categvizi,C_pretvizi_OK)
@@ -278,15 +279,10 @@ cpret<- cer %>%
 
 #A planilha tem 59 levels de pretVeg
 
-
-#Classificar MAPBIOMAS igual a planilha do paper para classe Floresta
-
-
 ### Filtrar e Rectify -------------------------------------------------------
 #     Filtrar classes da QCN                   #
 #     Criar col MAPBIOMAS_C7 e G_class_C7      #
 #               Number       e Name_class      #
-
 
 ##### Classes de Floresta -------------------------------------------------------
 cer_mapb_FLO<- cer %>% 
@@ -311,7 +307,6 @@ cer_mapb_FLO<- cer %>%
   mutate(MAPBIOMAS_C7 = 3)%>% 
   mutate(G_class_C7 = "F")
 
-  
 ##### Classes de Savana -------------------------------------------------------
 #Class Savana 4CN && ID_Mapbiomas = 4
 cer_mapb_S<- cer %>% 
@@ -325,14 +320,12 @@ cer_mapb_S<- cer %>%
   mutate(MAPBIOMAS_C7 = 4)%>%
   mutate(G_class_C7 = "Sav")
 
-
 ##### Classes de Mangrove -------------------------------------------------------
 #Class Mangrove 4CN && ID_Mapbiomas = 5
 cer_mapb_M<- cer %>% 
   filter(C_pretvizi_OK== "Pf") %>%
   mutate(MAPBIOMAS_C7 = 5)%>%
   mutate(G_class_C7 = "Man")
-
 
 ##### Classes de Wetland -------------------------------------------------------
 #Class Wetland 4CN && ID_Mapbiomas = 11
@@ -341,7 +334,6 @@ cer_mapb_W <- cer %>%
   mutate(MAPBIOMAS_C7 = 11)%>%
   mutate(G_class_C7 = "Wet")
 
-
 ##### Classes de Grassland -------------------------------------------------------
 cer_mapb_G<- cer %>% 
   filter(C_pretvizi_OK== "Eg" | C_pretvizi_OK== "Sg" |C_pretvizi_OK== "Sp" |
@@ -349,7 +341,6 @@ cer_mapb_G<- cer %>%
   | C_pretvizi_OK== "T") %>%
   mutate(MAPBIOMAS_C7 = 12)%>% 
   mutate(G_class_C7 = "GrassL")
-
 
 ##### Classes de Dune -------------------------------------------------------
 cer_mapb_DUN<- cer %>% 
@@ -371,32 +362,26 @@ cer_mapb_Res <- cer %>%
 
 
 ### Rbind subsets -------------------------------------------------------
-
 cer_c7_segg_c10<-rbind(cer_mapb_FLO,cer_mapb_S,cer_mapb_G,cer_mapb_DUN,cer_mapb_AR,cer_mapb_W,cer_mapb_Res, cer_mapb_M)
 
-
-
 ### Write subsets -------------------------------------------------------
-
 rectify_class_8bit <-cer_c7_segg_c10[,c(1,2,15)]
 write.csv(rectify_class_8bit,file = "data/CER_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
 rm(rectify_class_8bit)
-
-#rectify_class_16bit <-cer_c7_segg_c10 [,c(1,2,13,14)]
+#rectify_class_16bit <-cer_c7_segg_c10 [,c(1,2,13,14,15)]
 #write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
 #rm(rectify_class_8bit)
-
-#rectify_class_32bit <-cer_c7_segg_c10 [,c(1,2,11,12,13,14)]
+#rectify_class_32bit <-cer_c7_segg_c10 [,c(1,2,11,12,13,14,15)]
 #write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
 #rm(rectify_class_32bit)
-
-
 rm(list=ls())
 
 
 
-
+###########------------------------------------------------------------------)
 ## Biome Caatinga ------------------------------------------------------------------
+###########------------------------------------------------------------------)
+
 
 ### Input-------------------------------------------------------------------------
 #getwd('patch_your_project')
@@ -408,18 +393,16 @@ ca <- read.csv("C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/caating
 colnames(ca)
 summary(ca)
 cbind(names(ca))
-
-
 #Nomes das colunas
 newNames <- c("FID", "ID", "C_pretorig","C_pretvizi", "c_agb", 
               "c_bgb","c_dw","c_litter","c_total4inv","Cagrpret","MAPBIOMAS_C6")
-
 colnames(ca)
 #Reclassificando as colunas dos biomas da QCN
 colnames(ca)<-newNames
 #Criar coluna dos Biomas 
 ca$BIOMA <- c("Caatinga")
 ca <- mutate(ca, C_pretvizi_OK =C_pretvizi) #Criar variável de classe igual para tratamentos nas tbls
+
 
 ### Resume class_fito -------------------------------------------------------
 ca_class <- ca %>%
@@ -445,13 +428,11 @@ ca_mapb_FLO<- ca %>%
   mutate(MAPBIOMAS_C7 = 3)%>%
   mutate(G_class_C7 = "F")
 
-
 ##### Classes de Savana -------------------------------------------------------
 ca_mapb_S<- ca %>% 
   filter(C_pretvizi_OK== "ST"| C_pretvizi_OK== "Sa" |C_pretvizi_OK== "Ta") %>%
   mutate(MAPBIOMAS_C7 = 4)%>%
   mutate(G_class_C7 = "Sav")
-
 
 ##### Classes de Grassland -------------------------------------------------------
 ca_mapb_G<- ca %>% 
@@ -461,9 +442,7 @@ ca_mapb_G<- ca %>%
   mutate(MAPBIOMAS_C7 = 12)%>%
   mutate(G_class_C7 = "GrassL")
 
-
 ##### Classes de Mangrove -------------------------------------------------------
-
 ca_mapb_M<- ca %>% 
   filter(C_pretvizi_OK== "Pf") %>%
   mutate(MAPBIOMAS_C7 = 5)%>%
@@ -487,38 +466,30 @@ ca_mapb_Res <- ca %>%
   mutate(MAPBIOMAS_C7 = 49)%>% 
   mutate(G_class_C7 = "Res")
 
-
-
 ### Rbind subsets -------------------------------------------------------
 ca_c7_segg_c10 <-rbind(ca_mapb_FLO,ca_mapb_S, ca_mapb_G,ca_mapb_M,ca_mapb_DUN,ca_mapb_AR,ca_mapb_Res)
-
 str(ca_c7_segg_c10)
 
 ### Write subsets -------------------------------------------------------
-
 rectify_class_8bit <-ca_c7_segg_c10[,c(1,2,14)]
 write.csv(rectify_class_8bit,file = "data/CAA_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
 rm(rectify_class_8bit)
-
 #rectify_class_16bit <-ca_c7_segg_c10[,c(1,2,14,15)]
 #write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
 #rm(rectify_class_8bit)
-
 #rectify_class_32bit <-ca_c7_segg_c10[,c(1,2,11,12,13,14)]
 #write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
 #rm(rectify_class_32bit)
-
-
 rm(list=ls())
 
 
-#------------------------------------------------------------------
+
+###########------------------------------------------------------------------)
 ## Biome Mata Atlântica ------------------------------------------------------------------
-#------------------------------------------------------------------
-  
+###########------------------------------------------------------------------)
+
 ### Input-------------------------------------------------------------------------
 #getwd('patch_your_project')
-
 m_atl <- read.csv("C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/mata_atlantica.csv",
                    h=T, encoding = "UTF-8")
 
@@ -527,14 +498,11 @@ colnames(m_atl)
 summary(m_atl)
 m_atl<-m_atl[,-c(3,6)] #hÃ¡ duas colunas addicionais "ObjID" e "categorig" retirar e alinhar as colunas
 cbind(names(m_atl))
-
 newNames <- c("FID", "ID", "C_pretorig","C_pretvizi", "categvizi", "c_agb", 
               "c_bgb","c_dw","c_litter","c_total4inv","MAPBIOMAS_C6") #Aqui as colunas pad
-
 #Reclassificando as colunas dos biomas da QCN
 colnames(m_atl)<-newNames
 m_atl <- mutate(m_atl, C_pretvizi_OK =C_pretvizi)#Criar variável de classe igual para tratamentos
-
 
 ### Resume class_fito -------------------------------------------------------
 a<- m_atl %>%
@@ -576,14 +544,11 @@ m_atl_mapb_M<- m_atl %>%
   mutate(MAPBIOMAS_C7 = 5)%>%
   mutate(G_class_C7 = "Man")
 
-
 ##### Classes de Wetland-------------------------------------------------------
 m_atl_mapb_W <- m_atl %>% 
   filter(C_pretvizi_OK== "Pa")%>%
   mutate(MAPBIOMAS_C7 = 11)%>%
   mutate(G_class_C7 = "Wet")
-
-
 
 ##### Classes de Grassland-------------------------------------------------------
 m_atl_mapb_G<- m_atl %>% 
@@ -594,7 +559,6 @@ m_atl_mapb_G<- m_atl %>%
          #|C_pretvizi_OK== "Tg")%>%
   mutate(MAPBIOMAS_C7 = 12)%>% 
   mutate(G_class_C7 = "GrassL")
-
 
 ##### Classes de Dune-------------------------------------------------------
 m_atl_mapb_DUN<- m_atl %>% 
@@ -614,22 +578,17 @@ m_atl_mapb_Res <- m_atl %>%
   mutate(MAPBIOMAS_C7 = 49)%>% 
   mutate(G_class_C7 = "Res")
 
-
 ### Rbind subsets -------------------------------------------------------
 m_atl_c7_segg_c10<-rbind(m_atl_mapb_FLO,m_atl_mapb_S, m_atl_mapb_G,m_atl_mapb_M,m_atl_mapb_W,m_atl_mapb_DUN,m_atl_mapb_AR,m_atl_mapb_Res)
-
 str(m_atl_c7_segg_c10)
 
 ### Write subsets -------------------------------------------------------
-
 rectify_class_8bit <-m_atl_c7_segg_c10[,c(1,2,13)]
 write.csv(rectify_class_8bit,file = "data/m_atl_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
 rm(rectify_class_8bit)
-
 #rectify_class_16bit <-m_atl_c7_segg_c10[,c(1,2,13,14)]
 #write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
 #rm(rectify_class_8bit)
-
 #rectify_class_32bit <-m_atl_c7_segg_c10[,c(1,2,11,12,13,14)]
 #write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
 #rm(rectify_class_32bit)
@@ -637,32 +596,21 @@ rm(list=ls())
 
 
 
-
-
-#------------------------------------------------------------------
+###########------------------------------------------------------------------)
 ## Biome Pantanal  ------------------------------------------------------------------
-#------------------------------------------------------------------
-  
+###########------------------------------------------------------------------)
+
 ### Input-------------------------------------------------------------------------
 #getwd('patch_your_project')
-
-
 pan <- read.csv("C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/pantanal.csv",
                  h=T, encoding = "UTF-8")
-
 colnames(pan)# Verificar nomes das colunas Pantanal
 summary(pan) 
 pan<-pan[,-c(5)]#Na csv tem outra categoria do IBGE, "categorig" retirar e alinhar a colunas
 cbind(names(pan))
-
-
 newNames <- c("FID", "ID", "C_pretorig","C_pretvizi", "categvizi", "c_agb", 
               "c_bgb","c_dw","c_litter","c_total4inv","MAPBIOMAS_C6") #Aqui as colunas pad
-
-
 colnames(pan)<-newNames #Reclassificando as colunas dos biomas da QCN
-
-
 pan <- mutate(pan, C_pretvizi_OK =C_pretvizi)#Criar variável de classe igual para tratamentos
 
 
@@ -670,13 +618,10 @@ pan <- mutate(pan, C_pretvizi_OK =C_pretvizi)#Criar variável de classe igual pa
 a<- pan %>%
   group_by(C_pretvizi_OK) %>%
   count(C_pretvizi_OK)
-
 ggplot(data=a, aes(x=C_pretvizi_OK, y=n)) +
   geom_bar(stat="identity")
-
+dev.off()
 #19 Classes
-
-
 ##### Classes de Floresta-------------------------------------------------------
 pan_mapb_FLO<- pan %>% 
   filter(C_pretvizi_OK== "Ca" |C_pretvizi_OK== "Cb"|C_pretvizi_OK== "Cs"
@@ -687,7 +632,6 @@ pan_mapb_FLO<- pan %>%
   mutate(MAPBIOMAS_C7 = 3)%>% 
   mutate(G_class_C7 = "F")
 
-
 ##### Classes de Savana-------------------------------------------------------
 pan_mapb_S<- pan %>% 
   filter(C_pretvizi_OK== "Ta" |C_pretvizi_OK== "ST" |C_pretvizi_OK== "T" |C_pretvizi_OK== "Sa" #Add Col7
@@ -695,14 +639,11 @@ pan_mapb_S<- pan %>%
   mutate(MAPBIOMAS_C7 = 4)%>%
   mutate(G_class_C7 = "Sav")
 
-
-
 ##### Classes de Wetland-------------------------------------------------------
 pan_mapb_W <- pan %>% 
   filter(C_pretvizi_OK== "Tg"|C_pretvizi_OK== "Tp" )%>%
   mutate(MAPBIOMAS_C7 = 11)%>%
   mutate(G_class_C7 = "Wet")
-
 
 ##### Classes de Grassland-------------------------------------------------------
 pan_mapb_G<- pan %>% 
@@ -710,51 +651,41 @@ pan_mapb_G<- pan %>%
   mutate(MAPBIOMAS_C7 = 12)%>% 
   mutate(G_class_C7 = "GrassL")
 
-
 ### Rbind subsets -------------------------------------------------------
+pan_c7_segg_c10<-rbind(pan_mapb_FLO,pan_mapb_S,pan_mapb_G,pan_mapb_W)
+str(pan_c7_segg_c10)
 
-todosNA<-rbind(pan_mapb_FLO,pan_mapb_S,pan_mapb_G,pan_mapb_W)
-
-
-aa<- todosNA %>%
-  group_by(C_pretvizi_OK) %>%
-  count(C_pretvizi_OK)
-
-mat<- a %>% 
-  left_join(aa,by=c("C_pretvizi_OK"="C_pretvizi_OK"))
-write.csv(class,file = "pan_Teste_MAPbiomas_NA.csv",row.names=F,fileEncoding = "UTF-8")
-write.csv(class1,file = "pan_Teste_MAPbiomas_NAA.csv",row.names=F,fileEncoding = "UTF-8")
-
+### Write subsets -------------------------------------------------------
+rectify_class_8bit <-pan_c7_segg_c10[,c(1,2,13)]
+write.csv(rectify_class_8bit,file = "data/pan_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
+rm(rectify_class_8bit)
+#rectify_class_16bit <-pan_c7_segg_c10[,c(1,2,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_8bit)
+#rectify_class_32bit <-pan_c7_segg_c10[,c(1,2,11,12,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_32bit)
 rm(list=ls())
 
 
-
+###########------------------------------------------------------------------)
 ## Biome Pampa ------------------------------------------------------------------
-
+###########------------------------------------------------------------------)
 
 ### Input-------------------------------------------------------------------------
 #getwd('patch_your_project')
 pam <- read.csv("C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/pampa.csv",
                  h=T, encoding = "UTF-8")
-
 # Tratar Pampa
 colnames(pam)
 summary(pam) #
 pam<-pam[,-c(5,12)] #hÃ¡ duas colunas addicionais "categorig" e uma "area_ha" a Ãºnica a ter Ã¡rea
 #retirar e alinhar as colunas
-
-
-
 newNames <- c("FID", "ID", "C_pretorig","C_pretvizi", "categvizi", "c_agb", 
               "c_bgb","c_dw","c_litter","c_total4inv","MAPBIOMAS_C6") #Aqui as colunas pad
-
-
 #Reclassificando as colunas dos biomas da QCN
 colnames(pam)<-newNames
-
-
 pam <- mutate(pam, C_pretvizi_OK =C_pretvizi)#Criar variável de classe igual para tratamentos
-
 
 ### Resume class_fito -------------------------------------------------------
 a<- pam %>%
@@ -764,10 +695,7 @@ a<- pam %>%
 ggplot(data=a, aes(x=C_pretvizi_OK, y=n)) +
   geom_bar(stat="identity")
 
-
 #33 Classes
-
-
 ##### Classes de Floresta-------------------------------------------------------
 pam_mapb_FLO<- pam %>% 
   filter(C_pretvizi_OK== "Ca" |C_pretvizi_OK== "Cb" |C_pretvizi_OK== "Cm"
@@ -801,32 +729,26 @@ pam_mapb_G<- pam %>%
   mutate(MAPBIOMAS_C7 = 12)%>% 
   mutate(G_class_C7 = "GrassL")
 
-
 ##### Classes de Dune-------------------------------------------------------
 pam_mapb_DUN<- pam %>% 
   filter(C_pretvizi_OK== "Dn") %>%
   mutate(MAPBIOMAS_C7 = 23)%>% 
   mutate(G_class_C7 = "DUN")
 
-
-
 ### Rbind subsets -------------------------------------------------------
+pam_c7_segg_c10<-rbind(pam_mapb_FLO,pam_mapb_W,pam_mapb_G,pam_mapb_DUN)
+str(pam_c7_segg_c10)
 
-todosNA<-rbind(pam_mapb_FLO,pam_mapb_W,pam_mapb_G,pam_mapb_DUN)
-
-
-aa<- todosNA %>%
-  group_by(C_pretvizi_OK) %>%
-  count(C_pretvizi_OK)
-
-mat<- a %>% 
-  left_join(aa,by=c("C_pretvizi_OK"="C_pretvizi_OK"))
-
-write.csv(class,file = "pam_Teste_MAPbiomas_NA.csv",row.names=F,fileEncoding = "UTF-8")
-write.csv(class1,file = "pam_MAPbiomas.csv",row.names=F,fileEncoding = "UTF-8")
-
-
-
+### Write subsets -------------------------------------------------------
+rectify_class_8bit <-pam_c7_segg_c10[,c(1,2,13)]
+write.csv(rectify_class_8bit,file = "data/pam_data_reclass8.csv",row.names=F,fileEncoding = "UTF-8")
+rm(rectify_class_8bit)
+#rectify_class_16bit <-pam_c7_segg_c10[,c(1,2,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass16.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_8bit)
+#rectify_class_32bit <-pam_c7_segg_c10[,c(1,2,11,12,13,14)]
+#write.csv(rectify_class_16bit,file = "data/AMZ_data_reclass32.csv",row.names=F,fileEncoding = "UTF-8")
+#rm(rectify_class_32bit)
 rm(list=ls())
 
-
+#/End

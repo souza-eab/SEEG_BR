@@ -27,7 +27,7 @@ for (i in 1:nrow(tiles)) {
   ## clip vector for the tile i
   vec_i <- st_intersection(vector, tile_i)
   ## create mask
-  mask <- raster(crs=projection(vec_i), ext= extent(vec_i)); res(mask) = 0.00025
+  mask <- raster(crs=projection(vec_i), ext= extent(vec_i)); res(mask) = 0.00025 0.002245
   ## convert to stars
   mask <- st_as_stars(mask)
   

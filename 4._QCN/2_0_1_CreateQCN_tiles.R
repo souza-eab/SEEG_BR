@@ -1,6 +1,7 @@
 ### rasterize QCN vectors 
 ## edriano.souza@ipam.org.br or dhemerson.costa@ipam.org.br
 
+
 ## read libraries
 library(sf)
 library(st)
@@ -32,7 +33,7 @@ for (i in 1:nrow(tiles)) {
   ## clip vector for the tile i
   vec_i <- st_intersection(vector, tile_i)
   ## create mask
-  mask <- raster(crs=projection(vec_i), ext= extent(vec_i)); res(mask) = 0.000269494585235856472 
+  mask <- raster(crs=projection(vec_i), ext= extent(vec_i)); res(mask) = 0.000269494585235856472 #30m
   ## convert to stars
   mask <- st_as_stars(mask)
   

@@ -1,5 +1,6 @@
 ## rasterize QCN vectors 
-## dhemerson.costa@ipam.org.br
+## edriano.souza@ipam.org.br or dhemerson.costa@ipam.org.br
+
 
 ## read libraries
 library(sf)

@@ -1,5 +1,5 @@
 // extract mean value and store as statistics 
-// any issue or bug, please write to dhemerson.costa@ipam.org.br and/or edriano.souza@ipam.org.br
+// any issue or bug, please write to edriano.souza@ipam.org.br and/or dhemerson.costa@ipam.org.br  
 
 // define years to be processed 
 var list_mapb_years = [1985//, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,

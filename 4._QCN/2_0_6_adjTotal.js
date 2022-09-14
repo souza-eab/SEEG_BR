@@ -1,4 +1,5 @@
-// adjust total band - that is wrongly imported by dhemerson.costa@ipam.org.br --'
+
+// adjust total band - that is wrongly imported by edriano.souza@ipam.org.br or dhemerson.costa@ipam.org.br --'
 
 // define output directory
 var dir_out = 'projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_c/';

@@ -1,5 +1,5 @@
 ## create metadata for each tile
-## dhemerson.costa@ipam.org.br
+## edriano.souza@ipam.org.br or dhemerson.costa@ipam.org.br
 
 ## read files
 filename <- tools::file_path_sans_ext(basename(list.files('./output/')))

@@ -195,7 +195,7 @@ amz_mapb_NAs <- amz %>%
   
 
 ### Rbind subsets ----------------------------------------------------------------
-amz_c7_segg_c10 <- rm(
+amz_c7_segg_c10 <- rbind(
   amz_mapb_FA, 
   amz_mapb_F,
   amz_mapb_GA,

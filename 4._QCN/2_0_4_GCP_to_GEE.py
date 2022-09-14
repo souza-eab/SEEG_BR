@@ -1,5 +1,5 @@
 ## batch upload from GCP to GEE
-## dhemerson.costa@ipam.org.br
+## edriano.souza@ipam.org.br or dhemerson.costa@ipam.org.br
 
 ## import libraries
 import ee

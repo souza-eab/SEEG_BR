@@ -1,5 +1,5 @@
 // Rectify 'c_total' of QCN per native vegetation classe by using Mapbiomas Collection 6.0 LCLUC as reference  
-// For any issue/bug, please write to <dhemerson.costa@ipam.org.br> and/or <edriano.souza@ipam.org.br>
+// For any issue/bug, please write to <edriano.souza@ipam.org.br> and/or <dhemerson.costa@ipam.org.br>
 // SEEG/Observatório do Clima and IPAM
 // Current version: 2.0
 

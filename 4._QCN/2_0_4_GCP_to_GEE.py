@@ -15,7 +15,7 @@ ee.Initialize()
 client = storage.Client()
 
 ## define bucket
-bucket_name = 'qcn-tiles'
+bucket_name = 'gcp_qcn'
 asset_name = 'projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m'
 
 ## create empty recipies

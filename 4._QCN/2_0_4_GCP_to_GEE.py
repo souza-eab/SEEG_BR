@@ -16,7 +16,7 @@ client = storage.Client()
 
 ## define bucket
 bucket_name = 'gcp_qcn'
-asset_name = 'projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m'
+asset_name = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m'
 
 ## create empty recipies
 gcp_file = []

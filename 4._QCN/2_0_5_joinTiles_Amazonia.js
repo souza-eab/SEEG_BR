@@ -14,17 +14,17 @@
 var assets = ee.List.sequence(6,6,1).getInfo();
 
 // Insert Acsess 
-var address =   'projects/mapbiomas-workspace/SEEG/2021/QCN/tile_id_';
+var address =   'projects/mapbiomas-workspace/SEEG/2022/QCN/Amz_tiles/tile_id_';
 
 // Id for tiles
-var tiles = [1,2,3,4,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,27,28,32];
+var tiles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
 
 var geom =ee.Image('users/edrianosouza/QCN/am_ctotal4inv').geometry();
 
  /* @. Set user parameters */// eg.
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2021/QCN/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/';
 
-var version = '1';
+var version = '2';
 
 ///////////////////////////////////////
 /* @. Don't change below this line *///
@@ -59,7 +59,7 @@ Map.centerObject(featureCollection.first());
 
 
 var pastVegetation = ee.Image().select();
-var propertieNames = ['cagb','cbgb','clitter','cdw','MAPBIOMAS','ctotal4inv'];
+var propertieNames = ['cagb','cbgb','clitter','cdw','C7_MAPBIOM','ctotal4inv'];
 
 propertieNames.forEach(function(propertie){
   

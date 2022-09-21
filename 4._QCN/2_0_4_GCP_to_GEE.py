@@ -1,5 +1,6 @@
 ## batch upload from GCP to GEE
 ## edriano.souza@ipam.org.br or dhemerson.costa@ipam.org.br
+## Time: Fast
 
 ## import libraries
 import ee

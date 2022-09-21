@@ -85,7 +85,7 @@ propertieNames.forEach(function(propertie){
 
 print('pastVegetation',pastVegetation);
 
-// export as GEE asset
+// Export as GEE asset
 Export.image.toAsset({
     "image": pastVegetation,
     "description": 'pastVegetation',

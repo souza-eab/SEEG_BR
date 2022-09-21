@@ -10,12 +10,13 @@
  
 /* @. Set user parameters *///
 
-// Insert Asset 
+// Insert patch Asset -
 var address =   'projects/mapbiomas-workspace/SEEG/2022/QCN/Amz_tiles/tile_id_';
 
-// Id for tiles
+// Id for tiles {Amazon Biome = 25 tiles }
 var tiles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
 
+//Geometry
 var geom =ee.Image('users/edrianosouza/QCN/am_ctotal4inv').geometry();
 
  /* @. Set user parameters */// eg.
@@ -40,6 +41,7 @@ var featureCollection = tiles.map(function(i){
   
   var name = asset.split()[6];
   
+ //Function - Change the variable's format
   return ee.FeatureCollection(asset).set('name',name)
     .map(function(feature){
     return feature.set({

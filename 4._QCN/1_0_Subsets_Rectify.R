@@ -223,12 +223,12 @@ amz_c7_segg_c10_v1 <- rbind(
   amz_mapb_NAs)
 
 ### Write subsets -------------------------------------------------------
-rectify_class_8bit <-amz_c7_segg_c10_v1[,c(1,2,13,14)]
+rectify_class_8bit <-amz_c7_segg_c10_v1[,c(1,2,13,14)] ##Separate subset to join with QGis
 newNames <- c("FID", "ID", "MB_C7","G_class_C7") #Colunas TRUE
 colnames(rectify_class_8bit)<-newNames# Receber classes
 
 str(rectify_class_8bit)
-rectify_class_8bit$MB_C7 <- as.numeric(rectify_class_8bit$MB_C7)
+rectify_class_8bit$MB_C7 <- as.numeric(rectify_class_8bit$MB_C7) ## Fundamental define your variable as numeric; 
 
 str(rectify_class_8bit)
 

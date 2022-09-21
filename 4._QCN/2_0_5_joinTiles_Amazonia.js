@@ -2,6 +2,7 @@
 // For any issue/bug, please write to wallace.silva@ipam.org.br or edriano.souza@ipam.org.br 
 // Developed by: IPAM, SEEG and OC
 // Citing: SEEG/Observatório do Clima and IPAM
+// Time processing: >
 
 // @. UPDATE HISTORIC //
 // 1:   Insert tiles 

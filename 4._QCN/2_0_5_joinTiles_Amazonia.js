@@ -10,10 +10,7 @@
  
 /* @. Set user parameters *///
 
-// Insert list sequence
-var assets = ee.List.sequence(6,6,1).getInfo();
-
-// Insert Acsess 
+// Insert Asset 
 var address =   'projects/mapbiomas-workspace/SEEG/2022/QCN/Amz_tiles/tile_id_';
 
 // Id for tiles
@@ -43,12 +40,23 @@ var featureCollection = tiles.map(function(i){
   
   var name = asset.split()[6];
   
-  return ee.FeatureCollection(asset).set('name',name);
+  return ee.FeatureCollection(asset).set('name',name)
+    .map(function(feature){
+    return feature.set({
+      'name':name,
+      'C7_MAPBIOM':ee.Algorithms.If({
+        condition:ee.String("").compareTo(feature.getString('C7_MAPBIOM')),
+        trueCase:ee.Number.parse(feature.get('C7_MAPBIOM')),
+        falseCase:null
+      }),
+    });
+  });
 });
 
-featureCollection = ee.FeatureCollection(featureCollection).flatten();
+featureCollection = ee.FeatureCollection(featureCollection)
+  .flatten();
 
-print(featureCollection,'featureCollection');
+print(featureCollection.limit(10),featureCollection.aggregate_array('C7_MAPBIOM').distinct(),'featureCollection');
 
 Map.addLayer(featureCollection,{},'featureCollection',false);
 
@@ -79,7 +87,7 @@ print('pastVegetation',pastVegetation);
 Export.image.toAsset({
     "image": pastVegetation,
     "description": 'pastVegetation',
-    "assetId": dir_output + 'pastVegetation',
+    "assetId": dir_output + 'pastVegetation' + version,
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

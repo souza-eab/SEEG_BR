@@ -2,7 +2,6 @@
 // For any issue/bug, please write to wallace.silva@ipam.org.br or edriano.souza@ipam.org.br 
 // Developed by: IPAM, SEEG and OC
 // Citing: SEEG/Observatório do Clima and IPAM
-// Time processing: >
 
 // @. UPDATE HISTORIC //
 // 1:   Insert tiles 
@@ -11,19 +10,21 @@
  
 /* @. Set user parameters *///
 
-// Insert patch Asset -
+// Insert list sequence
+//var assets = ee.List.sequence(6,6,1).getInfo();
+
+// Insert Acsess 
 var address =   'projects/mapbiomas-workspace/SEEG/2022/QCN/Amz_tiles/tile_id_';
 
-// Id for tiles {Amazon Biome = 25 tiles }
+// Id for tiles
 var tiles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
 
-//Geometry
 var geom =ee.Image('users/edrianosouza/QCN/am_ctotal4inv').geometry();
 
  /* @. Set user parameters */// eg.
 var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/';
 
-var version = '2';
+var version = '_v2';
 
 ///////////////////////////////////////
 /* @. Don't change below this line *///
@@ -42,35 +43,23 @@ var featureCollection = tiles.map(function(i){
   
   var name = asset.split()[6];
   
- //Function - Change the variable's format
-  return ee.FeatureCollection(asset).set('name',name)
-    .map(function(feature){
-    return feature.set({
-      'name':name,
-      'C7_MAPBIOM':ee.Algorithms.If({
-        condition:ee.String("").compareTo(feature.getString('C7_MAPBIOM')),
-        trueCase:ee.Number.parse(feature.get('C7_MAPBIOM')),
-        falseCase:null
-      }),
-    });
-  });
+  return ee.FeatureCollection(asset).set('name',name);
 });
 
-featureCollection = ee.FeatureCollection(featureCollection)
-  .flatten();
+featureCollection = ee.FeatureCollection(featureCollection).flatten();
 
-print(featureCollection.limit(10),featureCollection.aggregate_array('C7_MAPBIOM').distinct(),'featureCollection');
+print(featureCollection,'featureCollection');
 
 Map.addLayer(featureCollection,{},'featureCollection',false);
 
 print(featureCollection.first(),'featureCollection');
 
 Map.addLayer(ee.FeatureCollection([featureCollection.first()]),{},'featureCollection.first()',false);
-Map.centerObject(featureCollection.first());
+//Map.centerObject(featureCollection.first());
 
 
 var pastVegetation = ee.Image().select();
-var propertieNames = ['cagb','cbgb','clitter','cdw','C7_MAPBIOM','ctotal4inv'];
+var propertieNames = ['cagb','cbgb','clitter','cdw','_MB_C7','ctotal4inv'];
 
 propertieNames.forEach(function(propertie){
   
@@ -86,10 +75,10 @@ propertieNames.forEach(function(propertie){
 
 print('pastVegetation',pastVegetation);
 
-// Export as GEE asset
+// export as GEE asset
 Export.image.toAsset({
     "image": pastVegetation,
-    "description": 'pastVegetation',
+    "description": 'pastVegetation' + version,
     "assetId": dir_output + 'pastVegetation' + version,
     "scale": 30,
     "pyramidingPolicy": {

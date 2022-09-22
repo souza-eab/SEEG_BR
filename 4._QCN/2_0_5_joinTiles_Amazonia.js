@@ -1,5 +1,5 @@
 // Perform join tiles and Rasterize variables AGB, BGB, LITTER, CDW, TOTAL and Mapbiomas Reclass with 4° Fourth Comunication Nacional (QCN/4CN/FCN)
-// For any issue/bug, please write to wallace.silva@ipam.org.br or edriano.souza@ipam.org.br 
+// For any issue/bug, please write to edriano.souza@ipam.org.br or wallace.silva@ipam.org.br 
 // Developed by: IPAM, SEEG and OC
 // Citing: SEEG/Observatório do Clima and IPAM
 

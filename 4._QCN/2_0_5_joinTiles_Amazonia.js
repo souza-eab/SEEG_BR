@@ -1,16 +1,17 @@
-// Perform join tiles and Rasterize variables AGB, BGB, LITTER, CDW, TOTAL and Mapbiomas Reclass with 4° Comunication Nacional (QCN)
+// Perform join tiles and Rasterize variables AGB, BGB, LITTER, CDW, TOTAL and Mapbiomas Reclass with 4° Fourth Comunication Nacional (QCN/4CN/FCN)
 // For any issue/bug, please write to wallace.silva@ipam.org.br or edriano.souza@ipam.org.br 
 // Developed by: IPAM, SEEG and OC
 // Citing: SEEG/Observatório do Clima and IPAM
 
 // @. UPDATE HISTORIC //
 // 1:   Insert tiles 
-// 1.1: Perform correction of QCN by following rules
+// 1.1: Perform correction of QCN by following rules (next step)
+// 2.0: Updated and Congruence QCN and 4
 // @. ~~~~~~~~~~~~~~ // 
  
 /* @. Set user parameters *///
 
-// Insert list sequence
+// Insert list sequence 
 //var assets = ee.List.sequence(6,6,1).getInfo();
 
 // Insert Acsess 

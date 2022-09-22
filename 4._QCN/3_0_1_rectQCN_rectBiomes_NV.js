@@ -11,7 +11,7 @@
 
 //* @ Set user parameters *//
 var dir_output = 'projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_rect_v2_0_0';
-var version = 'v2';
+var version = '2';
 
 // define biomes to be processed
 // to process a single biome, comment lines 

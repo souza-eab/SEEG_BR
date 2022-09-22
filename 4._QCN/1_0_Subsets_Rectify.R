@@ -228,7 +228,7 @@ newNames <- c("FID", "ID", "MB_C7","G_class_C7") #Colunas TRUE
 colnames(rectify_class_8bit)<-newNames# Receber classes
 
 str(rectify_class_8bit)
-rectify_class_8bit$MB_C7 <- as.numeric(rectify_class_8bit$MB_C7) ## Fundamental define your variable as numeric; 
+rectify_class_8bit$MB_C7 <- as.numeric(rectify_class_8bit$MB_C7) ## Define your variable as numeric; 
 
 str(rectify_class_8bit)
 

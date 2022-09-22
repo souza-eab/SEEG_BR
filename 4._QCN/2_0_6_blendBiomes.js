@@ -2,11 +2,11 @@
 // edriano.souza@ipam.org.br; dhemerson.costa@ipam.org.br ; wallace.silva@ipam.org.br
 
 // define output directory
-var dir_out = 'projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_b/';
+var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect';
 
 // import QCN with 30 meters
-var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m').aside(print,'outros biomas');
-var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2021/QCN/pastVegetation2').aside(print,'amazonia');
+var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect').aside(print,'outros biomas');
+var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2022/QCN/pastVegetation_v2').aside(print,'amazonia');
 
 // import biomes
 var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster');

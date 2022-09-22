@@ -39,8 +39,8 @@ var list_qcn_classes = [3,  // Forest formation
                         ];
 
 // define mapbiomas colelction 6.0 reclassification matrix
-var raw_mapbiomas  = [3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 39, 40, 41, 46, 47, 48, 49];   //*
-var reclass_vector = [3, 4, 5, 0, 12, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  5];   //*
+var raw_mapbiomas  = [3, 3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 39, 40, 41, 46, 47, 48, 49];   //*
+var reclass_vector = [0, 3, 4, 5, 0, 12, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  5];   //*
 
 // import QCN data
 var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0')
@@ -53,7 +53,7 @@ var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster'
 var states = ee.Image('projects/mapbiomas-workspace/AUXILIAR/estados-2016-raster'); //*
 
 // import Mapbiomas Collection 7.0
-var colecao6 = ee.Image("projects/mapbiomas-workspace/public/collection6/mapbiomas_collection60_integration_v1"); //*
+var colecao6 = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //*
 
 ///////////////////////////////////////
 /* @. Don't change below this line *///
@@ -121,31 +121,31 @@ list_biomes.forEach(function(biome_i) {
       // when biome equals amazonia
       if (biome_i == 1) {
         biome_name = 'amazonia';           // Diff Version                    // V1                // V2
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 164,7144336);   // to 162.89128848 from 164,7144336
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  165,49274450);  // to 173.05       from 165,49274450
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  38,30);         // to 38.52        from 38,3
-            tot_rect = tot_rect.where(discordance_ijk.eq(11),  58,20);        // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 110,338709 );   // to 49.8300      from 110,338709 
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 164.7144336);   // to 162.89128848 from 164,7144336
+            tot_rect = tot_rect.where(discordance_ijk.eq(4),  165.49274450);  // to 173.05       from 165,49274450
+            tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.30);         // to 38.52        from 38,3
+            tot_rect = tot_rect.where(discordance_ijk.eq(11),  58.20);        // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 110.338709 );   // to 49.8300      from 110,338709 
       }
       
       // when biome equals to mata atlantica
       if (biome_i == 2) {
         biome_name = 'mata_atlantica';    // Diff Version                    // V1                 // V2
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 121,781719);   // to 127.8127795   from 121,781719
-            tot_rect = tot_rect.where(discordance_ijk.eq(4), 47,651060);     // to 48.2497191    from 47,651060
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  83,06);        // to 127.812779    from 83,06
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 103,75);       // Include Wetland v2;
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 121.781719);   // to 127.8127795   from 121,781719
+            tot_rect = tot_rect.where(discordance_ijk.eq(4), 47.651060);     // to 48.2497191    from 47,651060
+            tot_rect = tot_rect.where(discordance_ijk.eq(5),  83.06);        // to 127.812779    from 83,06
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 103.75);       // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 13.89369925);  // to  13.89369925  from 13,91
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 104,7000000);  // Include Wooded Restinga v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 104.7000000);  // Include Wooded Restinga v2;
       }
       
       // when biome equals to pantanal
       if (biome_i == 3) {
         biome_name = 'pantanal';    // Diff Version                          // V1                 // V2
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 118,769014);   // to  98.10198434   from 118,769014
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  39,84);        // to  37.53344167   from 39,84
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 23,240789);    // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 25,2083135);   // to  24.01225878   from 25,2083135
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 118.769014);   // to  98.10198434   from 118,769014
+            tot_rect = tot_rect.where(discordance_ijk.eq(4),  39.84);        // to  37.53344167   from 39,84
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 23.240789);    // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 25.2083135);   // to  24.01225878   from 25,2083135
       }
       
       // when biome equals to cerrado
@@ -153,43 +153,43 @@ list_biomes.forEach(function(biome_i) {
         biome_name = 'cerrado';   
         // when discordance equal to forest formation           // Diff Version                            // V1                 // V2
         var tot_rect = biome_tot.where(states.eq(11).and(discordance_ijk.eq(3)), 79.80779548);      // RO // to  79.80779548    from 79.80779548
-            tot_rect = tot_rect.where(states.eq(17).and(discordance_ijk.eq(3)),  67,34568565);      // TO // to  64.27657895    from 67,34568565
-            tot_rect = tot_rect.where(states.eq(21).and(discordance_ijk.eq(3)),  62,68812168);      // MA // to  63.91879963    from 62,68812168
-            tot_rect = tot_rect.where(states.eq(22).and(discordance_ijk.eq(3)),  61,74337814);      // PI // to  66.068241      from 61,74337814
-            tot_rect = tot_rect.where(states.eq(29).and(discordance_ijk.eq(3)),  62,51979601);      // BA // to  67.18329178    from 62,51979601
-            tot_rect = tot_rect.where(states.eq(31).and(discordance_ijk.eq(3)),  64,73412216);      // MG // to  70.08654663    from 64,73412216
-            tot_rect = tot_rect.where(states.eq(35).and(discordance_ijk.eq(3)),  80,45093149);      // SP // to  84.98800092    from 80,45093149
-            tot_rect = tot_rect.where(states.eq(41).and(discordance_ijk.eq(3)),  74,80437684);      // PR // to  74.98246537    from 74,80437684
-            tot_rect = tot_rect.where(states.eq(50).and(discordance_ijk.eq(3)),  99,18537083);      // MS // to  99.27158356    from 99,18537083
-            tot_rect = tot_rect.where(states.eq(51).and(discordance_ijk.eq(3)),  97,45652989);      // MT // to  93.55501847    from 97,45652989
-            tot_rect = tot_rect.where(states.eq(52).and(discordance_ijk.eq(3)),  64,72447117);      // GO // to  70.01143121    from 64,72447117
-            tot_rect = tot_rect.where(states.eq(53).and(discordance_ijk.eq(3)),  71,41565647);      // DF // to  66.8596976     from 71,41565647
+            tot_rect = tot_rect.where(states.eq(17).and(discordance_ijk.eq(3)),  67.34568565);      // TO // to  64.27657895    from 67,34568565
+            tot_rect = tot_rect.where(states.eq(21).and(discordance_ijk.eq(3)),  62.68812168);      // MA // to  63.91879963    from 62,68812168
+            tot_rect = tot_rect.where(states.eq(22).and(discordance_ijk.eq(3)),  61.74337814);      // PI // to  66.068241      from 61,74337814
+            tot_rect = tot_rect.where(states.eq(29).and(discordance_ijk.eq(3)),  62.51979601);      // BA // to  67.18329178    from 62,51979601
+            tot_rect = tot_rect.where(states.eq(31).and(discordance_ijk.eq(3)),  64.73412216);      // MG // to  70.08654663    from 64,73412216
+            tot_rect = tot_rect.where(states.eq(35).and(discordance_ijk.eq(3)),  80.45093149);      // SP // to  84.98800092    from 80,45093149
+            tot_rect = tot_rect.where(states.eq(41).and(discordance_ijk.eq(3)),  74.80437684);      // PR // to  74.98246537    from 74,80437684
+            tot_rect = tot_rect.where(states.eq(50).and(discordance_ijk.eq(3)),  99.18537083);      // MS // to  99.27158356    from 99,18537083
+            tot_rect = tot_rect.where(states.eq(51).and(discordance_ijk.eq(3)),  97.45652989);      // MT // to  93.55501847    from 97,45652989
+            tot_rect = tot_rect.where(states.eq(52).and(discordance_ijk.eq(3)),  64.72447117);      // GO // to  70.01143121    from 64,72447117
+            tot_rect = tot_rect.where(states.eq(53).and(discordance_ijk.eq(3)),  71.41565647);      // DF // to  66.8596976     from 71,41565647
             
         // when discordance equal to other types of NV   // Diff Version                                // V1                 // V2
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  41,319679);                               // to  39.99          from 71,41565647    
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  38,260000);                               // to  38.26          from 38,260000
-            tot_rect = tot_rect.where(discordance_ijk.eq(11),  36,210000);                              // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 24,941889);                               // to  24.75375483    from 24,941889
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34,760000);                               // Include Wooded Restinga v2;   
+            tot_rect = tot_rect.where(discordance_ijk.eq(4),  41.319679);                               // to  39.99          from 71,41565647    
+            tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.260000);                               // to  38.26          from 38,260000
+            tot_rect = tot_rect.where(discordance_ijk.eq(11),  36.210000);                              // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 24.941889);                               // to  24.75375483    from 24,941889
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34.760000);                               // Include Wooded Restinga v2;   
       }
       
       // when biome equal to caatinga
       if (biome_i == 5) {
         biome_name = 'caatinga';     // Diff Version                         // V1                 // V2
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 68,52608570);  // to  101.8751897    from 68,52608570
-            tot_rect = tot_rect.where(discordance_ijk.eq(4),  20,29966574);  // to  19.87407942    from 20,29966574
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  170,5400000);  // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 15,45568408);  // to  12.83059147    from 15,45568408
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 147,09000000); // Include Wooded Restinga v2;  
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 68.52608570);  // to  101.8751897    from 68,52608570
+            tot_rect = tot_rect.where(discordance_ijk.eq(4),  20.29966574);  // to  19.87407942    from 20,29966574
+            tot_rect = tot_rect.where(discordance_ijk.eq(5),  170.5400000);  // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 15.45568408);  // to  12.83059147    from 15,45568408
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 147.09000000); // Include Wooded Restinga v2;  
       }
       
       // when biome equal to pampa
       if (biome_i == 6) {
         biome_name = 'pampa';
-        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 76,02510);   // to  115.0286131    from 76,02510
+        var tot_rect = biome_tot.where(discordance_ijk.eq(3), 76.02510);   // to  115.0286131    from 76,02510
             // tot_rect = tot_rect.where(discordance_ijk.eq(5),  12.77);   // Exclude v2
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 11,744348);  // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 22,832296);  // to  4.560158311    from 22,83
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 11.744348);  // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 22.832296);  // to  4.560158311    from 22,83
       }
 
       // bind corrections of each class into a unique 'temp' obj 

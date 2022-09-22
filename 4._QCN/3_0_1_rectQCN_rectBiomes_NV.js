@@ -170,7 +170,7 @@ list_biomes.forEach(function(biome_i) {
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  38,260000);                               // to  38.26          from 38,260000
             tot_rect = tot_rect.where(discordance_ijk.eq(11),  36,210000);                              // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 24,941889);                               // to  24.75375483    from 24,941889
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34,760000);                               // Include Wetland v2;   
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34,760000);                               // Include Wooded Restinga v2;   
       }
       
       // when biome equal to caatinga
@@ -178,9 +178,9 @@ list_biomes.forEach(function(biome_i) {
         biome_name = 'caatinga';     // Diff Version                         // V1                 // V2
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 68,52608570);  // to  101.8751897    from 68,52608570
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  20,29966574);  // to  19.87407942    from 20,29966574
-            tot_rect = tot_rect.where(discordance_ijk.eq(5),  170,5400000);  // Include v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(5),  170,5400000);  // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 15,45568408);  // to  12.83059147    from 15,45568408
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 147,09000000); // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 147,09000000); // Include Wooded Restinga v2;  
       }
       
       // when biome equal to pampa

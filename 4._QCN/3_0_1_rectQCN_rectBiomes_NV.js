@@ -1,13 +1,13 @@
-// Rectify 'c_total' of QCN per native vegetation classe by using Mapbiomas Collection 6.0 LCLUC as reference  
+// Rectify 'c_total' of QCN per native vegetation classe by using Mapbiomas Collection 7.0 LCLUC as reference  
 // For any issue/bug, please write to <edriano.souza@ipam.org.br> and/or <dhemerson.costa@ipam.org.br>
 // SEEG/Observatório do Clima and IPAM
 // Current version: 2.0
 
 // @ UPDATE HISTORIC @ //
-// 1:  Compute number of divergences by comparing qcn past vegetation and mapbiomas 6.0 (per year)
+// 1:  Compute number of divergences by comparing qcn past vegetation and mapbiomas 7.0 (per year)
 // 1.1 Perform 'c_total' correction for the Cerrado biome (1985) 
 // 1.2 Perform 'c_total' correction for the Cerrado biome from 1985 to 2020 (cumulative and static)
-// 2.0 Perform 'c_total' correction for all biomes from 1985 to 2020 
+// 2.0 Perform 'c_total' correction for all biomes from 1985 to 2021 (Static)
 
 //* @ Set user parameters *//
 var dir_output = 'projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_rect_v2_0_0';

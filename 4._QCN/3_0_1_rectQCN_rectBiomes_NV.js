@@ -26,7 +26,7 @@ var list_biomes = [1, // amazonia
 // define years to be processed 
 var list_mapb_years = [1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,
                        1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
-                       2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020,2021
+                       2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
                        ];
                        
 // define QCN classes to be rectified
@@ -39,8 +39,8 @@ var list_qcn_classes = [3,  // Forest formation
                         ];
 
 // define mapbiomas colelction 6.0 reclassification matrix
-var raw_mapbiomas  = [3, 3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 39, 40, 41, 46, 47, 48, 49];   //*
-var reclass_vector = [0, 3, 4, 5, 0, 12, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  5];   //*
+var raw_mapbiomas  = [3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 39, 40, 41, 46, 47, 48, 49];   //*
+var reclass_vector = [3, 4, 5, 0, 11, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49];   //*
 
 // import QCN data
 var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0')
@@ -236,7 +236,7 @@ list_biomes.forEach(function(biome_i) {
                              
   // plot results
   print (biome_name, image_static);
-  Map.addLayer(image_static.select(['total_2020']), {min: 0, max: 168, palette: palt}, biome_name + ' rect 2020');
+  Map.addLayer(image_static.select(['total_1985']), {min: 0, max: 168, palette: palt}, biome_name + ' rect 1985');
   
   // export results as GEE asset
   // when biome equal to amazonia, export with 250 x 250 m//pixel

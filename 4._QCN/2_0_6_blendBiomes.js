@@ -2,7 +2,7 @@
 // edriano.souza@ipam.org.br; dhemerson.costa@ipam.org.br ; wallace.silva@ipam.org.br
 
 // define output directory
-var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect';
+var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0';
 
 // import QCN with 30 meters
 var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect').aside(print,'outros biomas');
@@ -53,7 +53,7 @@ var qcn_total = ee.ImageCollection([
   ]).mosaic();
   
 var qcn_class = ee.ImageCollection([
-    qcn_amazonia.select(['past_vegetation_MAPBIOMAS'],['qcnclass']),
+    qcn_amazonia.select(['past_vegetation__MB_C7'],['qcnclass']),
     qcn_ic.filterMetadata('band', 'equals', 'qcnclass').mosaic().rename('qcnclass')
   ]).mosaic();
   

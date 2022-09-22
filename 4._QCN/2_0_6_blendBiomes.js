@@ -5,8 +5,8 @@
 var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0/';
 
 // import QCN with 30 meters
-var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect').aside(print,'outros biomas');
-var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2022/QCN/pastVegetation_v2').aside(print,'amazonia');
+var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect').aside(print,'others biomes');
+var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2022/QCN/pastVegetation_v2').aside(print,'biome amazonia');
 
 // import biomes
 var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster');

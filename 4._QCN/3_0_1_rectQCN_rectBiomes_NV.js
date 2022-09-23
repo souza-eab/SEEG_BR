@@ -36,24 +36,24 @@ var list_qcn_classes = [3,  // Forest formation
                         11, // Wetland
                         12, // Grassland 
                         49, // Wooded Restinga
-                        ];
+                        50]; // Shrubby Restinga //*BZ
 
-// define mapbiomas colelction 6.0 reclassification matrix
-var raw_mapbiomas  = [3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 39, 40, 41, 46, 47, 48, 49];   //*
-var reclass_vector = [3, 4, 5, 0, 11, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 49];   //*
+// define mapbiomas colelction 7.0 reclassification matrix
+var raw_mapbiomas  = [3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 36, 39, 40, 41, 46, 47, 48, 49, 50, 62];   //*BZ
+var reclass_vector = [3, 4, 5, 0, 11, 12,  13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,  0,  0,  0,  0,  0, 49, 50, 0];   //*BZ
 
 // import QCN data
 var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0')
             .mosaic();
             
 // import biomes raster
-var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster'); //* 
+var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster'); //* ok
 
 // import states raster
-var states = ee.Image('projects/mapbiomas-workspace/AUXILIAR/estados-2016-raster'); //*
+var states = ee.Image('projects/mapbiomas-workspace/AUXILIAR/estados-2016-raster'); //* ok
 
 // import Mapbiomas Collection 7.0
-var colecao6 = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //*
+var colecao6 = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //* ok
 
 ///////////////////////////////////////
 /* @. Don't change below this line *///
@@ -62,8 +62,8 @@ var colecao6 = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiom
 // get color-ramp module
 var vis = {
     'min': 0,
-    'max': 49,  //*
-    'palette': require('users/mapbiomas/modules:Palettes.js').get('classification6')  //*
+    'max': 62,  //*BZ
+    'palette': require('users/mapbiomas/modules:Palettes.js').get('classification7')  //*ok
 };
 
 // pre-definied palletes
@@ -125,7 +125,7 @@ list_biomes.forEach(function(biome_i) {
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  165.49274450);  // to 173.05       from 165,49274450
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.30);         // to 38.52        from 38,3
             tot_rect = tot_rect.where(discordance_ijk.eq(11),  58.20);        // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 110.338709 );   // to 49.8300      from 110,338709 
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 110.338709 );   // to 49.8300      from 110,338709
       }
       
       // when biome equals to mata atlantica
@@ -136,7 +136,9 @@ list_biomes.forEach(function(biome_i) {
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  83.06);        // to 127.812779    from 83,06
             tot_rect = tot_rect.where(discordance_ijk.eq(11), 103.75);       // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 13.89369925);  // to  13.89369925  from 13,91
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 104.7000000);  // Include Wooded Restinga v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);       //*BZ
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 104.7000000);  // Wooded Restinga v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(50), 104.7000000);  //*BZ
       }
       
       // when biome equals to pantanal
@@ -145,14 +147,15 @@ list_biomes.forEach(function(biome_i) {
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 118.769014);   // to  98.10198434   from 118,769014
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  39.84);        // to  37.53344167   from 39,84
             tot_rect = tot_rect.where(discordance_ijk.eq(11), 23.240789);    // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 25.2083135);   // to  24.01225878   from 25,2083135
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 25.2083135);
+            tot_rect = tot_rect.where(discordance_ijk.eq(13), 25.2083135); //*BZ
       }
       
       // when biome equals to cerrado
       if (biome_i == 4) {
         biome_name = 'cerrado';   
         // when discordance equal to forest formation           // Diff Version                            // V1                 // V2
-        var tot_rect = biome_tot.where(states.eq(11).and(discordance_ijk.eq(3)), 79.80779548);      // RO // to  79.80779548    from 79.80779548
+        var tot_rect = biome_tot.where(states.eq(11).and(discordance_ijk.eq(3)), 76.3);//*BZ      // RO // to  79.80779548    from 76.3
             tot_rect = tot_rect.where(states.eq(17).and(discordance_ijk.eq(3)),  67.34568565);      // TO // to  64.27657895    from 67,34568565
             tot_rect = tot_rect.where(states.eq(21).and(discordance_ijk.eq(3)),  62.68812168);      // MA // to  63.91879963    from 62,68812168
             tot_rect = tot_rect.where(states.eq(22).and(discordance_ijk.eq(3)),  61.74337814);      // PI // to  66.068241      from 61,74337814
@@ -170,7 +173,8 @@ list_biomes.forEach(function(biome_i) {
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.260000);                               // to  38.26          from 38,260000
             tot_rect = tot_rect.where(discordance_ijk.eq(11),  36.210000);                              // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 24.941889);                               // to  24.75375483    from 24,941889
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34.760000);                               // Include Wooded Restinga v2;   
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 34.760000);                               // Include Wooded Restinga v2; 
+            tot_rect = tot_rect.where(discordance_ijk.eq(50), 34.760000); //*BZ
       }
       
       // when biome equal to caatinga
@@ -179,8 +183,11 @@ list_biomes.forEach(function(biome_i) {
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 68.52608570);  // to  101.8751897    from 68,52608570
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  20.29966574);  // to  19.87407942    from 20,29966574
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  170.5400000);  // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 36.21);
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 15.45568408);  // to  12.83059147    from 15,45568408
-            tot_rect = tot_rect.where(discordance_ijk.eq(49), 147.09000000); // Include Wooded Restinga v2;  
+            tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 147.09000000); // Include Wooded Restinga v2; 
+            tot_rect = tot_rect.where(discordance_ijk.eq(50), 147.09000000); //*BZ
       }
       
       // when biome equal to pampa
@@ -190,6 +197,8 @@ list_biomes.forEach(function(biome_i) {
             // tot_rect = tot_rect.where(discordance_ijk.eq(5),  12.77);   // Exclude v2
             tot_rect = tot_rect.where(discordance_ijk.eq(11), 11.744348);  // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 22.832296);  // to  4.560158311    from 22,83
+            tot_rect = tot_rect.where(discordance_ijk.eq(49), 12.77); // Include Wooded Restinga v2; 
+            tot_rect = tot_rect.where(discordance_ijk.eq(50), 12.77); //*BZ
       }
 
       // bind corrections of each class into a unique 'temp' obj 
@@ -208,8 +217,15 @@ list_biomes.forEach(function(biome_i) {
       if (class_k == 12) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
       }
+      if (class_k == 13) {
+        temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
+      }
       if (class_k == 49) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
+      }
+      if (class_k == 50) {
+        temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
+      
           
       // rename band
       temp = temp.rename('total_' + year_j);
@@ -226,7 +242,7 @@ list_biomes.forEach(function(biome_i) {
   if (biome_name == 'amazonia') {
     var res = 250;
   } else {
-    var res = 30;
+     res = 30;
   }
   
   // insert properties into image

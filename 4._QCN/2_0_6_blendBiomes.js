@@ -54,7 +54,7 @@ var qcn_total = ee.ImageCollection([
   
 var qcn_class = ee.ImageCollection([
     qcn_amazonia.select(['past_vegetation__MB_C7'],['qcnclass']),
-    qcn_ic.filterMetadata('band', 'equals', '_c7_qcnclass').mosaic().rename('qcnclass')
+    qcn_ic.filterMetadata('band', 'equals', 'c7_qcnclass').mosaic().rename('qcnclass')
   ]).mosaic();
   
 // stack bands

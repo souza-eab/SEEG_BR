@@ -10,7 +10,7 @@
 // 2.0 Perform 'c_total' correction for all biomes from 1985 to 2021 (Static)
 
 //* @ Set user parameters *//
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0_0';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0_2';
 var version = '2';
 
 // define biomes to be processed

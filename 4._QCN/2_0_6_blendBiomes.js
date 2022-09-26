@@ -2,7 +2,7 @@
 // edriano.souza@ipam.org.br; dhemerson.costa@ipam.org.br ; wallace.silva@ipam.org.br
 
 // define output directory
-var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0/';
+var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0_1/';
 
 // import QCN with 30 meters
 var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect').aside(print,'others biomes');
@@ -54,7 +54,7 @@ var qcn_total = ee.ImageCollection([
   
 var qcn_class = ee.ImageCollection([
     qcn_amazonia.select(['past_vegetation__MB_C7'],['qcnclass']),
-    qcn_ic.filterMetadata('band', 'equals', 'qcnclass').mosaic().rename('qcnclass')
+    qcn_ic.filterMetadata('band', 'equals', '_c7_qcnclass').mosaic().rename('qcnclass')
   ]).mosaic();
   
 // stack bands
@@ -93,12 +93,12 @@ list_biomes.forEach(function(process_biome) {
   var temp_biome = stacked_brazil.updateMask(biomes.eq(process_biome))
     .set({biome: ee.String(biome_name)});
   
-  /*
+  
   print(temp_biome,biome_name)
   Map.addLayer(temp_biome,{},biome_name)
   print(temp_biome.geometry(),biome_name)
   Map.addLayer(temp_biome.geometry(),{},biome_name)
-  */
+
 
   // export
   Export.image.toAsset({

@@ -14,7 +14,7 @@ library(raster)
 root <-"C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0"
 
 ## define filename of vector to be rasterized
-vector  <- st_make_valid(read_sf(dsn= root, layer= "classes_biomes"))
+vector  <- st_make_valid(read_sf(dsn= root, layer= "classes_biomes_v2"))
 
 ## define tiles file
 #tiles <- read_sf(dsn= '../vector/qcn_veg_pret', layer='tiles_biomes')
@@ -53,12 +53,12 @@ for (i in 1:nrow(tiles)) {
   #write_stars(r_cagb, paste0('./output/total/', 'tile_', i, '_total.tif'), type="Float32", drive="GTiff")
   #write_stars(r_class, paste0('./output/', 'tile_', i, '_c7_qcnclass.tif'), type="Float32", drive="GTiff")
   
-  write_stars(r_cagb, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output/cagb/', 'tile_', i, '_cagb.tif'), type="Float32", drive="GTiff")
-  write_stars(r_cbgb, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output/cbgb/', 'tile_', i, '_cbgb.tif'), type="Float32", drive="GTiff")
-  write_stars(r_cdw, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output/cdw/', 'tile_', i, '_cdw.tif'), type="Float32", drive="GTiff")
-  write_stars(r_clitter, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output/clitter/', 'tile_', i, '_clitter.tif'), type="Float32", drive="GTiff")
-  write_stars(r_cagb, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output/total/', 'tile_', i, '_total.tif'), type="Float32", drive="GTiff")
-  write_stars(r_class, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output/', 'tile_', i, '_c7_qcnclass.tif'), type="Float32", drive="GTiff")
+  write_stars(r_cagb, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output_v2/', 'tile_', i, '_cagb.tif'), type="Float32", drive="GTiff")
+  write_stars(r_cbgb, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output_v2/', 'tile_', i, '_cbgb.tif'), type="Float32", drive="GTiff")
+  write_stars(r_cdw, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output_v2/', 'tile_', i, '_cdw.tif'), type="Float32", drive="GTiff")
+  write_stars(r_clitter, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output_v2/', 'tile_', i, '_clitter.tif'), type="Float32", drive="GTiff")
+  write_stars(r_total, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output_v2/', 'tile_', i, '_total.tif'), type="Float32", drive="GTiff")
+  write_stars(r_class, paste0('C:/Users/edriano.souza/GitHub/2022_2_QCN_rectify_v2/data/shp/biomes_v0/output_v2/', 'tile_', i, '_c7_qcnclass.tif'), type="Float32", drive="GTiff")
   
   
   ## clean cache

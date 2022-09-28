@@ -10,7 +10,7 @@
 // 2.0 Perform 'c_total' correction for all biomes from 1985 to 2021 (Static)
 
 //* @ Set user parameters *//
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0_2';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_2_Rect';
 var version = '2';
 
 // define biomes to be processed
@@ -43,7 +43,7 @@ var raw_mapbiomas  = [3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31
 var reclass_vector = [3, 4, 5, 0, 11, 12,  13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,  0,  0,  0,  0,  0, 49, 50, 0];   //*BZ
 
 // import QCN data
-var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0')
+var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_1')
             .mosaic();
             
 // import biomes raster
@@ -53,7 +53,7 @@ var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster'
 var states = ee.Image('projects/mapbiomas-workspace/AUXILIAR/estados-2016-raster'); //* ok
 
 // import Mapbiomas Collection 7.0
-var colecao6 = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //* ok
+var colecao7 = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //* ok
 
 ///////////////////////////////////////
 /* @. Don't change below this line *///
@@ -95,7 +95,7 @@ list_biomes.forEach(function(biome_i) {
   // for each year
   list_mapb_years.forEach(function(year_j) {
     // subset mapbiomas collection 6.0 for the biome [i] and year [j]
-    var mapbiomas_ij = colecao6.select(['classification_' + year_j])
+    var mapbiomas_ij = colecao7.select(['classification_' + year_j])
                                .updateMask(biomes.eq(biome_i));
     
     // reclassify mapbiomas by using the obj 'reclass_vector' as general rule

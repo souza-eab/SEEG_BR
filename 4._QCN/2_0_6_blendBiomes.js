@@ -94,12 +94,12 @@ list_biomes.forEach(function(process_biome) {
   var temp_biome = stacked_brazil.updateMask(biomes.eq(process_biome))
     .set({biome: ee.String(biome_name)});
   
-  
+  /*
   print(temp_biome,biome_name)
   Map.addLayer(temp_biome,{},biome_name)
   print(temp_biome.geometry(),biome_name)
   Map.addLayer(temp_biome.geometry(),{},biome_name)
-
+  */
 
   // export
   Export.image.toAsset({

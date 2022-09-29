@@ -1,12 +1,12 @@
 // standardize assets per biome
-// For clarification or an issue/bug report, please write to edriano.souza@ipam.org.br and/or dhemerson.costa@ipam.org.br ; 
+// dhemerson.costa@ipam.org.br ; wallace.silva@ipam.org.br
 
 // define output directory
 var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_1/';
 
 // import QCN with 30 meters
-var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m').aside(print,'others biomes');
-var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2022/QCN/pastVegetation_v2').aside(print,'biome amazonia');
+var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m').aside(print,'outros biomas');
+var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2022/QCN/pastVegetation_v2').aside(print,'amazonia');
 
 // import biomes
 var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster');
@@ -24,7 +24,7 @@ var list_biomes = [1, // amazonia
 // read filename and paste as metadata
 var qcn_ic= qcn_ic.map(function(image){return image.set({
       band: ee.String(image.get('system:index')).split('_').get(2)}); 
-    });
+    })
 
 // aggregate all biomes
 var qcn_cagb = ee.ImageCollection([
@@ -37,15 +37,16 @@ var qcn_cbgb = ee.ImageCollection([
     qcn_ic.filterMetadata('band', 'equals', 'cbgb').mosaic().rename('cbgb')
   ]).mosaic();
   
+var qcn_clitter = ee.ImageCollection([
+    qcn_amazonia.select(['past_vegetation_clitter'],['clitter']),
+    qcn_ic.filterMetadata('band', 'equals', 'clitter').mosaic().rename('clitter')
+  ]).mosaic();
+
 var qcn_cdw = ee.ImageCollection([
     qcn_amazonia.select(['past_vegetation_cdw'],['cdw']),
     qcn_ic.filterMetadata('band', 'equals', 'cdw').mosaic().rename('cdw')
   ]).mosaic();
   
-var qcn_clitter = ee.ImageCollection([
-    qcn_amazonia.select(['past_vegetation_clitter'],['clitter']),
-    qcn_ic.filterMetadata('band', 'equals', 'clitter').mosaic().rename('clitter')
-  ]).mosaic();
   
 var qcn_total = ee.ImageCollection([
     qcn_amazonia.select(['past_vegetation_ctotal4inv'],['total']),
@@ -54,9 +55,10 @@ var qcn_total = ee.ImageCollection([
   
 var qcn_class = ee.ImageCollection([
     qcn_amazonia.select(['past_vegetation__MB_C7'],['qcnclass']),
-    qcn_ic.filterMetadata('band', 'equals', 'c7_qcnclass').mosaic().rename('qcnclass')
+    qcn_ic.filterMetadata('band', 'equals', 'c7').mosaic().rename('qcnclass')
   ]).mosaic();
-
+  
+//Map.addLayer(qcn_class,{},'aaa')
 // stack bands
 var stacked_brazil = qcn_cagb.addBands(qcn_cbgb)
                              .addBands(qcn_cdw)
@@ -66,7 +68,6 @@ var stacked_brazil = qcn_cagb.addBands(qcn_cbgb)
                             // .rename(['cagb', 'cbgb', 'cdw',
                             //           'clitter', 'total', 'class']);
                                       
-
 // export per biome
 list_biomes.forEach(function(process_biome) {
   var biome_name;

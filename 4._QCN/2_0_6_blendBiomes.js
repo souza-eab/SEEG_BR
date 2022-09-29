@@ -1,5 +1,5 @@
 // standardize assets per biome
-// edriano.souza@ipam.org.br; dhemerson.costa@ipam.org.br ; 
+// For clarification or an issue/bug report, please write to edriano.souza@ipam.org.br and/or dhemerson.costa@ipam.org.br ; 
 
 // define output directory
 var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_1/';

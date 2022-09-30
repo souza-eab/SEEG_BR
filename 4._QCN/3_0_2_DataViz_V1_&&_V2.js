@@ -1,24 +1,24 @@
 
 // import 'c_total' from qcn v1
 var qcn_total = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_c')
-  .filterMetadata('biome', 'equals', 'pantanal')
+  .filterMetadata('biome', 'equals', 'caatinga')
   .mosaic();
 
 // import rectified 'c_total' v1
 var qcn_total_rect = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2021/QCN/QCN_30m_rect') 
   .filterMetadata('version', 'equals', '1')
-  .filterMetadata('biome', 'equals', 'pantanal')
+  .filterMetadata('biome', 'equals', 'caatinga')
   .mosaic();
 
 // import 'c_total' from qcn v2
-var qcn_total2 = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0')
-  .filterMetadata('biome', 'equals', 'pantanal')
+var qcn_total2 = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_1')
+  .filterMetadata('biome', 'equals', 'caatinga')
   .mosaic();
 
 // import rectified 'c_total' v2
-var qcn_total_rect2 = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_rect_v2_0_0') 
+var qcn_total_rect2 = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_2_Rect') 
   .filterMetadata('version', 'equals', '2')
-  .filterMetadata('biome', 'equals', 'pantanal')
+  .filterMetadata('biome', 'equals', 'caatinga')
   .mosaic();
 
 

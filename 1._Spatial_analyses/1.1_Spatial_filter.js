@@ -17,7 +17,7 @@
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,14 +105,14 @@ var filterParams = [
    {classValue: 0, maxSize: 5}
 ];
 
-
+//*
 var years = ['1986','1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021'];
 
 // Creat list of years
 var eeYears = ee.List(years);
 
-///// Input the Asset 'REGENERATION MASK' exported from step 1.0
-var inputImage_regeneration = ee.Image('projects/ee-seeg-brazil/assets/collection_10/v1/1_0_Regeneration_masks'); // change to the asset you saved in the previous script
+///// Input the Asset 'REGENERATION MASK' exported from step 1.0 //*
+var inputImage_regeneration = ee.Image('projects/mapbiomas-workspace/SEEG/2022/public/1_0_Regeneration_masks'); // change to the asset you saved in the previous script
 
 // Apply functions
 var result_regeneration = eeYears.map(function(year){
@@ -142,7 +142,7 @@ Export.image.toAsset({
 });
 
 ///// Input the Asset 'DEFORESTATION MASK' exported from step 1.0  
-var inputImage_deforestation = ee.Image('projects/ee-seeg-brazil/assets/collection_10/v1/1_0_Deforestation_masks'); // change to the asset saved by you in the previous script
+var inputImage_deforestation = ee.Image('projects/mapbiomas-workspace/SEEG/2022/public/1_0_Deforestation_masks'); // change to the asset saved by you in the previous script
 
 // Apply function 
 var result_deforestation = eeYears.map(function(year){

@@ -15,14 +15,14 @@
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 
 // Load Asset
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 // Load ImageCollection from Mapbiomas 6.0 
-var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2");
+var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //*
 print(MapBiomas_col);
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
@@ -33,7 +33,7 @@ var col_antrop85 = MapBiomas_col.select('classification_1985').remap(
 // Changing band names
 col_antrop85 = col_antrop85.select([0],['deforestation1985']).int8();
 
-// List years
+// List years //*
 var years = ['1985','1986','1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021'];
 
 // Reclassify all other years 
@@ -195,14 +195,14 @@ Export.image.toAsset({
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 
 // Load assets
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 //  Load ImageCollection from Mapbiomas
-var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2");
+var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //*
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
 var col_forest85 = MapBiomas_col.select('classification_1985').remap(
@@ -212,7 +212,7 @@ var col_forest85 = MapBiomas_col.select('classification_1985').remap(
 // Changing band names
 col_forest85 = col_forest85.select([0],['regeneration1985']).int8();
 
-// List years
+// List years //*
 var years = ['1985','1986','1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021'];
 
 // Reclassify all other years 

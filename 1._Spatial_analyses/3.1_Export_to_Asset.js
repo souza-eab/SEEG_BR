@@ -18,7 +18,7 @@
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
@@ -28,12 +28,12 @@ var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/';
 //var assetId = 'projects/mapbiomas-workspace/SEEG/2022/Col10'; // asset link
 
 // Define the data path
-var dir = 'projects/ee-seeg-brazil/assets/collection_10/v1/3_0_Transition_maps';
+var dir = 'projects/mapbiomas-workspace/SEEG/2022/public/3_0_Transition_maps'; //* Path anterior da ImgC
            
 // Define filename prefix
 var prefix = 'SEEG_Transitions_';
 
-// Define pairs of years to be processed
+// Define pairs of years to be processed //*
 var listYears = ['1985_1986','1986_1987', '1987_1988', '1988_1989', '1989_1990', '1990_1991', '1991_1992',
                  '1992_1993', '1993_1994', '1994_1995', '1995_1996', 
                  '1996_1997', '1997_1998', '1998_1999', '1999_2000', '2000_2001', '2001_2002', '2002_2003',

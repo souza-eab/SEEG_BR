@@ -22,10 +22,10 @@
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/ee-seeg-brazil/assets/collection_10/v1/2_1_Mask_stable_v2/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/2_1_Mask_stable_v2/';
 
 // Load Asset from MapBiomas collection 6.0  
-var mapbioDir = "projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2";
+var mapbioDir = "projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"; //* 
 var mapbiomas = ee.Image(mapbioDir)
 
 // Feature of the region of interest, in this case, all biomes in Brazil
@@ -33,11 +33,11 @@ var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
 // Load the filtered deforestation and regeneration masks
-var regenDir = 'projects/ee-seeg-brazil/assets/collection_10/v1/1_1_Temporal_filter_regeneration';
+var regenDir = 'projects/mapbiomas-workspace/SEEG/2022/public/1_1_Temporal_filter_regeneration';
 var regen = ee.Image(regenDir);
 print("bandas regen", regen.bandNames());// regeneration since 1986
 
-var annualDesm = 'projects/ee-seeg-brazil/assets/collection_10/v1/1_1_Temporal_filter_deforestation';
+var annualDesm = 'projects/mapbiomas-workspace/SEEG/2022/public/1_1_Temporal_filter_deforestation';
 var annualLoss = ee.Image(annualDesm); // deforestation since 1986
 print("bandas annualLoss", annualLoss.bandNames());
 
@@ -46,7 +46,7 @@ var bandNames = mapbiomas.bandNames();
 print("bandas", bandNames);
       mapbiomas = mapbiomas.select(bandNames);
 
-// 1985 -> 2021
+// 1985 -> 2021  //* Verificar o somatório das Bandas conforme o periodo
 //////// Calculate the frequency (number of years) in which each i_pixel was a determined class_n
 // General rule (ratio of the total number of years of the considered period)
 var exp = '100*((b(0)+b(1)+b(2)+b(3)+b(4)+b(5)+b(6)+b(7)+b(8)+b(9)+b(10)+b(11)+b(12)+b(13)+b(14)+b(15)' +
@@ -180,6 +180,7 @@ var  baseMap = ee.Image(0).clip(regions)
   baseMap = baseMap.updateMask(baseMap.neq(0));
   baseMap = baseMap.select([0], ["classification_1985"]).unmask(0);
 
+//*
 var years = [1986, 1987, 1988, 1989,
     1990, 1991, 1992, 1993, 1994, 1995, 1996,
     1997, 1998, 1999, 2000, 2001, 2002, 2003,
@@ -426,16 +427,17 @@ print('SEEGmap1_1 Maps_pos_desmate*regen', SEEGmap1_1 );
 
 ///////////////////////////////////
 //Export the stabilized land cover maps as an Image Collection
-//(you need to create an empty Image Collection in the Asset to receive and store each image that is iteratively exported)
+//(you need to create an empty Image Collection in the Asset to receive and store each image that is iteratively exported) //* Criado
 
+//* verificar anos
 for (var i = 0; i < 37; i++){ //Number of years in the collection being used
   var bandName = SEEGmap1_1.bandNames().get(i);
   var image = SEEGmap1_1.select([bandName]).set('year', ee.Number(1985).add(i));
   
   Export.image.toAsset({
     "image": image.unmask(0).uint32(),
-    "description": 'SEEG_c10_v1_'+ (1985+i),
-    "assetId": dir_output + 'SEEG_c10_v1_'+ (1985+i),
+    "description": 'SEEG_c10_v2_'+ (1985+i),
+    "assetId": dir_output + 'SEEG_c10_v2_'+ (1985+i),
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

@@ -24,20 +24,21 @@
 // Set directory for the output file
 var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/2_1_Mask_stable_v2/';
 
-// Load Asset from MapBiomas collection 6.0  
-var mapbioDir = "projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"; //* 
-var mapbiomas = ee.Image(mapbioDir)
+// Load Asset from MapBiomas collection 7.1 (Version: 0-29) 
+var mapbiomas = ee.ImageCollection('projects/mapbiomas-workspace/COLECAO7/integracao')
+  .filter(ee.Filter.eq('version','0-29'))
+  .mosaic(); //* 
 
 // Feature of the region of interest, in this case, all biomes in Brazil
 var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
 var regions = ee.FeatureCollection(assetRegions);
 
 // Load the filtered deforestation and regeneration masks
-var regenDir = 'projects/mapbiomas-workspace/SEEG/2022/public/1_1_Temporal_filter_regeneration';
+var regenDir = 'projects/mapbiomas-workspace/SEEG/2023/c10/1_1_Temporal_filter_regeneration';
 var regen = ee.Image(regenDir);
 print("bandas regen", regen.bandNames());// regeneration since 1986
 
-var annualDesm = 'projects/mapbiomas-workspace/SEEG/2022/public/1_1_Temporal_filter_deforestation';
+var annualDesm = 'projects/mapbiomas-workspace/SEEG/2023/c10/1_1_Temporal_filter_deforestation';
 var annualLoss = ee.Image(annualDesm); // deforestation since 1986
 print("bandas annualLoss", annualLoss.bandNames());
 

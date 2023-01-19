@@ -36,23 +36,16 @@ var regions = ee.FeatureCollection(assetRegions);
 // Load the filtered deforestation and regeneration masks
 var regenDir = 'projects/mapbiomas-workspace/SEEG/2023/c10/1_1_Temporal_filter_regeneration';
 var regen = ee.Image(regenDir);
-print("bandas regen", regen.bandNames());// regeneration since 1986
+print("bandas regen", regen.bandNames());// regeneration since 1990
 
 var annualDesm = 'projects/mapbiomas-workspace/SEEG/2023/c10/1_1_Temporal_filter_deforestation';
-var annualLoss = ee.Image(annualDesm); // deforestation since 1986
+var annualLoss = ee.Image(annualDesm); // deforestation since 1990
 print("bandas annualLoss", annualLoss.bandNames());
 
-// Selects bands from the MapBiomas collection starting in 1985 (makes up the pair from the 1985-1986 transition, which will be the first to be considered)
+// Selects bands from the MapBiomas collection starting in 1989 (makes up the pair from the 1985-1990 transition, which will be the first to be considered)
 var bandNames = mapbiomas.bandNames();
 print("bandas", bandNames);
       mapbiomas = mapbiomas.select(bandNames);
-
-// 1985 -> 2021  //* Verificar o somatório das Bandas conforme o periodo
-//////// Calculate the frequency (number of years) in which each i_pixel was a determined class_n
-// General rule (ratio of the total number of years of the considered period)
-//var exp = '100*((b(0)+b(1)+b(2)+b(3)+b(4)+b(5)+b(6)+b(7)+b(8)+b(9)+b(10)+b(11)+b(12)+b(13)+b(14)+b(15)' +
-//    '+b(16)+b(17)+b(18)+b(19)+b(20)+b(21)+b(22)+b(23)+b(24)+b(25)+b(26)+b(27)+b(28)+b(29)+b(30)+b(31)+b(32)+b(33)+b(34)+b(35)+b(36))/37)'; // Each collection adds one more year and it is important to check the period of the Mapbiomas collection being used
-
 
 // 1989 -> 2021
 //////// Calculate the frequency (number of years) in which each i_pixel was a determined class_n
@@ -184,9 +177,9 @@ var  baseMap = ee.Image(0).clip(regions)
 
 // Fills in the unstable areas with the land use and native vegetation masks in 1985
   baseMap = baseMap.where(baseMap.eq(0).and(mapBiomas85Mask.eq(1)),
-                                            mapbiomas.select("classification_1985"));
+                                            mapbiomas.select("classification_1989"));
   baseMap = baseMap.updateMask(baseMap.neq(0));
-  baseMap = baseMap.select([0], ["classification_1985"]).unmask(0);
+  baseMap = baseMap.select([0], ["classification_1989"]).unmask(0);
 
 //*
 var years = [
@@ -273,7 +266,7 @@ var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,
       
       thisYearCoverMap = thisYearCoverMap.select([0], currentMapBioBand);
 
-/// Bands of past years to fill maps between 1986 and t-1, based on regeneration and deforestation data and Mapbiomas  
+/// Bands of past years to fill maps between 1990 and t-1, based on regeneration and deforestation data and Mapbiomas  
   var pastBandsVoid = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
     previous.bandNames().get(0),
     previous.bandNames());
@@ -283,14 +276,14 @@ var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,
 /// MapBiomas maps to be used  
 /// Constant (stable classes)
   var pastConstMapBio = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
-    mapbiomas.select(lastMapBioBand, ee.List(["classification_1985"])),
+    mapbiomas.select(lastMapBioBand, ee.List(["classification_1989"])),
     mapbiomas.select(ee.List.repeat(ee.String(lastMapBioBand.get(0)), eeYears.indexOf(element).add(1)),
                      bandNames.slice(0, eeYears.indexOf(element).add(1))));
   pastConstMapBio = ee.Image(pastConstMapBio);
 
 ///// 
   var pastFreeMapBio = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
-    mapbiomas.select(["classification_1985"]),
+    mapbiomas.select(["classification_1989"]),
     mapbiomas.select(pastBandsVoid));
     
   pastFreeMapBio = ee.Image(pastFreeMapBio);
@@ -381,10 +374,10 @@ var moreFrequent = ee.Algorithms.If(frequencyWindow.reduce(ee.Reducer.max())
     moreFrequent = ee.Image(moreFrequent);
     
 var pastFreqMapBio = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
-    ee.Image(moreFrequent.select([0], ["classification_1985"])),
+    ee.Image(moreFrequent.select([0], ["classification_1989"])),
     ee.Image(pastBandsVoid.iterate(function(element, accumImg){
       return ee.Image(accumImg).addBands(ee.Image(moreFrequent.select([0], [element]))).slice(1);
-    },ee.Image(moreFrequent.select([0], ["classification_1985"])))));
+    },ee.Image(moreFrequent.select([0], ["classification_1989"])))));
 
   pastFreqMapBio = ee.Image(pastFreqMapBio);
 
@@ -445,8 +438,8 @@ for (var i = 0; i < 33; i++){ //Number of years in the collection being used
   
   Export.image.toAsset({
     "image": image.unmask(0).uint32(),
-    "description": 'SEEG_c10_v2_'+ (1989+i),
-    "assetId": dir_output + 'SEEG_c10_v2_'+ (1989+i),
+    "description": 'SEEG_c10_'+ (1989+i),
+    "assetId": dir_output + 'SEEG_c10_'+ (1989+i),
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

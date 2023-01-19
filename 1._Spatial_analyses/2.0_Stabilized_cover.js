@@ -431,7 +431,7 @@ return ee.List(accumList).add(ee.Image(adequatedSack));
 var mapsSEEG1_1 = eeYears.iterate(goSEEG1_1, ee.List([baseMap]));
     mapsSEEG1_1 = ee.List(mapsSEEG1_1);
 
-var SEEGmap1_1 = ee.Image(mapsSEEG1_1.get(36)); //DUVIDA SOBRE O QUE É O 36
+var SEEGmap1_1 = ee.Image(mapsSEEG1_1.get(32)); 
 print('SEEGmap1_1 Maps_pos_desmate*regen', SEEGmap1_1 );
 
 ///////////////////////////////////
@@ -439,14 +439,14 @@ print('SEEGmap1_1 Maps_pos_desmate*regen', SEEGmap1_1 );
 //(you need to create an empty Image Collection in the Asset to receive and store each image that is iteratively exported) //* Criado
 
 //* verificar anos
-for (var i = 0; i < 37; i++){ //Number of years in the collection being used
+for (var i = 0; i < 33; i++){ //Number of years in the collection being used
   var bandName = SEEGmap1_1.bandNames().get(i);
-  var image = SEEGmap1_1.select([bandName]).set('year', ee.Number(1985).add(i));
+  var image = SEEGmap1_1.select([bandName]).set('year', ee.Number(1989).add(i));
   
   Export.image.toAsset({
     "image": image.unmask(0).uint32(),
-    "description": 'SEEG_c10_v2_'+ (1985+i),
-    "assetId": dir_output + 'SEEG_c10_v2_'+ (1985+i),
+    "description": 'SEEG_c10_v2_'+ (1989+i),
+    "assetId": dir_output + 'SEEG_c10_v2_'+ (1989+i),
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

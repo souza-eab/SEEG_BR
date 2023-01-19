@@ -21,7 +21,7 @@ var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
-// Load ImageCollection from Mapbiomas 6.0 
+// Load ImageCollection from Mapbiomas 7.1 (Version: 0-29) 
 var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //*
 print(MapBiomas_col);
 
@@ -201,7 +201,7 @@ var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 // Load asset Biomes of Brazil
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
-//  Load ImageCollection from Mapbiomas
+//  Load ImageCollection from Mapbiomas 7.1 (Version: 0-29)
 var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //*
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)

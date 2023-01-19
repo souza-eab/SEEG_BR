@@ -112,7 +112,7 @@ var years = ['1990','1991','1992','1993','1994','1995','1996','1997','1998','199
 var eeYears = ee.List(years);
 
 ///// Input the Asset 'REGENERATION MASK' exported from step 1.0 //*
-var inputImage_regeneration = ee.Image('projects/mapbiomas-workspace/SEEG/2022/public/1_0_Regeneration_masks'); // change to the asset you saved in the previous script
+var inputImage_regeneration = ee.Image('projects/mapbiomas-workspace/SEEG/2023/c10/1_0_Regeneration_masks'); // change to the asset you saved in the previous script
 
 // Apply functions
 var result_regeneration = eeYears.map(function(year){

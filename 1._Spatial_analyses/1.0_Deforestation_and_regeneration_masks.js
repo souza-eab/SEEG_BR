@@ -15,7 +15,7 @@
 // @. ~~~~~~~~~~~~~~ // 
 
 /* @. Set user parameters */// eg.
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2023/c10/';
 
 // Load Asset
 // Load asset Biomes of Brazil
@@ -204,7 +204,7 @@ var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 //  Load ImageCollection from Mapbiomas 7.1 (Version: 0-29)
-var MapBiomas_col = ee.Image(var MapBiomas_col = ee.ImageCollection('projects/mapbiomas-workspace/COLECAO7/integracao')
+var MapBiomas_col = ee.ImageCollection('projects/mapbiomas-workspace/COLECAO7/integracao')
   .filter(ee.Filter.eq('version','0-29'))
   .mosaic();
 

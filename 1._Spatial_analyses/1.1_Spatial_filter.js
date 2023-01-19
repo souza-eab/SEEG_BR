@@ -142,7 +142,7 @@ Export.image.toAsset({
 });
 
 ///// Input the Asset 'DEFORESTATION MASK' exported from step 1.0  
-var inputImage_deforestation = ee.Image('projects/mapbiomas-workspace/SEEG/2022/public/1_0_Deforestation_masks'); // change to the asset saved by you in the previous script
+var inputImage_deforestation = ee.Image('projects/mapbiomas-workspace/SEEG/2023/c10/1_0_Deforestation_masks'); // change to the asset saved by you in the previous script
 
 // Apply function 
 var result_deforestation = eeYears.map(function(year){

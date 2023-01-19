@@ -10,7 +10,7 @@
 
 // @. UPDATE HISTORIC EXECUTABLE//
 // 1: Script to generate and stabilize annual land cover basemaps from a MapBiomas collection
-// 1.1: Create your ImageCollection (eg. 2_1_Mask_stable)
+// 1.1: Create your ImageCollection (eg. 2_0_Mask_stable)
 // 1.2: Load Asset
 // 1.3: Calculate frequency (number of years) in which each i_pixel was a determined class_n
 // 1.4: Build the stabilized cover map for year t      
@@ -22,7 +22,7 @@
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/2_1_Mask_stable_v2/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2023/c10/2_0_Mask_stable_v2/';
 
 // Load Asset from MapBiomas collection 7.1 (Version: 0-29) 
 var mapbiomas = ee.ImageCollection('projects/mapbiomas-workspace/COLECAO7/integracao')

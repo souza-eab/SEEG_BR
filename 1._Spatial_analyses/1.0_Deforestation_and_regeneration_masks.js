@@ -22,7 +22,9 @@ var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 // Load ImageCollection from Mapbiomas 7.1 (Version: 0-29) 
-var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //*
+var MapBiomas_col = ee.ImageCollection('projects/mapbiomas-workspace/COLECAO7/integracao')
+  .filter(ee.Filter.eq('version','0-29'))
+  .mosaic();
 print(MapBiomas_col);
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
@@ -202,7 +204,9 @@ var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/public/';
 var Biomes = ee.FeatureCollection("projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR"); 
 
 //  Load ImageCollection from Mapbiomas 7.1 (Version: 0-29)
-var MapBiomas_col = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //*
+var MapBiomas_col = ee.Image(var MapBiomas_col = ee.ImageCollection('projects/mapbiomas-workspace/COLECAO7/integracao')
+  .filter(ee.Filter.eq('version','0-29'))
+  .mosaic();
 
 // Reclassify native vegetation classes to 0 and anthropic classes to 1 for the base year of 1985 (classify what does not apply to 9)
 var col_forest85 = MapBiomas_col.select('classification_1985').remap(

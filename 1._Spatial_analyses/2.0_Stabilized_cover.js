@@ -10,7 +10,7 @@
 
 // @. UPDATE HISTORIC EXECUTABLE//
 // 1: Script to generate and stabilize annual land cover basemaps from a MapBiomas collection
-// 1.1: Create your ImageCollection (eg. 2_0_Mask_stable)
+// 1.1: Create your ImageCollection (eg. 2_1_Mask_stable)
 // 1.2: Load Asset
 // 1.3: Calculate frequency (number of years) in which each i_pixel was a determined class_n
 // 1.4: Build the stabilized cover map for year t      
@@ -22,12 +22,18 @@
 /* @. Set user parameters */// eg.
 
 // Set directory for the output file
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2023/c10/2_0_Mask_stable_v2/';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2023/c10/2_0_Mask_stable/';
 
-// Load Asset from MapBiomas collection 7.1 (Version: 0-29) 
-var mapbiomas = ee.ImageCollection('projects/mapbiomas-workspace/COLECAO7/integracao')
+// Load Asset from MapBiomas collection7 - LULC BR (v_0_29) 
+//var mapbioDir = "projects/mapbiomas-workspace/SEEG/2023/c10/0_1_Mapbiomas";
+
+// ** Asset Mapbiomas LULC BR (v_0_29)
+var mapbioDir = ee.ImageCollection('projects/mapbiomas-workspace/COLECAO7/integracao')
   .filter(ee.Filter.eq('version','0-29'))
-  .mosaic(); //* 
+  .mosaic();
+  
+var mapbiomas = ee.Image(mapbioDir)
+print("lulc-mapbiomas",mapbiomas)
 
 // Feature of the region of interest, in this case, all biomes in Brazil
 var assetRegions = "projects/ee-seeg-brazil/assets/collection_9/v1/Biomes_BR";
@@ -42,16 +48,16 @@ var annualDesm = 'projects/mapbiomas-workspace/SEEG/2023/c10/1_1_Temporal_filter
 var annualLoss = ee.Image(annualDesm); // deforestation since 1990
 print("bandas annualLoss", annualLoss.bandNames());
 
-// Selects bands from the MapBiomas collection starting in 1989 (makes up the pair from the 1985-1990 transition, which will be the first to be considered)
-var bandNames = mapbiomas.bandNames();
-print("bandas", bandNames);
+// Selects bands from the MapBiomas collection starting in 1989 (makes up the pair from the 1989-1986 transition, which will be the first to be considered)
+var bandNames = mapbiomas.bandNames().slice(4,37); // Add slice, bands Mapbiomas (N= 1985-2021, selected:: 1989-2021)
+print("bandas mapbiomas", bandNames);
       mapbiomas = mapbiomas.select(bandNames);
 
 // 1989 -> 2021
 //////// Calculate the frequency (number of years) in which each i_pixel was a determined class_n
 // General rule (ratio of the total number of years of the considered period)
 var exp = '100*((b(0)+b(1)+b(2)+b(3)+b(4)+b(5)+b(6)+b(7)+b(8)+b(9)+b(10)+b(11)+b(12)+b(13)+b(14)+b(15)' +
-    '+b(16)+b(17)+b(18)+b(19)+b(20)+b(21)+b(22)+b(23)+b(24)+b(25)+b(26)+b(27)+b(28)+b(29)+b(30)+b(31)+b(32)/33)'; // Each collection adds one more year and it is important to check the period of the Mapbiomas collection being used
+    '+b(16)+b(17)+b(18)+b(19)+b(20)+b(21)+b(22)+b(23)+b(24)+b(25)+b(26)+b(27)+b(28)+b(29)+b(30)+b(31)+b(32))/33)'; // Each collection adds one more year and it is important to check the period of the Mapbiomas collection being used
 
 // Get frequency of each class
 var florFreq = mapbiomas.eq(3).expression(exp);                     //  Forest Formation
@@ -165,31 +171,30 @@ var  baseMap = ee.Image(0).clip(regions)
                               .where(vegMask.eq(1).and(grassFreq.gt(95)), 12)
                               .where(vegMask.eq(1).and(naoFlorFreq.gt(95)), 13);
                                      
-// To fill voids: 1985 map (except class 21)
-// Mask Native vegetation in 1985
-  var mapBiomas85vegMask = mapbiomas.select("classification_1985").remap([3, 4, 5, 49, 50, 11, 12, 13], [1, 1, 1, 1, 1, 1, 1, 1], 0);
+// To fill voids: 1989 map (except class 21)
+// Mask Native vegetation in 1989
+  var mapBiomas89vegMask = mapbiomas.select("classification_1989").remap([3, 4, 5, 49, 50, 11, 12, 13], [1, 1, 1, 1, 1, 1, 1, 1], 0);
 // Mask Land Use and Water in 1989
-  var mapBiomas85UsoMask = mapbiomas.select("classification_1985").remap([9, 15, 20, 23, 24, 25, 30, 31,  39, 40, 41, 46, 47, 48, 62], 
+  var mapBiomas89UsoMask = mapbiomas.select("classification_1989").remap([9, 15, 20, 23, 24, 25, 30, 31,  39, 40, 41, 46, 47, 48, 62], 
                                                                          [1,  1,  1,  1,  1,  1,  1,  1,   1,  1,  1,  1,  1,  1, 1], 0);
 // 
 // Merge                                                    
-  var mapBiomas85Mask = mapBiomas85vegMask.where(mapBiomas85vegMask.eq(0), mapBiomas85UsoMask);
+  var mapBiomas89Mask = mapBiomas89vegMask.where(mapBiomas89vegMask.eq(0), mapBiomas89UsoMask);
 
-// Fills in the unstable areas with the land use and native vegetation masks in 1985
-  baseMap = baseMap.where(baseMap.eq(0).and(mapBiomas85Mask.eq(1)),
+// Fills in the unstable areas with the land use and native vegetation masks in 1989
+  baseMap = baseMap.where(baseMap.eq(0).and(mapBiomas89Mask.eq(1)),
                                             mapbiomas.select("classification_1989"));
   baseMap = baseMap.updateMask(baseMap.neq(0));
   baseMap = baseMap.select([0], ["classification_1989"]).unmask(0);
 
-//*
 var years = [
     1990, 1991, 1992, 1993, 1994, 1995, 1996,
     1997, 1998, 1999, 2000, 2001, 2002, 2003,
     2004, 2005, 2006, 2007, 2008, 2009, 2010,
     2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
 ]; 
-
 var eeYears = ee.List(years);
+print(eeYears)
 
 
 ///// Create rule for stabilizing land cover maps and generating a classification for secondary native vegetation (*100)
@@ -266,7 +271,7 @@ var thisYearLandUseMask = thisYearCoverMap.remap([9, 15, 20, 23, 24, 25, 30, 31,
       
       thisYearCoverMap = thisYearCoverMap.select([0], currentMapBioBand);
 
-/// Bands of past years to fill maps between 1990 and t-1, based on regeneration and deforestation data and Mapbiomas  
+/// Bands of past years to fill maps between 1986 and t-1, based on regeneration and deforestation data and Mapbiomas  
   var pastBandsVoid = ee.Algorithms.If(ee.Number(eeYears.indexOf(element)).eq(0),
     previous.bandNames().get(0),
     previous.bandNames());
@@ -424,22 +429,21 @@ return ee.List(accumList).add(ee.Image(adequatedSack));
 var mapsSEEG1_1 = eeYears.iterate(goSEEG1_1, ee.List([baseMap]));
     mapsSEEG1_1 = ee.List(mapsSEEG1_1);
 
-var SEEGmap1_1 = ee.Image(mapsSEEG1_1.get(32)); 
+var SEEGmap1_1 = ee.Image(mapsSEEG1_1.get(32)); //DUVIDA SOBRE O QUE É O 36
 print('SEEGmap1_1 Maps_pos_desmate*regen', SEEGmap1_1 );
 
 ///////////////////////////////////
 //Export the stabilized land cover maps as an Image Collection
-//(you need to create an empty Image Collection in the Asset to receive and store each image that is iteratively exported) //* Criado
+//(you need to create an empty Image Collection in the Asset to receive and store each image that is iteratively exported)
 
-//* verificar anos
 for (var i = 0; i < 33; i++){ //Number of years in the collection being used
   var bandName = SEEGmap1_1.bandNames().get(i);
   var image = SEEGmap1_1.select([bandName]).set('year', ee.Number(1989).add(i));
   
   Export.image.toAsset({
     "image": image.unmask(0).uint32(),
-    "description": 'SEEG_c10_'+ (1989+i),
-    "assetId": dir_output + 'SEEG_c10_'+ (1989+i),
+    "description": 'SEEG_c10_v_0_29_'+ (1989+i),
+    "assetId": dir_output + 'SEEG_c10_v_0_29_'+ (1989+i),
     "scale": 30,
     "pyramidingPolicy": {
         '.default': 'mode'

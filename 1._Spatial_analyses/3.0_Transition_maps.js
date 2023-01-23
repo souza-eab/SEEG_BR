@@ -15,6 +15,7 @@
 
 /* @. Set user parameters */// eg.
 
+// @Obs: Create your ImageCollection: Eg. id:'projects/mapbiomas-workspace/SEEG/2023/c10/3_0_Transition_maps'
 // Set directory for the output file
 var dir_output = 'projects/mapbiomas-workspace/SEEG/2023/c10/';
 

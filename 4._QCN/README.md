@@ -8,17 +8,17 @@
 # About
    
    
-## Folders 📂:
+## Workflow 📂:
 
 
 #
-1.0 [Processamento no R] para relacionar as classes de LULC da QCN com o Mapbiomas - Col7
+1.0 Processamento no R para relacionar as classes de LULC da QCN com o Mapbiomas - Col7
 # 
-2.0.1 - [Rasterização das tiles] das variáveis 'cagb', 'cbgb', 'cdw', 'clitter', 'total', 'class_mb_c7'; 
+2.0.1 - Rasterização das tiles das variáveis 'cagb', 'cbgb', 'cdw', 'clitter', 'total', 'class_mb_c7'; 
 #
-2.0.1 - [GCP to GEE (ImgC)];
+2.0.1 - GCP to GEE (ImgC);
 # 
-2.0.3 - [JoinTiles_Amz]
+2.0.3 - JoinTiles_Amz
 # 
 2.0.4 - BlendBiomes
 # 

@@ -1,14 +1,17 @@
-# Workflow
+![Github](https://img.shields.io/badge/Github-0.0.1-green.svg)<br/>
+<img src='./aux/seegbrasilhome__2_.png' height='auto' width='auto' align='right'>
+<div>
+<h1>  ✨ Mais em: [Relação LULC_QCN_vs_SEEG](https://docs.google.com/presentation/d/163BR9IsZoWoa_IGIZb5A5GkJfi-aSWVnKJNRWOtDUG0/edit?usp=sharing) </h1>
+<div>
    
 
-# ✨ More [Relação LULC_QCN_vs_SEEG](https://docs.google.com/presentation/d/163BR9IsZoWoa_IGIZb5A5GkJfi-aSWVnKJNRWOtDUG0/edit?usp=sharing)
+# About
+   
+## Folders 📂:
 
-"""
-Folders 📂:
-"""
 
 #
-1.0 Processamento no R para relacionar as classes de LULC da QCN com o Mapbiomas - Col7
+1.0 [Processamento no R] para relacionar as classes de LULC da QCN com o Mapbiomas - Col7
 # 
 2.0.1 - Rasterização das tiles das variáveis 'cagb', 'cbgb', 'cdw', 'clitter', 'total', 'class_mb_c7'; 
 #

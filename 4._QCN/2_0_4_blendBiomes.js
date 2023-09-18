@@ -1,12 +1,15 @@
 // standardize assets per biome
-// dhemerson.costa@ipam.org.br ; wallace.silva@ipam.org.br
+// dhemerson.costa@ipam.org.br ; wallace.silva@ipam.org.br ; edrinao.souza@ipam.org.br
 
 // define output directory
-var dir_out = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_1/';
+var dir_out = 'projects/mapbiomas-workspace/SEEG/2023/QCN/Asset_v0-1/'; // 30m
+//var dir_out = 'projects/mapbiomas-workspace/SEEG/2023/QCN/Asset_v0-2/'; // 250 m
 
+var version = '_v0-1'
 // import QCN with 30 meters
-var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m').aside(print,'outros biomas');
-var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2022/QCN/pastVegetation_v2').aside(print,'amazonia');
+var qcn_ic = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2023/QCN/Data_Official').aside(print,'outros biomas');
+var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2023/QCN/pastVegetation_v0-1').aside(print,'amazonia'); // 30m
+//var qcn_amazonia = ee.Image('projects/mapbiomas-workspace/SEEG/2023/QCN/pastVegetation_v0-2').aside(print,'amazonia'); // 250 m
 
 // import biomes
 var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster');
@@ -28,34 +31,34 @@ var qcn_ic= qcn_ic.map(function(image){return image.set({
 
 // aggregate all biomes
 var qcn_cagb = ee.ImageCollection([
-    qcn_amazonia.select(['past_vegetation_cagb'],['cagb']),
-    qcn_ic.filterMetadata('band', 'equals', 'cagb').mosaic().rename('cagb')
+    qcn_amazonia.select(['past_vegetation_c_agb'],['c_agb']),
+    qcn_ic.filterMetadata('band', 'equals', 'c_agb').mosaic().rename('c_agb')
   ]).mosaic();
 
 var qcn_cbgb = ee.ImageCollection([
-    qcn_amazonia.select(['past_vegetation_cbgb'],['cbgb']),
-    qcn_ic.filterMetadata('band', 'equals', 'cbgb').mosaic().rename('cbgb')
+    qcn_amazonia.select(['past_vegetation_c_bgb'],['c_bgb']),
+    qcn_ic.filterMetadata('band', 'equals', 'c_bgb').mosaic().rename('c_bgb')
   ]).mosaic();
   
 var qcn_clitter = ee.ImageCollection([
-    qcn_amazonia.select(['past_vegetation_clitter'],['clitter']),
-    qcn_ic.filterMetadata('band', 'equals', 'clitter').mosaic().rename('clitter')
+    qcn_amazonia.select(['past_vegetation_c_litter'],['c_litter']),
+    qcn_ic.filterMetadata('band', 'equals', 'c_litter').mosaic().rename('c_litter')
   ]).mosaic();
 
 var qcn_cdw = ee.ImageCollection([
-    qcn_amazonia.select(['past_vegetation_cdw'],['cdw']),
-    qcn_ic.filterMetadata('band', 'equals', 'cdw').mosaic().rename('cdw')
+    qcn_amazonia.select(['past_vegetation_c_dw'],['c_dw']),
+    qcn_ic.filterMetadata('band', 'equals', 'c_dw').mosaic().rename('c_dw')
   ]).mosaic();
   
   
 var qcn_total = ee.ImageCollection([
-    qcn_amazonia.select(['past_vegetation_ctotal4inv'],['total']),
+    qcn_amazonia.select(['past_vegetation_c_total'],['total']),
     qcn_ic.filterMetadata('band', 'equals', 'total').mosaic().rename('total')
   ]).mosaic();
   
 var qcn_class = ee.ImageCollection([
-    qcn_amazonia.select(['past_vegetation__MB_C7'],['qcnclass']),
-    qcn_ic.filterMetadata('band', 'equals', 'c7').mosaic().rename('qcnclass')
+    qcn_amazonia.select(['past_vegetation_MB_C8'],['MB_C8']),
+    qcn_ic.filterMetadata('band', 'equals', 'C8').mosaic().rename('MB_C8')
   ]).mosaic();
   
 //Map.addLayer(qcn_class,{},'aaa')
@@ -105,9 +108,10 @@ list_biomes.forEach(function(process_biome) {
   // export
   Export.image.toAsset({
     "image": temp_biome,
-    "description": biome_name,
+    "description": biome_name + version,
     "assetId": dir_out + biome_name,
     "scale": 30,
+    //"scale": 250,
     "pyramidingPolicy": {
         '.default': 'mode'
     },

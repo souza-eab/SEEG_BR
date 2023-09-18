@@ -26,21 +26,25 @@ var list_biomes = [1, // amazonia
 // define years to be processed 
 var list_mapb_years = [1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,
                        1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
-                       2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+                       2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022
                        ];
                        
 // define QCN classes to be rectified
 var list_qcn_classes = [3,  // Forest formation
                         4,  // Savanna formation 
                         5,  // Mangrove
+                        6,  // Floodable Forest (beta)
                         11, // Wetland
                         12, // Grassland 
                         49, // Wooded Restinga
                         50]; // Shrubby Restinga //*BZ
 
 // define mapbiomas colelction 7.0 reclassification matrix
-var raw_mapbiomas  = [3, 4, 5, 9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 36, 39, 40, 41, 46, 47, 48, 49, 50, 62];   //*BZ
-var reclass_vector = [3, 4, 5, 0, 11, 12,  13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,  0,  0,  0,  0,  0, 49, 50, 0];   //*BZ
+// var raw_mapbiomas  = [3, 4, 5, 6,  9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 36, 39, 40, 41, 46, 47, 48, 49, 50, 62];   //*BZ
+// var reclass_vector = [3, 4, 5, 6,  0, 11, 12,  13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,  0,  0,  0,  0,  0, 49, 50, 0];   //*B
+var raw_mapbiomas  = [3, 4, 5, 6,  9, 11, 12, 13, 15, 20, 21, 23, 24, 25, 29, 30, 31, 32, 33, 36, 39, 40, 41, 46, 47, 48, 49, 50, 62];   //*Edriano
+var reclass_vector = [3, 4, 5, 6,  0, 11, 12,  13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,  0,  0,  0,  0,  0, 49, 50, 0];   //*Edriano
+
 
 // import QCN data
 var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_1')
@@ -124,6 +128,7 @@ list_biomes.forEach(function(biome_i) {
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 164.7144336);   // to 162.89128848 from 164,7144336
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  165.49274450);  // to 173.05       from 165,49274450
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  38.30);         // to 38.52        from 38,3
+            tot_rect = tot_rect.where(discordance_ijk.eq(6),  164.7144336);                                          /// Version 8 - Collection
             tot_rect = tot_rect.where(discordance_ijk.eq(11),  58.20);        // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 110.338709 );   // to 49.8300      from 110,338709
       }
@@ -134,6 +139,7 @@ list_biomes.forEach(function(biome_i) {
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 121.781719);   // to 127.8127795   from 121,781719
             tot_rect = tot_rect.where(discordance_ijk.eq(4), 47.651060);     // to 48.2497191    from 47,651060
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  83.06);        // to 127.812779    from 83,06
+            tot_rect = tot_rect.where(discordance_ijk.eq(6),  121.781719);                                               /// Version 8 - Collection
             tot_rect = tot_rect.where(discordance_ijk.eq(11), 103.75);       // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 13.89369925);  // to  13.89369925  from 13,91
             tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);       //*BZ
@@ -146,6 +152,7 @@ list_biomes.forEach(function(biome_i) {
         biome_name = 'pantanal';    // Diff Version                          // V1                 // V2
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 118.769014);   // to  98.10198434   from 118,769014
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  39.84);        // to  37.53344167   from 39,84
+            tot_rect = tot_rect.where(discordance_ijk.eq(6),  118.769014);                                                /// Version 8 - Collection
             tot_rect = tot_rect.where(discordance_ijk.eq(11), 23.240789);    // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 25.2083135);
             tot_rect = tot_rect.where(discordance_ijk.eq(13), 25.2083135); //*BZ
@@ -183,6 +190,7 @@ list_biomes.forEach(function(biome_i) {
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 68.52608570);  // to  101.8751897    from 68,52608570
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  20.29966574);  // to  19.87407942    from 20,29966574
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  170.5400000);  // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(6),  68.52608570));                                              /// Version 8 - Collection
             tot_rect = tot_rect.where(discordance_ijk.eq(11), 36.21);
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 15.45568408);  // to  12.83059147    from 15,45568408
             tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);

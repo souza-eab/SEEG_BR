@@ -2,7 +2,7 @@
 // For any issue/bug, please write to edriano.souza@ipam.org.br or wallace.silva@ipam.org.br 
 // Developed by: IPAM, SEEG and OC
 // Citing: SEEG/Observatório do Clima and IPAM
-// Time processing: v0-1: 250m = 40min | v0-2: 250m = 18min
+// Time processing: v0-1: 250m = 180min | v0-2: 250m = 18min
 
 // @. UPDATE HISTORIC //
 // 1:   Insert tiles 

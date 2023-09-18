@@ -47,7 +47,7 @@ var reclass_vector = [3, 4, 5, 6,  0, 11, 12,  13,  0,  0,  0,  0,  0,  0,  0,  
 
 
 // import QCN data
-var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_1')
+var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2023/QCN/Asset_v0-1')
             .mosaic();
             
 // import biomes raster
@@ -193,7 +193,7 @@ list_biomes.forEach(function(biome_i) {
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 68.52608570);  // to  101.8751897    from 68,52608570
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  20.29966574);  // to  19.87407942    from 20,29966574
             tot_rect = tot_rect.where(discordance_ijk.eq(5),  170.5400000);  // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(6),  68.52608570));                                              /// Version 8 - Collection
+            tot_rect = tot_rect.where(discordance_ijk.eq(6),  68.52608570);                                              /// Version 8 - Collection
             tot_rect = tot_rect.where(discordance_ijk.eq(11), 36.21);
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 15.45568408);  // to  12.83059147    from 15,45568408
             tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);
@@ -222,7 +222,6 @@ list_biomes.forEach(function(biome_i) {
       }
       if (class_k == 5) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
-      }
       }
       if (class_k == 6) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));

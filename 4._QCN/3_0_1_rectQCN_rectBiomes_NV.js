@@ -57,7 +57,10 @@ var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster'
 var states = ee.Image('projects/mapbiomas-workspace/AUXILIAR/estados-2016-raster'); //* ok
 
 // import Mapbiomas Collection 7.0
-var colecao7 = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //* ok
+//var colecao7 = ee.Image("projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2"); //* ok
+// import Mapbiomas Collection 8.0
+var colecao8 = ee.Image("projects/mapbiomas-workspace/public/collection8/mapbiomas_collection80_integration_v1"); //* ok
+
 
 ///////////////////////////////////////
 /* @. Don't change below this line *///
@@ -75,11 +78,11 @@ var palt = require('users/gena/packages:palettes').matplotlib.viridis[7];
 var pala = require('users/gena/packages:palettes').kovesi.rainbow_bgyr_35_85_c72[7];
 
 // read products
-var qcn_class = qcn.select(['qcnclass']);
+var qcn_class = qcn.select(['MB_C8']);
 var qcn_total = qcn.select(['total']);
 
 // plot inspects
-Map.addLayer(qcn_class, vis, 'QCN_Class');
+Map.addLayer(qcn_class, vis, 'QCN_Class_MB_C8');
 Map.addLayer(qcn_total, {min: 0, max: 168, palette: palt}, 'QCN_Total');
 
 // for each biome
@@ -99,7 +102,7 @@ list_biomes.forEach(function(biome_i) {
   // for each year
   list_mapb_years.forEach(function(year_j) {
     // subset mapbiomas collection 6.0 for the biome [i] and year [j]
-    var mapbiomas_ij = colecao7.select(['classification_' + year_j])
+    var mapbiomas_ij = colecao8.select(['classification_' + year_j])
                                .updateMask(biomes.eq(biome_i));
     
     // reclassify mapbiomas by using the obj 'reclass_vector' as general rule
@@ -162,7 +165,7 @@ list_biomes.forEach(function(biome_i) {
       if (biome_i == 4) {
         biome_name = 'cerrado';   
         // when discordance equal to forest formation           // Diff Version                            // V1                 // V2
-        var tot_rect = biome_tot.where(states.eq(11).and(discordance_ijk.eq(3)), 76.3);//*BZ      // RO // to  79.80779548    from 76.3
+        var tot_rect = biome_tot.where(states.eq(11).and(discordance_ijk.eq(3)), 76.3);//*BZ        // RO // to  79.80779548    from 76.3
             tot_rect = tot_rect.where(states.eq(17).and(discordance_ijk.eq(3)),  67.34568565);      // TO // to  64.27657895    from 67,34568565
             tot_rect = tot_rect.where(states.eq(21).and(discordance_ijk.eq(3)),  62.68812168);      // MA // to  63.91879963    from 62,68812168
             tot_rect = tot_rect.where(states.eq(22).and(discordance_ijk.eq(3)),  61.74337814);      // PI // to  66.068241      from 61,74337814
@@ -203,6 +206,7 @@ list_biomes.forEach(function(biome_i) {
         biome_name = 'pampa';
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 76.02510);   // to  115.0286131    from 76,02510
             // tot_rect = tot_rect.where(discordance_ijk.eq(5),  12.77);   // Exclude v2
+            tot_rect = tot_rect.where(discordance_ijk.eq(6), 76.02510);                                                   /// Version 8 - Collection
             tot_rect = tot_rect.where(discordance_ijk.eq(11), 11.744348);  // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 22.832296);  // to  4.560158311    from 22,83
             tot_rect = tot_rect.where(discordance_ijk.eq(49), 12.77); // Include Wooded Restinga v2; 
@@ -217,6 +221,10 @@ list_biomes.forEach(function(biome_i) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
       }
       if (class_k == 5) {
+        temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
+      }
+      }
+      if (class_k == 6) {
         temp = temp.blend(tot_rect.updateMask(qcn_class_i.eq(class_k)));
       }
       if (class_k == 11) {

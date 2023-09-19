@@ -48,7 +48,10 @@ var reclass_vector = [3, 4, 5, 6,  0, 11, 12,  13,  0,  0,  0,  0,  0,  0,  0,  
 
 // import QCN data
 var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2023/QCN/Asset_v0-1')
-            .mosaic();
+            .mosaic(); 
+
+//var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2023/QCN/Asset_v0-2')
+  //          .mosaic(); 
             
 // import biomes raster
 var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster'); //* ok
@@ -269,14 +272,14 @@ list_biomes.forEach(function(biome_i) {
   print (biome_name, image_static);
   Map.addLayer(image_static.select(['total_1985']), {min: 0, max: 168, palette: palt}, biome_name + ' rect 1985');
   
-  // export results as GEE asset
+  // export results as GEE asset (Condition with AMZ)
   // when biome equal to amazonia, export with 250 x 250 m//pixel
   if (biome_name == 'amazonia') {
     Export.image.toAsset({
       "image": image_static,
       "description": biome_name,
       "assetId": dir_output + '/' + biome_name + '_rect_total_v' + version,
-      "scale": 250,
+      "scale": 250, // Amazon: scale 250m
       "pyramidingPolicy": {
           '.default': 'mode'
       },
@@ -289,7 +292,7 @@ list_biomes.forEach(function(biome_i) {
       "image": image_static,
       "description": biome_name,
       "assetId": dir_output + '/' + biome_name + '_rect_total_v' + version,
-      "scale": 30,
+      "scale": 30, // other biomes: 30m
       "pyramidingPolicy": {
           '.default': 'mode'
       },

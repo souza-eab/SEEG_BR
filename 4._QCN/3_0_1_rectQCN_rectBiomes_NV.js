@@ -10,8 +10,10 @@
 // 2.0 Perform 'c_total' correction for all biomes from 1985 to 2021 (Static)
 
 //* @ Set user parameters *//
-var dir_output = 'projects/mapbiomas-workspace/SEEG/2022/QCN/QCN_30m_BR_v2_0_2_Rect';
-var version = '2';
+//var dir_output = 'projects/mapbiomas-workspace/SEEG/2023/QCN/2_Asset_v0-1_rect';
+var dir_output = 'projects/mapbiomas-workspace/SEEG/2023/QCN/2_Asset_v0-2_rect';
+//var version = '0-1';
+var version = '0-2';
 
 // define biomes to be processed
 // to process a single biome, comment lines 
@@ -47,11 +49,11 @@ var reclass_vector = [3, 4, 5, 6,  0, 11, 12,  13,  0,  0,  0,  0,  0,  0,  0,  
 
 
 // import QCN data
-var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2023/QCN/Asset_v0-1')
-            .mosaic(); 
-
-//var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2023/QCN/Asset_v0-2')
+//var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2023/QCN/1_Asset_v0-1')
   //          .mosaic(); 
+
+var qcn = ee.ImageCollection('projects/mapbiomas-workspace/SEEG/2023/QCN/1_Asset_v0-2')
+            .mosaic(); 
             
 // import biomes raster
 var biomes = ee.Image('projects/mapbiomas-workspace/AUXILIAR/biomas-2019-raster'); //* ok
@@ -73,7 +75,7 @@ var colecao8 = ee.Image("projects/mapbiomas-workspace/public/collection8/mapbiom
 var vis = {
     'min': 0,
     'max': 62,  //*BZ
-    'palette': require('users/mapbiomas/modules:Palettes.js').get('classification7')  //*ok
+    'palette': require('users/mapbiomas/modules:Palettes.js').get('classification8')  //*ok
 };
 
 // pre-definied palletes
@@ -137,7 +139,7 @@ list_biomes.forEach(function(biome_i) {
             tot_rect = tot_rect.where(discordance_ijk.eq(6),  164.7144336);                                          /// Version 8 - Collection
             tot_rect = tot_rect.where(discordance_ijk.eq(11),  58.20);        // Include Wetland v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 110.338709 );   // to 49.8300      from 110,338709
-      }
+      } // Amazonia conferida
       
       // when biome equals to mata atlantica
       if (biome_i == 2) {
@@ -151,7 +153,7 @@ list_biomes.forEach(function(biome_i) {
             tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);       //*BZ
             tot_rect = tot_rect.where(discordance_ijk.eq(49), 104.7000000);  // Wooded Restinga v2;
             tot_rect = tot_rect.where(discordance_ijk.eq(50), 104.7000000);  //*BZ
-      }
+      } // MA conferida
       
       // when biome equals to pantanal
       if (biome_i == 3) {
@@ -159,10 +161,10 @@ list_biomes.forEach(function(biome_i) {
         var tot_rect = biome_tot.where(discordance_ijk.eq(3), 118.769014);   // to  98.10198434   from 118,769014
             tot_rect = tot_rect.where(discordance_ijk.eq(4),  39.84);        // to  37.53344167   from 39,84
             tot_rect = tot_rect.where(discordance_ijk.eq(6),  118.769014);                                                /// Version 8 - Collection
-            tot_rect = tot_rect.where(discordance_ijk.eq(11), 23.240789);    // Include Wetland v2;
-            tot_rect = tot_rect.where(discordance_ijk.eq(12), 25.2083135);
+            tot_rect = tot_rect.where(discordance_ijk.eq(12), 23.240789);    // Include Wetland v2;
+            tot_rect = tot_rect.where(discordance_ijk.eq(11), 25.2083135);
             tot_rect = tot_rect.where(discordance_ijk.eq(13), 25.2083135); //*BZ
-      }
+      } // 11 e 12 inversão
       
       // when biome equals to cerrado
       if (biome_i == 4) {
@@ -202,7 +204,7 @@ list_biomes.forEach(function(biome_i) {
             tot_rect = tot_rect.where(discordance_ijk.eq(13), 83.06);
             tot_rect = tot_rect.where(discordance_ijk.eq(49), 147.09000000); // Include Wooded Restinga v2; 
             tot_rect = tot_rect.where(discordance_ijk.eq(50), 147.09000000); //*BZ
-      }
+      } // Class 11 e 13  not fitofisionomias.xls
       
       // when biome equal to pampa
       if (biome_i == 6) {
@@ -214,7 +216,7 @@ list_biomes.forEach(function(biome_i) {
             tot_rect = tot_rect.where(discordance_ijk.eq(12), 22.832296);  // to  4.560158311    from 22,83
             tot_rect = tot_rect.where(discordance_ijk.eq(49), 12.77); // Include Wooded Restinga v2; 
             tot_rect = tot_rect.where(discordance_ijk.eq(50), 12.77); //*BZ
-      }
+      } // 49 e 50 include Babi
 
       // bind corrections of each class into a unique 'temp' obj 
       if (class_k == 3) {
@@ -277,7 +279,7 @@ list_biomes.forEach(function(biome_i) {
   if (biome_name == 'amazonia') {
     Export.image.toAsset({
       "image": image_static,
-      "description": biome_name,
+      "description": biome_name + '_rect_total_v' + version,
       "assetId": dir_output + '/' + biome_name + '_rect_total_v' + version,
       "scale": 250, // Amazon: scale 250m
       "pyramidingPolicy": {
@@ -290,7 +292,7 @@ list_biomes.forEach(function(biome_i) {
   } else {
     Export.image.toAsset({
       "image": image_static,
-      "description": biome_name,
+      "description": biome_name + '_rect_total_v' + version,
       "assetId": dir_output + '/' + biome_name + '_rect_total_v' + version,
       "scale": 30, // other biomes: 30m
       "pyramidingPolicy": {
